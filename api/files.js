@@ -10,11 +10,7 @@ async function initializeDatabase() {
     await sql`
       CREATE TABLE IF NOT EXISTS files (
         id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        type TEXT NOT NULL,
-        url TEXT,
-        note TEXT,
-        children JSONB DEFAULT '[]',
+        data JSONB NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
@@ -31,8 +27,15 @@ async function initializeDatabase() {
     // 检查是否有管理员令牌，如果没有则创建一个默认的
     const result = await sql`SELECT * FROM admin_tokens LIMIT 1`;
     if (result.length === 0) {
-      // 创建默认管理员令牌（在实际应用中，应该通过环境变量或安全的方式设置）
+      // 创建默认管理员令牌
       await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
+    }
+    
+    // 检查是否有文件数据，如果没有则创建一个空数组
+    const filesResult = await sql`SELECT * FROM files LIMIT 1`;
+    if (filesResult.length === 0) {
+      // 创建默认文件数据
+      await sql`INSERT INTO files (data) VALUES ($1)`, [JSON.stringify([])];
     }
   } catch (error) {
     console.error('Failed to initialize database:', error);
@@ -59,16 +62,8 @@ module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
     // GET 请求不需要身份验证，公开访问文件列表
     try {
-      const result = await sql`SELECT * FROM files ORDER BY id`;
-      const files = result.map(row => ({
-        id: row.id,
-        name: row.name,
-        type: row.type,
-        url: row.url,
-        note: row.note,
-        children: row.children || [],
-        expanded: false
-      }));
+      const result = await sql`SELECT data FROM files LIMIT 1`;
+      const files = result.length > 0 ? JSON.parse(result[0].data) : [];
       
       return res.status(200).json(files);
     } catch (error) {
@@ -99,81 +94,55 @@ module.exports = async function handler(req, res) {
           return res.status(400).json({ error: 'Invalid file data: name and type are required' });
         }
 
-        // 插入新文件到数据库
-        const result = await sql`
-          INSERT INTO files (name, type, url, note, children)
-          VALUES (${newFile.name}, ${newFile.type}, ${newFile.url || null}, ${newFile.note || null}, ${JSON.stringify(newFile.children || [])})
-          RETURNING *
-        `;
+        // 获取现有文件数据
+        const result = await sql`SELECT data FROM files LIMIT 1`;
+        let files = result.length > 0 ? JSON.parse(result[0].data) : [];
         
-        return res.status(201).json(result[0]);
+        // 确保 files 是数组
+        if (!Array.isArray(files)) {
+          files = [];
+        }
+        
+        files.push(newFile);
+        
+        // 更新文件数据
+        await sql`DELETE FROM files`;
+        await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
+        
+        return res.status(201).json(newFile);
       } catch (error) {
         console.error('Failed to add file:', error);
         return res.status(500).json({ error: 'Failed to add file: ' + error.message });
       }
     } else if (req.method === 'PUT') {
       try {
-        const { index, file, filesList } = req.body;
+        const { index, file } = req.body;
         
-        // 如果提供了 filesList，则替换整个文件列表（用于导入功能）
-        if (filesList && Array.isArray(filesList) && filesList.length > 0) {
-          // 验证文件列表
-          if (!filesList.every(f => f && f.name && f.type)) {
-            return res.status(400).json({ error: 'Invalid files list: each file must have name and type' });
-          }
-          
-          // 清空现有文件
-          await sql`DELETE FROM files`;
-          
-          // 插入新文件列表
-          for (const f of filesList) {
-            await sql`
-              INSERT INTO files (name, type, url, note, children)
-              VALUES (${f.name}, ${f.type}, ${f.url || null}, ${f.note || null}, ${JSON.stringify(f.children || [])})
-            `;
-          }
-          
-          return res.status(200).json({ message: 'Files list updated successfully', count: filesList.length });
-        }
-        
-        // 如果提供了 filesList 但是空数组，则清空文件列表
-        if (filesList && Array.isArray(filesList) && filesList.length === 0) {
-          await sql`DELETE FROM files`;
-          return res.status(200).json({ message: 'Files list cleared successfully', count: 0 });
-        }
-        
-        // 否则，更新单个文件（原有功能）
         if (index === undefined || !file) {
           return res.status(400).json({ error: 'Invalid update data' });
         }
 
-        // 获取所有文件
-        const result = await sql`SELECT * FROM files ORDER BY id`;
-        const files = result.map(row => ({
-          id: row.id,
-          name: row.name,
-          type: row.type,
-          url: row.url,
-          note: row.note,
-          children: row.children || []
-        }));
+        // 获取现有文件数据
+        const result = await sql`SELECT data FROM files LIMIT 1`;
+        let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+        
+        // 确保 files 是数组
+        if (!Array.isArray(files)) {
+          files = [];
+        }
         
         if (index < 0 || index >= files.length) {
           return res.status(404).json({ error: 'File not found' });
         }
         
         // 更新文件
-        const fileId = files[index].id;
-        await sql`
-          UPDATE files 
-          SET name = ${file.name}, type = ${file.type}, url = ${file.url || null}, 
-              note = ${file.note || null}, children = ${JSON.stringify(file.children || [])}
-          WHERE id = ${fileId}
-        `;
+        files[index] = file;
         
-        // 获取更新后的文件
-        const updatedResult = await sql`SELECT * FROM files WHERE id = ${fileId}`;
-        return res.status(200).json(updatedResult[0]);
+        // 更新文件数据
+        await sql`DELETE FROM files`;
+        await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
+        
+        return res.status(200).json(file);
       } catch (error) {
         console.error('Failed to update file:', error);
         return res.status(500).json({ error: 'Failed to update file' });
@@ -186,24 +155,25 @@ module.exports = async function handler(req, res) {
           return res.status(400).json({ error: 'Invalid delete request' });
         }
 
-        // 获取所有文件
-        const result = await sql`SELECT * FROM files ORDER BY id`;
-        const files = result.map(row => ({
-          id: row.id,
-          name: row.name,
-          type: row.type,
-          url: row.url,
-          note: row.note,
-          children: row.children || []
-        }));
+        // 获取现有文件数据
+        const result = await sql`SELECT data FROM files LIMIT 1`;
+        let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+        
+        // 确保 files 是数组
+        if (!Array.isArray(files)) {
+          files = [];
+        }
         
         if (index < 0 || index >= files.length) {
           return res.status(404).json({ error: 'File not found' });
         }
         
         // 删除文件
-        const fileId = files[index].id;
-        await sql`DELETE FROM files WHERE id = ${fileId}`;
+        files.splice(index, 1);
+        
+        // 更新文件数据
+        await sql`DELETE FROM files`;
+        await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
         
         return res.status(200).json({ message: 'File deleted successfully' });
       } catch (error) {

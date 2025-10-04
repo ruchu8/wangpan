@@ -1,11 +1,49 @@
 // Vercel Serverless Function for authentication
-const { Redis } = require('@upstash/redis');
+const { neon } = require('@neondatabase/serverless');
 
-// 初始化 Redis 客户端
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+// 初始化 Neon PostgreSQL 客户端
+const sql = neon(process.env.DATABASE_URL);
+
+// 创建数据库表（如果不存在）
+async function initializeDatabase() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS admin_credentials (
+        id SERIAL PRIMARY KEY,
+        username TEXT NOT NULL,
+        password TEXT NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      )
+    `;
+    
+    await sql`
+      CREATE TABLE IF NOT EXISTS admin_tokens (
+        id SERIAL PRIMARY KEY,
+        token TEXT NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      )
+    `;
+    
+    // 检查是否有管理员凭证，如果没有则创建默认的
+    const result = await sql`SELECT * FROM admin_credentials LIMIT 1`;
+    if (result.length === 0) {
+      // 创建默认管理员凭证
+      await sql`INSERT INTO admin_credentials (username, password) VALUES ('admin', 'admin123')`;
+    }
+    
+    // 检查是否有管理员令牌，如果没有则创建一个默认的
+    const tokenResult = await sql`SELECT * FROM admin_tokens LIMIT 1`;
+    if (tokenResult.length === 0) {
+      // 创建默认管理员令牌
+      await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
+    }
+  } catch (error) {
+    console.error('Failed to initialize database:', error);
+  }
+}
+
+// 初始化数据库
+initializeDatabase();
 
 module.exports = async function handler(req, res) {
   // CORS headers
@@ -28,23 +66,21 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Username and password are required' });
       }
 
-      // Check if admin credentials exist, if not create default ones
-      const adminExists = await redis.exists('admin_credentials');
+      // 获取管理员凭证
+      const adminCredentialsResult = await sql`SELECT * FROM admin_credentials LIMIT 1`;
       
-      if (!adminExists) {
-        await redis.set('admin_credentials', {
-          username: 'admin',
-          password: 'admin123' // In production, use hashed passwords
-        });
-        
-        // Generate a random token for API authentication
-        const token = Math.random().toString(36).substring(2, 15) + 
-                     Math.random().toString(36).substring(2, 15);
-        await redis.set('admin_token', token);
+      if (adminCredentialsResult.length === 0) {
+        return res.status(500).json({ error: 'Admin credentials not initialized' });
       }
       
-      const adminCredentials = await redis.get('admin_credentials');
-      const adminToken = await redis.get('admin_token');
+      const adminCredentials = adminCredentialsResult[0];
+      const adminTokenResult = await sql`SELECT * FROM admin_tokens LIMIT 1`;
+      
+      if (adminTokenResult.length === 0) {
+        return res.status(500).json({ error: 'Admin token not initialized' });
+      }
+      
+      const adminToken = adminTokenResult[0].token;
       
       if (username === adminCredentials.username && password === adminCredentials.password) {
         return res.status(200).json({ 
