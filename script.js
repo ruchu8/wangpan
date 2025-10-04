@@ -167,10 +167,12 @@ function renderFileList() {
         
         if (item.type === 'folder') {
             // 文件夹保持原来的图标
-            displayContent = `<i class="bi ${iconClass}"></i> ${item.name}`;
+            const displayName = item._highlightedName || item.name;
+            displayContent = `<i class="bi ${iconClass}"></i> ${displayName}`;
         } else {
             // 文件使用tu.png图标
-            displayContent = `<img src="img/tu.png" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${item.name}`;
+            const displayName = item._highlightedName || item.name;
+            displayContent = `<img src="img/tu.png" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${displayName}`;
         }
         
         // 如果有备注，添加备注
@@ -255,6 +257,14 @@ function renderFileList() {
     }
 }
 
+// 高亮显示搜索关键词
+function highlightSearchTerm(text, searchTerm) {
+    if (!searchTerm) return text;
+    
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+}
+
 // 搜索文件功能
 function searchFiles() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
@@ -270,7 +280,11 @@ function searchFiles() {
             items.forEach(item => {
                 // 检查当前项是否匹配搜索词
                 if (item.name.toLowerCase().includes(searchTerm)) {
-                    filteredFiles.push(item);
+                    // 创建一个带有高亮名称的新对象
+                    filteredFiles.push({
+                        ...item,
+                        _highlightedName: highlightSearchTerm(item.name, searchTerm)
+                    });
                 }
                 
                 // 如果是文件夹，递归检查其子项
@@ -280,6 +294,7 @@ function searchFiles() {
                         // 如果子项有匹配，则包含该文件夹
                         filteredFiles.push({
                             ...item,
+                            _highlightedName: highlightSearchTerm(item.name, searchTerm),
                             children: childrenMatch
                         });
                     }
