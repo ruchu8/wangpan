@@ -76,3 +76,78 @@
 [2025-10-04T06:40:37.165Z] GET /api/comments called
 [2025-10-04T06:40:37.539Z] Returning 2 files
 [2025-10-04T06:40:37.948Z] Returning 4 comments to admin
+[2025-10-04T06:42:43.969Z] GET /api/files called
+[2025-10-04T06:42:43.972Z] GET /api/comments called
+[2025-10-04T06:42:44.416Z] Returning 2 files
+[2025-10-04T06:42:44.766Z] Returning 4 comments to admin
+[2025-10-04T06:43:52.658Z] Server is running on http://localhost:3001
+[2025-10-04T06:43:52.659Z] Open http://localhost:3001 in your browser to view the application
+[2025-10-04T06:43:52.855Z] GET /api/files called
+[2025-10-04T06:43:52.856Z] GET /api/comments called
+[2025-10-04T06:43:53.264Z] Returning 2 files
+[2025-10-04T06:43:53.638Z] Returning 4 comments to admin
+[2025-10-04T06:43:55.334Z] GET /api/files called
+[2025-10-04T06:43:55.341Z] GET /api/comments called
+[2025-10-04T06:43:55.765Z] Returning 2 files
+[2025-10-04T06:43:55.950Z] GET /api/files called
+[2025-10-04T06:43:56.210Z] Returning 4 comments to admin
+[2025-10-04T06:43:56.213Z] GET /api/comments called
+[2025-10-04T06:43:56.302Z] Returning 2 files
+[2025-10-04T06:43:56.623Z] Returning 4 comments to user
+[2025-10-04T06:43:56.704Z] GET /api/files called
+[2025-10-04T06:43:56.706Z] GET /api/comments called
+[2025-10-04T06:43:57.119Z] Returning 2 files
+[2025-10-04T06:43:57.490Z] Returning 4 comments to admin
+[2025-10-04T06:43:58.169Z] GET /api/comments called
+[2025-10-04T06:43:59.020Z] Returning 4 comments to admin
+[2025-10-04T06:43:59.822Z] DELETE /api/comments called
+[2025-10-04T06:44:00.495Z] DELETE /api/comments called
+[2025-10-04T06:44:00.939Z] Comment 1759560031115 deleted successfully
+[2025-10-04T06:44:00.946Z] GET /api/comments called
+[2025-10-04T06:44:01.576Z] Comment 1759560032496 deleted successfully
+[2025-10-04T06:44:01.785Z] Returning 3 comments to admin
+[2025-10-04T06:44:02.636Z] DELETE /api/comments called
+[2025-10-04T06:44:02.639Z] GET /api/comments called
+[2025-10-04T06:44:03.004Z] Comment not found with ID: 1759560031115
+[2025-10-04T06:44:03.467Z] Returning 2 comments to admin
+[2025-10-04T06:44:05.405Z] DELETE /api/comments called
+[2025-10-04T06:44:06.283Z] DELETE /api/comments called
+[2025-10-04T06:44:06.314Z] Comment 1759558881338 deleted successfully
+[2025-10-04T06:44:06.317Z] GET /api/comments called
+[2025-10-04T06:44:07.037Z] Comment 1759558998252 deleted successfully
+[2025-10-04T06:44:07.110Z] Returning 1 comments to admin
+[2025-10-04T06:44:07.112Z] GET /api/comments called
+[2025-10-04T06:44:07.898Z] Returning 0 comments to admin
+[2025-10-04T06:44:08.642Z] GET /api/files called
+[2025-10-04T06:44:08.644Z] GET /api/comments called
+[2025-10-04T06:44:09.076Z] Returning 2 files
+[2025-10-04T06:44:09.484Z] Returning 0 comments to admin
+[2025-10-04T06:44:10.556Z] GET /api/files called
+[2025-10-04T06:44:10.562Z] GET /api/comments called
+[2025-10-04T06:44:10.945Z] Returning 2 files
+[2025-10-04T06:44:11.354Z] Returning 0 comments to admin
+[2025-10-04T06:44:11.355Z] GET /api/comments called
+[2025-10-04T06:44:12.127Z] Returning 0 comments to admin
+[2025-10-04T06:44:14.621Z] GET /api/files called
+[2025-10-04T06:44:14.623Z] GET /api/comments called
+[2025-10-04T06:44:15.016Z] Returning 0 comments to user
+[2025-10-04T06:44:15.048Z] Returning 2 files
+[2025-10-04T06:44:20.361Z] POST /api/comments called
+[2025-10-04T06:44:21.518Z] Comment created with ID: 1759560260362
+[2025-10-04T06:44:22.874Z] GET /api/comments called
+[2025-10-04T06:44:23.310Z] Returning 1 comments to user
+[2025-10-04T06:44:25.731Z] GET /api/files called
+[2025-10-04T06:44:25.733Z] GET /api/comments called
+[2025-10-04T06:44:26.151Z] Returning 2 files
+[2025-10-04T06:44:26.557Z] Returning 1 comments to admin
+[2025-10-04T06:44:26.560Z] GET /api/comments called
+[2025-10-04T06:44:27.443Z] Returning 1 comments to admin
+[2025-10-04T06:44:29.101Z] PUT /api/comments called
+[2025-10-04T06:44:29.527Z] Comment 1759560260362 approved status updated to: true
+[2025-10-04T06:44:29.965Z] Comment 1759560260362 updated successfully
+[2025-10-04T06:44:29.968Z] GET /api/comments called
+[2025-10-04T06:44:30.786Z] Returning 1 comments to admin
+[2025-10-04T06:44:30.930Z] GET /api/files called
+[2025-10-04T06:44:30.932Z] GET /api/comments called
+[2025-10-04T06:44:31.295Z] Returning 2 files
+[2025-10-04T06:44:31.352Z] Returning 1 comments to user
