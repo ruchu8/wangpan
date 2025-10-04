@@ -4,15 +4,28 @@ const { neon } = require('@neondatabase/serverless');
 // 初始化 Neon PostgreSQL 客户端
 // 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
 const databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+
 if (!databaseUrl) {
-  console.error('Database URL not found in environment variables');
-  throw new Error('Database URL not found in environment variables');
+  console.error('❌ Database URL not found in environment variables');
+  // 不立即抛出错误，而是在处理请求时再检查
 }
-const sql = neon(databaseUrl);
+
+let sql;
 
 // 创建数据库表（如果不存在）
 async function initializeDatabase() {
   try {
+    // 确保数据库连接已初始化
+    if (!databaseUrl) {
+      throw new Error('Database URL not found in environment variables');
+    }
+    
+    if (!sql) {
+      sql = neon(databaseUrl);
+    }
+    
+    console.log('Initializing comments table...');
+    
     // 创建留言表
     await sql`
       CREATE TABLE IF NOT EXISTS comments (
@@ -25,15 +38,24 @@ async function initializeDatabase() {
         reply TEXT
       )
     `;
+    console.log('✅ comments table ensured');
     
-    // 注意：admin_tokens表应该在auth.js中创建和管理
+    console.log('✅ Comments database initialization completed');
+    return true;
   } catch (error) {
-    console.error('Failed to initialize database:', error);
+    console.error('❌ Failed to initialize comments database:', error);
+    return false;
   }
 }
 
-// 初始化数据库
-initializeDatabase();
+// 确保数据库已初始化
+let dbInitialized = false;
+async function ensureDatabaseInitialized() {
+  if (!dbInitialized) {
+    dbInitialized = await initializeDatabase();
+  }
+  return dbInitialized;
+}
 
 // 联系方式隐私保护函数
 function maskContactInfo(contactInfo) {
@@ -77,6 +99,23 @@ module.exports = async function handler(req, res) {
   // Handle different HTTP methods
   if (req.method === 'GET') {
     try {
+      console.log('Comments GET request received');
+      
+      // 确保数据库已初始化
+      const isDbReady = await ensureDatabaseInitialized();
+      if (!isDbReady) {
+        return res.status(500).json({ error: 'Database initialization failed' });
+      }
+      
+      // 确保数据库连接已初始化
+      if (!databaseUrl) {
+        return res.status(500).json({ error: 'Database URL not found in environment variables' });
+      }
+      
+      if (!sql) {
+        sql = neon(databaseUrl);
+      }
+      
       // 获取分页参数
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
@@ -91,6 +130,7 @@ module.exports = async function handler(req, res) {
         const token = authHeader.split(' ')[1];
         // 验证令牌是否有效
         const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
+        console.log('Admin token verification result:', adminTokenResult.length);
         if (adminTokenResult.length > 0) {
           isAdmin = true;
           adminToken = token;
@@ -98,6 +138,7 @@ module.exports = async function handler(req, res) {
       }
       
       if (isAdmin && adminToken) {
+        console.log('Admin access to comments');
         // 管理员访问，返回所有留言，包括未审核的，并显示完整联系方式和内容
         const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
         const totalComments = parseInt(countResult[0].count);
@@ -130,6 +171,7 @@ module.exports = async function handler(req, res) {
           totalComments
         });
       } else {
+        console.log('Public access to comments');
         // 普通用户访问（前台），返回所有留言（包括未审核的），但对联系方式和未审核留言的内容进行隐私保护处理
         const commentsResult = await sql`
           SELECT * FROM comments 
@@ -186,12 +228,30 @@ module.exports = async function handler(req, res) {
         });
       }
     } catch (error) {
-      console.error('Failed to fetch comments:', error);
-      return res.status(500).json({ error: 'Failed to fetch comments' });
+      console.error('❌ Failed to fetch comments:', error);
+      return res.status(500).json({ error: 'Failed to fetch comments: ' + error.message });
     }
   } else if (req.method === 'POST') {
     try {
+      console.log('Comments POST request received');
+      
+      // 确保数据库已初始化
+      const isDbReady = await ensureDatabaseInitialized();
+      if (!isDbReady) {
+        return res.status(500).json({ error: 'Database initialization failed' });
+      }
+      
+      // 确保数据库连接已初始化
+      if (!databaseUrl) {
+        return res.status(500).json({ error: 'Database URL not found in environment variables' });
+      }
+      
+      if (!sql) {
+        sql = neon(databaseUrl);
+      }
+      
       const { name, content, ip } = req.body;
+      console.log('New comment submission:', { name, content });
       
       if (!name || !content) {
         return res.status(400).json({ error: 'Name and content are required' });
@@ -212,13 +272,31 @@ module.exports = async function handler(req, res) {
         VALUES (${newComment.id}, ${newComment.name}, ${newComment.content}, ${newComment.date}, ${newComment.approved}, ${newComment.ip})
       `;
       
+      console.log('✅ Comment added successfully');
       return res.status(201).json(newComment);
     } catch (error) {
-      console.error('Failed to add comment:', error);
-      return res.status(500).json({ error: 'Failed to add comment' });
+      console.error('❌ Failed to add comment:', error);
+      return res.status(500).json({ error: 'Failed to add comment: ' + error.message });
     }
   } else if (req.method === 'PUT') {
     try {
+      console.log('Comments PUT request received');
+      
+      // 确保数据库已初始化
+      const isDbReady = await ensureDatabaseInitialized();
+      if (!isDbReady) {
+        return res.status(500).json({ error: 'Database initialization failed' });
+      }
+      
+      // 确保数据库连接已初始化
+      if (!databaseUrl) {
+        return res.status(500).json({ error: 'Database URL not found in environment variables' });
+      }
+      
+      if (!sql) {
+        sql = neon(databaseUrl);
+      }
+      
       // Authentication check for admin operations
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -228,12 +306,14 @@ module.exports = async function handler(req, res) {
       const token = authHeader.split(' ')[1];
       // 验证令牌是否有效
       const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
+      console.log('Admin token verification result:', adminTokenResult.length);
       
       if (adminTokenResult.length === 0) {
         return res.status(401).json({ error: 'Invalid token' });
       }
 
       const { id, approved, reply } = req.body;
+      console.log('Updating comment:', { id, approved, reply });
       
       if (!id) {
         return res.status(400).json({ error: 'Comment ID is required' });
@@ -252,6 +332,7 @@ module.exports = async function handler(req, res) {
           SET approved = ${approved}
           WHERE id = ${id}
         `;
+        console.log('✅ Comment approval status updated');
       }
       
       if (reply !== undefined) {
@@ -260,6 +341,7 @@ module.exports = async function handler(req, res) {
           SET reply = ${reply}
           WHERE id = ${id}
         `;
+        console.log('✅ Comment reply updated');
       }
       
       // 获取更新后的评论
@@ -274,13 +356,31 @@ module.exports = async function handler(req, res) {
         reply: updatedResult[0].reply
       };
       
+      console.log('✅ Comment updated successfully');
       return res.status(200).json(updatedComment);
     } catch (error) {
-      console.error('Failed to update comment:', error);
-      return res.status(500).json({ error: 'Failed to update comment' });
+      console.error('❌ Failed to update comment:', error);
+      return res.status(500).json({ error: 'Failed to update comment: ' + error.message });
     }
   } else if (req.method === 'DELETE') {
     try {
+      console.log('Comments DELETE request received');
+      
+      // 确保数据库已初始化
+      const isDbReady = await ensureDatabaseInitialized();
+      if (!isDbReady) {
+        return res.status(500).json({ error: 'Database initialization failed' });
+      }
+      
+      // 确保数据库连接已初始化
+      if (!databaseUrl) {
+        return res.status(500).json({ error: 'Database URL not found in environment variables' });
+      }
+      
+      if (!sql) {
+        sql = neon(databaseUrl);
+      }
+      
       // Authentication check for admin operations
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -290,12 +390,14 @@ module.exports = async function handler(req, res) {
       const token = authHeader.split(' ')[1];
       // 验证令牌是否有效
       const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
+      console.log('Admin token verification result:', adminTokenResult.length);
       
       if (adminTokenResult.length === 0) {
         return res.status(401).json({ error: 'Invalid token' });
       }
 
       const { id } = req.body;
+      console.log('Deleting comment:', id);
       
       if (!id) {
         return res.status(400).json({ error: 'Comment ID is required' });
@@ -310,10 +412,11 @@ module.exports = async function handler(req, res) {
       // 删除评论
       await sql`DELETE FROM comments WHERE id = ${id}`;
       
+      console.log('✅ Comment deleted successfully');
       return res.status(200).json({ message: 'Comment deleted successfully' });
     } catch (error) {
-      console.error('Failed to delete comment:', error);
-      return res.status(500).json({ error: 'Failed to delete comment' });
+      console.error('❌ Failed to delete comment:', error);
+      return res.status(500).json({ error: 'Failed to delete comment: ' + error.message });
     }
   } else {
     return res.status(405).json({ error: 'Method not allowed' });

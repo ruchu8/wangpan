@@ -69,20 +69,26 @@ npm run dev
 
 详细部署说明请参考 [VERCEL_DEPLOYMENT_INSTRUCTIONS.md](VERCEL_DEPLOYMENT_INSTRUCTIONS.md)
 
-### Vercel部署后问题解决
+### Vercel部署后问题诊断
 
-如果部署后出现无法留言或无法登录后台的问题，请执行以下步骤：
+如果部署后出现无法留言或无法登录后台的问题，请按以下步骤进行诊断：
 
-1. 运行数据库修复脚本：
-   ```bash
-   node fix-database.js
-   ```
+1. **检查环境变量**：
+   确保在Vercel项目设置中正确配置了`POSTGRES_URL`环境变量。
 
-2. 检查管理员凭证：
-   - 默认用户名：`admin`
-   - 默认密码：`admin123`
+2. **测试数据库连接**：
+   访问 `https://你的域名/api/test-db` 来测试数据库连接状态。
 
-3. 如果问题仍然存在，请检查Vercel函数日志以获取更多信息。
+3. **检查Vercel函数日志**：
+   在Vercel控制台的"Functions"部分查看[api/auth.js](file:///c:/Users/Administrator/Desktop/test/api/auth.js)和[api/comments.js](file:///c:/Users/Administrator/Desktop/test/api/comments.js)的日志。
+
+4. **手动初始化数据库**：
+   如果表结构有问题，可以临时添加一个API端点来重新初始化数据库。
+
+### 默认管理员凭据
+
+- 用户名：`admin`
+- 密码：`admin123`
 
 ## 项目结构
 
