@@ -5,6 +5,7 @@ let expandedFolderIndex = -1; // 记录当前展开的文件夹索引
 let currentPage = 1; // 当前页码
 let totalPages = 1; // 总页数
 let totalComments = 0; // 总留言数
+let filteredFiles = []; // 用于存储过滤后的文件列表
 
 // 从API获取文件列表
 async function fetchFiles() {
@@ -18,6 +19,7 @@ async function fetchFiles() {
             
             // 直接使用服务器返回的数据，不再重新组织
             files = rawData;
+            filteredFiles = [...files]; // 初始化过滤后的文件列表
             console.log('Files to render:', files);
         } else {
             // 如果API不可用，使用默认数据
@@ -56,6 +58,7 @@ async function fetchFiles() {
                     expanded: false
                 }
             ];
+            filteredFiles = [...files]; // 初始化过滤后的文件列表
         }
         renderFileList();
     } catch (error) {
@@ -72,6 +75,7 @@ async function fetchFiles() {
                 expanded: false
             }
         ];
+        filteredFiles = [...files]; // 初始化过滤后的文件列表
         renderFileList();
     }
 }
@@ -79,22 +83,94 @@ async function fetchFiles() {
 function renderFileList() {
     console.log('Rendering file list...');
     const fileList = document.getElementById('fileList');
+    const noFiles = document.getElementById('noFiles');
+    
     if (!fileList) {
         console.error('File list element not found!');
         return;
     }
+    
     fileList.innerHTML = '';
     
-    console.log('Files to render:', files); // 添加调试日志
+    console.log('Files to render:', filteredFiles); // 使用过滤后的文件列表
 
-    function renderItem(item, index) {
+    function renderItem(item, index, isChild = false) {
         const li = document.createElement('li');
+        li.className = 'list-group-item';
+        
         const a = document.createElement('a');
         a.href = item.url || '#';
         a.className = 'file-name';
         
+        // 根据文件类型设置图标
+        let iconClass = '';
+        if (item.type === 'folder') {
+            iconClass = 'bi-folder2-open folder-icon';
+        } else {
+            // 根据文件扩展名设置不同的图标
+            const extension = item.name.split('.').pop().toLowerCase();
+            switch(extension) {
+                case 'txt':
+                    iconClass = 'bi-file-text';
+                    break;
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                case 'gif':
+                case 'bmp':
+                case 'svg':
+                    iconClass = 'bi-file-image';
+                    break;
+                case 'pdf':
+                    iconClass = 'bi-file-pdf';
+                    break;
+                case 'doc':
+                case 'docx':
+                    iconClass = 'bi-file-word';
+                    break;
+                case 'xls':
+                case 'xlsx':
+                    iconClass = 'bi-file-excel';
+                    break;
+                case 'ppt':
+                case 'pptx':
+                    iconClass = 'bi-file-ppt';
+                    break;
+                case 'zip':
+                case 'rar':
+                case '7z':
+                case 'tar':
+                case 'gz':
+                    iconClass = 'bi-file-zip';
+                    break;
+                case 'mp3':
+                case 'wav':
+                case 'ogg':
+                case 'flac':
+                    iconClass = 'bi-file-music';
+                    break;
+                case 'mp4':
+                case 'avi':
+                case 'mkv':
+                case 'mov':
+                case 'wmv':
+                    iconClass = 'bi-file-play';
+                    break;
+                default:
+                    iconClass = 'bi-file-earmark';
+            }
+        }
+        
         // 构建显示内容
-        let displayContent = item.name;
+        let displayContent = '';
+        
+        if (item.type === 'folder') {
+            // 文件夹保持原来的图标
+            displayContent = `<i class="bi ${iconClass}"></i> ${item.name}`;
+        } else {
+            // 文件使用tu.png图标
+            displayContent = `<img src="tu.png" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${item.name}`;
+        }
         
         // 如果有备注，添加备注
         if (item.note) {
@@ -129,11 +205,9 @@ function renderFileList() {
         // 只有当前文件夹是展开状态时才显示子文件
         if (item.type === 'folder' && expandedFolderIndex === index && item.children && Array.isArray(item.children)) {
             const ul = document.createElement('ul');
-            ul.style.display = 'block';
-            ul.style.paddingLeft = '0px';
-            ul.style.marginTop = '0px';
-            item.children.forEach(child => {
-                const childLi = renderItem(child);
+            ul.className = 'ms-3 mt-1';
+            item.children.forEach((child, childIndex) => {
+                const childLi = renderItem(child, childIndex, true);
                 ul.appendChild(childLi);
             });
             li.appendChild(ul);
@@ -141,18 +215,88 @@ function renderFileList() {
         return li;
     }
 
-    // 确保 files 是数组
-    if (Array.isArray(files)) {
-        if (files.length === 0) {
+    // 确保 filteredFiles 是数组
+    if (Array.isArray(filteredFiles)) {
+        if (filteredFiles.length === 0) {
             console.log('No files to display');
-            fileList.innerHTML = '<li>暂无文件</li>';
+            fileList.classList.add('d-none');
+            noFiles.classList.remove('d-none');
         } else {
-            files.forEach((item, index) => renderItem(item, index));
+            fileList.classList.remove('d-none');
+            noFiles.classList.add('d-none');
+            filteredFiles.forEach((item, index) => renderItem(item, index));
         }
     } else {
-        console.error('Files is not an array:', files);
+        console.error('filteredFiles is not an array:', filteredFiles);
     }
 }
+
+// 搜索文件功能
+function searchFiles() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (searchTerm === '') {
+        // 如果搜索框为空，显示所有文件
+        filteredFiles = [...files];
+    } else {
+        // 过滤文件
+        filteredFiles = [];
+        
+        function filterItems(items) {
+            items.forEach(item => {
+                // 检查当前项是否匹配搜索词
+                if (item.name.toLowerCase().includes(searchTerm)) {
+                    filteredFiles.push(item);
+                }
+                
+                // 如果是文件夹，递归检查其子项
+                if (item.type === 'folder' && item.children && item.children.length > 0) {
+                    const childrenMatch = filterItems(item.children);
+                    if (childrenMatch.length > 0) {
+                        // 如果子项有匹配，则包含该文件夹
+                        filteredFiles.push({
+                            ...item,
+                            children: childrenMatch
+                        });
+                    }
+                }
+            });
+            
+            return filteredFiles.filter(f => f.name.toLowerCase().includes(searchTerm) || 
+                                            (f.children && f.children.length > 0));
+        }
+        
+        filteredFiles = filterItems(files);
+    }
+    
+    // 重置展开状态
+    expandedFolderIndex = -1;
+    
+    // 重新渲染文件列表
+    renderFileList();
+}
+
+// 添加搜索事件监听器
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    
+    if (searchInput && searchBtn) {
+        searchBtn.addEventListener('click', searchFiles);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                searchFiles();
+            }
+        });
+        
+        // 实时搜索（可选）
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(searchFiles, 300); // 300ms延迟
+        });
+    }
+});
 
 // 从API获取留言列表
 async function fetchComments(page = 1) {
@@ -169,11 +313,11 @@ async function fetchComments(page = 1) {
             renderPagination();
         } else {
             console.warn('Failed to fetch comments from API');
-            document.getElementById('commentsList').innerHTML = '<p>暂无留言</p>';
+            document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">暂无留言</p>';
         }
     } catch (error) {
         console.error('Error fetching comments:', error);
-        document.getElementById('commentsList').innerHTML = '<p>加载留言失败</p>';
+        document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">加载留言失败</p>';
     }
 }
 
@@ -184,7 +328,7 @@ function renderComments() {
     
     // 显示所有留言（包括未审核的）
     if (comments.length === 0) {
-        commentsList.innerHTML = '<p>暂无留言</p>';
+        commentsList.innerHTML = '<p class="text-center py-4 text-muted">暂无留言</p>';
         return;
     }
     
@@ -235,10 +379,10 @@ function renderComments() {
 
 // 渲染留言统计信息
 function renderCommentsStats() {
-    const statsElement = document.getElementById('commentsStats');
+    const statsElement = document.getElementById('totalCommentsCount');
     if (!statsElement) return;
     
-    statsElement.innerHTML = `<p>共 <strong>${totalComments}</strong> 条留言</p>`;
+    statsElement.textContent = totalComments;
 }
 
 // 渲染分页控件
@@ -252,7 +396,7 @@ function renderPagination() {
         return;
     }
     
-    let paginationHTML = '<nav aria-label="留言分页"><ul class="pagination">';
+    let paginationHTML = '<ul class="pagination">';
     
     // 上一页按钮
     if (currentPage > 1) {
@@ -313,7 +457,7 @@ function renderPagination() {
         paginationHTML += `<li class="page-item disabled"><span class="page-link">下一页</span></li>`;
     }
     
-    paginationHTML += '</ul></nav>';
+    paginationHTML += '</ul>';
     
     pagination.innerHTML = paginationHTML;
     
@@ -407,12 +551,53 @@ function showCommentStatus(message, type) {
     
     setTimeout(() => {
         statusElement.className = 'comment-status';
-    }, 3000);
+    }, 5000);
+}
+
+// 返回顶部功能
+function setupBackToTop() {
+    const backToTopButton = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) { // 当页面滚动超过300px时显示按钮
+            backToTopButton.classList.remove('d-none');
+        } else {
+            backToTopButton.classList.add('d-none');
+        }
+    });
+    
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // 平滑滚动
+        });
+    });
+}
+
+// 平滑滚动到锚点
+function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, // 考虑固定导航栏的高度
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 }
 
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM content loaded');
+    
     // 获取文件列表
     fetchFiles();
     
@@ -426,6 +611,12 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('Comment form not found!');
     }
+    
+    // 设置返回顶部按钮
+    setupBackToTop();
+    
+    // 设置平滑滚动
+    setupSmoothScroll();
 });
 
 // 添加一个窗口加载事件作为备选方案
