@@ -1,0 +1,286 @@
+/* 在你的CSS文件中 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+}
+
+ul {
+    display: block;
+    padding-left: 0;
+    margin-top: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.file-list {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.file-list li {
+    color: black;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    margin: 8px 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    color: black;
+}
+
+.file-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-name {
+    display: inline-flex;
+    align-items: center;
+    color: black;
+    flex-wrap: wrap;
+}
+
+.file-note {
+    margin-left: 10px;
+    color: green;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.file-name::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+
+.file-name[href$='/']::before {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23FFD700" d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>');
+}
+
+/* 留言板样式 */
+.comments-section {
+    background-color: white;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.comments-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .comments-container {
+        flex-direction: row;
+    }
+    
+    .comments-list {
+        flex: 3;
+    }
+    
+    .comment-form {
+        flex: 2;
+    }
+}
+
+.comments-list {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+.comment-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.comment-name {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.comment-date {
+    font-style: italic;
+}
+
+.comment-content {
+    line-height: 1.5;
+}
+
+.loading-text {
+    color: #666;
+    text-align: center;
+    font-style: italic;
+}
+
+.comment-form {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.comment-status {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    display: none;
+}
+
+.comment-status.success {
+    display: block;
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.comment-status.error {
+    display: block;
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.download-btn::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.download-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ddd;
+}
+
+.file-list-expanded {
+    display: block;
+    padding-left: 0; /* 确保列表靠左边显示 */
+    margin-top: 0;
+    list-style-type: none; /* 移除默认的列表样式 */
+}
+
+.file-list-expanded li {
+    padding-left: 0; /* 确保子文件列表项靠左边显示 */
+    margin-left: 0; /* 确保子文件列表项靠左边显示 */
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如初的网盘</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>如初的网盘</h1>
+            <p>本站包含市面上百分之99的传奇补丁！例如装备射线补丁。BOSS射线。地砖。计时器。技能补丁等等。适用于任何服。包括盛大新百区！</p>
+            <nav>
+                <ul>
+                    <li><a href="#files">文件列表</a></li>
+                    <li><a href="#comments">留言板</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="files" class="file-list">
+                <h2>文件列表</h2>
+                <ul id="fileList"></ul>
+            </section>
+            
+            <section id="comments" class="comments-section">
+                <h2>留言板</h2>
+                <div class="comments-container">
+                    <div class="comments-list" id="commentsList">
+                        <p class="loading-text">加载留言中...</p>
+                    </div>
+                    
+                    <div class="comment-form">
+                        <h3>发表留言</h3>
+                        <form id="commentForm">
+                            <div class="form-group">
+                                <label for="commentName">您的名字</label>
+                                <input type="text" id="commentName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="commentContent">留言内容</label>
+                                <textarea id="commentContent" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">提交留言</button>
+                        </form>
+                        <div id="commentStatus" class="comment-status"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <p>© 2023 仿YS168网盘</p>
+            <div class="description">
+                欢迎来到我们的传奇补丁站！这里汇聚了市面上99%的传奇补丁资源，为您提供最全面的游戏体验。无论您需要装备射线补丁、BOSS射线、地砖、计时器还是技能补丁，我们都有您想要的。我们的补丁适用于任何服，包括盛大新百区，让您畅游游戏世界。我们的目标是提供最好的游戏体验，帮助您成为游戏的佼佼者。
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
