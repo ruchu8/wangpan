@@ -202,6 +202,12 @@ function renderFileList() {
         li.appendChild(a);
         fileList.appendChild(li);
 
+        // 检查是否有需要展开的文件夹（从后台添加文件后设置的）
+        if (window.expandedFolderIndex !== undefined && window.expandedFolderIndex === index) {
+            expandedFolderIndex = window.expandedFolderIndex;
+            delete window.expandedFolderIndex; // 清除标记
+        }
+
         // 只有当前文件夹是展开状态时才显示子文件
         if (item.type === 'folder' && expandedFolderIndex === index && item.children) {
             // 确保 children 是数组

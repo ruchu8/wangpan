@@ -158,15 +158,7 @@ async function loadFiles() {
             filesList = await response.json();
             renderFilesList();
         } else {
-            // 安全地解析错误响应
-            try {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-            } catch (parseError) {
-                // 如果无法解析JSON，显示状态文本
-                const errorText = await response.text();
-                throw new Error(`HTTP error! status: ${response.status}\n${errorText.substring(0, 200)}...`);
-            }
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
     } catch (error) {
         console.error('Error loading files:', error);
@@ -463,6 +455,11 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
             url: fileUrl
         };
         
+        // 确保children数组存在
+        if (!files[folderIndex].children) {
+            files[folderIndex].children = [];
+        }
+        
         files[folderIndex].children.push(newFile);
         
         // 更新文件夹
@@ -479,6 +476,9 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
         });
         
         if (updateResponse.ok) {
+            // 成功添加后，确保文件夹处于展开状态以便看到新添加的文件
+            // 这里我们设置一个全局变量来记住应该展开的文件夹索引
+            window.expandedFolderIndex = folderIndex;
             loadFiles();
         } else {
             // 安全地解析错误响应
