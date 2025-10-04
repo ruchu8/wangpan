@@ -151,3 +151,17 @@
 [2025-10-04T06:44:30.932Z] GET /api/comments called
 [2025-10-04T06:44:31.295Z] Returning 2 files
 [2025-10-04T06:44:31.352Z] Returning 1 comments to user
+[2025-10-04T06:54:34.806Z] GET /api/files called
+[2025-10-04T06:54:34.808Z] GET /api/comments called
+[2025-10-04T06:54:35.230Z] Returning 2 files
+[2025-10-04T06:54:35.711Z] Returning 1 comments to admin
+[2025-10-04T06:54:37.687Z] POST /api/auth called
+[2025-10-04T06:54:38.500Z] Admin login failed: invalid credentials
+[2025-10-04T06:54:41.839Z] POST /api/auth called
+[2025-10-04T06:54:42.890Z] Admin login failed: invalid credentials
+[2025-10-04T06:54:44.313Z] POST /api/auth called
+[2025-10-04T06:54:45.283Z] Admin login successful
+[2025-10-04T06:54:45.290Z] GET /api/files called
+[2025-10-04T06:54:45.292Z] GET /api/comments called
+[2025-10-04T06:54:45.675Z] Returning 2 files
+[2025-10-04T06:54:46.415Z] Returning 1 comments to admin
