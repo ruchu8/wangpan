@@ -908,7 +908,13 @@ async function importData(event) {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${authToken}`
                         },
+<<<<<<< Updated upstream
                         body: JSON.stringify(importedData.files)
+=======
+                        body: JSON.stringify({
+                            filesList: importedData.files || []
+                        })
+>>>>>>> Stashed changes
                     });
                     
                     if (!filesResponse.ok) {
