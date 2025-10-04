@@ -101,6 +101,7 @@ function renderFileList() {
         const a = document.createElement('a');
         a.href = item.url || '#';
         a.className = 'file-name';
+        a.target = '_blank';  // 确保链接在新窗口打开
         
         // 根据文件类型设置图标
         let iconClass = '';
@@ -373,11 +374,16 @@ function renderComments() {
             contactDisplay = `${contactType}: ${maskedContactInfo}`;
         }
         
-        // 对IP地址进行隐私保护处理（前台隐藏最后一位）
+        // 对IP地址进行隐私保护处理（隐藏最后一个数字段）
         let ipDisplay = comment.ip || '未知';
-        if (ipDisplay !== '未知' && ipDisplay.length > 3) {
-            // 隐藏IP地址的最后一位
-            ipDisplay = ipDisplay.substring(0, ipDisplay.length - 1) + '*';
+        if (ipDisplay !== '未知' && ipDisplay.includes('.')) {
+            // 将IP地址分割为各个部分
+            const ipParts = ipDisplay.split('.');
+            // 如果IP地址有多个部分，将最后一个部分替换为*
+            if (ipParts.length > 1) {
+                ipParts[ipParts.length - 1] = '*';
+                ipDisplay = ipParts.join('.');
+            }
         }
         
         // 构建留言内容

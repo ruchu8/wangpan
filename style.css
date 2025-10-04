@@ -15,7 +15,7 @@ body {
     font-family: var(--font-family);
     background-color: #f8f9fa;
     color: var(--dark-color);
-    line-height: 1.6;
+    /* line-height: 1.6; */
 }
 
 /* 英雄区域样式 */
@@ -23,7 +23,7 @@ body {
     background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
     position: relative;
     overflow: hidden;
-    padding: 3rem 0;
+    padding: 1.5rem 0;
 }
 
 .hero-section::before {
@@ -182,8 +182,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 0.55rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid #e9ecef;
 }
 
@@ -586,4 +586,28 @@ footer .description {
 .form-control:focus, .form-select:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* 广告位样式 */
+.ad-placeholder {
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #dee2e6;
+    transition: all 0.3s ease;
+    overflow: hidden;  /* 确保图片不会溢出容器 */
+}
+
+.ad-placeholder:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.ad-placeholder img {
+    width: 100%;  /* 图片宽度占满容器 */
+    height: 100%;  /* 图片高度占满容器 */
+    object-fit: cover;  /* 保持图片比例并覆盖整个容器 */
+    display: block;  /* 移除图片下方的间隙 */
 }
