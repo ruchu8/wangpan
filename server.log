@@ -214,3 +214,11 @@
 [2025-10-04T07:16:01.371Z] GET /api/comments called
 [2025-10-04T07:16:01.894Z] Returning 3 files
 [2025-10-04T07:16:01.996Z] Returning 1 comments to user
+[2025-10-04T07:19:48.996Z] GET /api/files called
+[2025-10-04T07:19:48.998Z] GET /api/comments called
+[2025-10-04T07:19:49.444Z] Returning 3 files
+[2025-10-04T07:19:49.495Z] Returning 1 comments to user
+[2025-10-04T07:19:53.709Z] POST /api/comments called
+[2025-10-04T07:19:54.900Z] Comment created with ID: 1759562393709
+[2025-10-04T07:19:57.958Z] GET /api/comments called
+[2025-10-04T07:19:58.334Z] Returning 2 comments to user
