@@ -1,5 +1,11 @@
 // Vercel Serverless Function for authentication
-const { kv } = require('@vercel/kv');
+const { Redis } = require('@upstash/redis');
+
+// 初始化 Redis 客户端
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 module.exports = async function handler(req, res) {
   // CORS headers
@@ -23,10 +29,10 @@ module.exports = async function handler(req, res) {
       }
 
       // Check if admin credentials exist, if not create default ones
-      const adminExists = await kv.exists('admin_credentials');
+      const adminExists = await redis.exists('admin_credentials');
       
       if (!adminExists) {
-        await kv.set('admin_credentials', {
+        await redis.set('admin_credentials', {
           username: 'admin',
           password: 'admin123' // In production, use hashed passwords
         });
@@ -34,11 +40,11 @@ module.exports = async function handler(req, res) {
         // Generate a random token for API authentication
         const token = Math.random().toString(36).substring(2, 15) + 
                      Math.random().toString(36).substring(2, 15);
-        await kv.set('admin_token', token);
+        await redis.set('admin_token', token);
       }
       
-      const adminCredentials = await kv.get('admin_credentials');
-      const adminToken = await kv.get('admin_token');
+      const adminCredentials = await redis.get('admin_credentials');
+      const adminToken = await redis.get('admin_token');
       
       if (username === adminCredentials.username && password === adminCredentials.password) {
         return res.status(200).json({ 

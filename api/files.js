@@ -1,5 +1,11 @@
 // Vercel Serverless Function for file management
-const { kv } = require('@vercel/kv');
+const { Redis } = require('@upstash/redis');
+
+// 初始化 Redis 客户端
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 module.exports = async function handler(req, res) {
   // CORS headers
@@ -21,7 +27,7 @@ module.exports = async function handler(req, res) {
   }
 
   const token = authHeader.split(' ')[1];
-  const adminToken = await kv.get('admin_token');
+  const adminToken = await redis.get('admin_token');
   
   if (!adminToken || token !== adminToken) {
     return res.status(401).json({ error: 'Invalid token' });
@@ -30,7 +36,7 @@ module.exports = async function handler(req, res) {
   // Handle different HTTP methods
   if (req.method === 'GET') {
     try {
-      const files = await kv.get('files') || [];
+      const files = await redis.get('files') || [];
       return res.status(200).json(files);
     } catch (error) {
       console.error('Failed to fetch files:', error);
@@ -44,10 +50,16 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid file data' });
       }
 
-      const files = await kv.get('files') || [];
+      let files = await redis.get('files') || [];
+      
+      // 确保 files 是数组
+      if (!Array.isArray(files)) {
+        files = [];
+      }
+      
       files.push(newFile);
       
-      await kv.set('files', files);
+      await redis.set('files', files);
       return res.status(201).json(newFile);
     } catch (error) {
       console.error('Failed to add file:', error);
@@ -61,14 +73,19 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid update data' });
       }
 
-      const files = await kv.get('files') || [];
+      let files = await redis.get('files') || [];
+      
+      // 确保 files 是数组
+      if (!Array.isArray(files)) {
+        files = [];
+      }
       
       if (index < 0 || index >= files.length) {
         return res.status(404).json({ error: 'File not found' });
       }
       
       files[index] = file;
-      await kv.set('files', files);
+      await redis.set('files', files);
       
       return res.status(200).json(file);
     } catch (error) {
@@ -83,14 +100,19 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid delete request' });
       }
 
-      const files = await kv.get('files') || [];
+      let files = await redis.get('files') || [];
+      
+      // 确保 files 是数组
+      if (!Array.isArray(files)) {
+        files = [];
+      }
       
       if (index < 0 || index >= files.length) {
         return res.status(404).json({ error: 'File not found' });
       }
       
       files.splice(index, 1);
-      await kv.set('files', files);
+      await redis.set('files', files);
       
       return res.status(200).json({ message: 'File deleted successfully' });
     } catch (error) {

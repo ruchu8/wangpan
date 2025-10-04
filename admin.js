@@ -494,3 +494,39 @@ async function deleteComment(id) {
         alert('删除留言失败');
     }
 }
+
+// 提交留言
+async function submitComment(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('commentName').value;
+    const content = document.getElementById('commentContent').value;
+    const statusElement = document.getElementById('commentStatus');
+    
+    if (!name || !content) {
+        showCommentStatus('请填写完整信息', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/comments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, content })
+        });
+        
+        if (response.ok) {
+            document.getElementById('commentForm').reset();
+            showCommentStatus('留言提交成功，等待审核后显示', 'success');
+            fetchComments(); // 刷新留言列表
+        } else {
+            const errorData = await response.json();
+            showCommentStatus(errorData.error || '提交失败', 'error');
+        }
+    } catch (error) {
+        console.error('Error submitting comment:', error);
+        showCommentStatus('提交失败，请稍后再试', 'error');
+    }
+}
