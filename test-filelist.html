@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件列表测试</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>文件列表测试</h1>
+        
+        <section class="file-list">
+            <h2>文件列表</h2>
+            <button id="loadBtn">加载文件列表</button>
+            <div id="debugInfo"></div>
+            <ul id="fileList"></ul>
+        </section>
+    </div>
+    
+    <script>
+        let files = [];
+        
+        // 加载文件
+        async function loadFiles() {
+            try {
+                const response = await fetch('/api/files');
+                const debugInfo = document.getElementById('debugInfo');
+                
+                debugInfo.innerHTML = `<p>状态码: ${response.status}</p>`;
+                
+                if (response.ok) {
+                    files = await response.json();
+                    debugInfo.innerHTML += `<p>文件数量: ${files.length}</p>`;
+                    debugInfo.innerHTML += `<pre>${JSON.stringify(files, null, 2)}</pre>`;
+                    renderFileList();
+                } else {
+                    debugInfo.innerHTML += `<p style="color: red;">加载失败: ${response.status}</p>`;
+                }
+            } catch (error) {
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            }
+        }
+        
+        // 渲染文件列表
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            console.log('Rendering files:', files);
+            
+            function renderItem(item) {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = item.url || '#';
+                a.className = 'file-name';
+                
+                // 将文件名和备注放在同一行显示
+                if (item.note) {
+                    a.innerHTML = `${item.name} <span class="file-note">${item.note}</span>`;
+                } else {
+                    a.textContent = item.name;
+                }
+                
+                if (item.type === 'folder') {
+                    a.href += '/';
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        item.expanded = !item.expanded;
+                        renderFileList();
+                    });
+                }
+                li.appendChild(a);
+                fileList.appendChild(li);
+                
+                if (item.type === 'folder' && item.expanded && item.children && Array.isArray(item.children)) {
+                    const ul = document.createElement('ul');
+                    ul.style.display = 'block';
+                    ul.style.paddingLeft = '0px';
+                    ul.style.marginTop = '0px';
+                    item.children.forEach(child => {
+                        const childLi = renderItem(child);
+                        ul.appendChild(childLi);
+                    });
+                    li.appendChild(ul);
+                }
+                return li;
+            }
+            
+            // 确保 files 是数组
+            if (Array.isArray(files)) {
+                files.forEach(item => renderItem(item));
+            } else {
+                console.error('Files is not an array:', files);
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loadBtn').addEventListener('click', loadFiles);
+        });
+    </script>
+</body>
+</html>

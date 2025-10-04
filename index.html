@@ -31,16 +31,31 @@
                         <p class="loading-text">加载留言中...</p>
                     </div>
                     
+                    <!-- 留言统计信息 -->
+                    <div class="comments-stats" id="commentsStats"></div>
+                    
+                    <!-- 分页控件 -->
+                    <div class="pagination-container" id="pagination"></div>
+                    
                     <div class="comment-form">
                         <h3>发表留言</h3>
                         <form id="commentForm">
                             <div class="form-group">
-                                <label for="commentName">您的名字</label>
-                                <input type="text" id="commentName" required>
+                                <label for="contactType">联系方式类型 <span class="required">*</span></label>
+                                <select id="contactType" class="form-control" required>
+                                    <option value="">请选择联系方式类型</option>
+                                    <option value="QQ">QQ</option>
+                                    <option value="微信">微信</option>
+                                    <option value="邮箱">邮箱</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="commentContent">留言内容</label>
-                                <textarea id="commentContent" rows="4" required></textarea>
+                                <label for="contactInfo">联系方式 <span class="required">*</span></label>
+                                <input type="text" id="contactInfo" class="form-control" placeholder="请输入您的QQ号/微信号/邮箱地址" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="commentContent">留言内容 <span class="required">*</span></label>
+                                <textarea id="commentContent" rows="4" class="form-control" required></textarea>
                             </div>
                             <button type="submit" class="submit-btn">提交留言</button>
                         </form>

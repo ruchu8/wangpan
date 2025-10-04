@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调试页面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>调试页面</h1>
+        
+        <section class="file-list">
+            <h2>文件列表调试</h2>
+            <button id="loadFilesBtn">加载文件</button>
+            <div id="fileDebugInfo"></div>
+            <ul id="fileList"></ul>
+        </section>
+        
+        <section class="comments-section">
+            <h2>留言列表调试</h2>
+            <button id="loadCommentsBtn">加载留言</button>
+            <div id="commentDebugInfo"></div>
+            <div class="comments-list" id="commentsList"></div>
+        </section>
+    </div>
+    
+    <script>
+        let files = [];
+        let comments = [];
+        
+        // 加载文件
+        async function loadFiles() {
+            try {
+                const response = await fetch('/api/files');
+                const debugInfo = document.getElementById('fileDebugInfo');
+                
+                debugInfo.innerHTML = `<p>状态码: ${response.status}</p>`;
+                
+                if (response.ok) {
+                    files = await response.json();
+                    debugInfo.innerHTML += `<p>文件数量: ${files.length}</p>`;
+                    debugInfo.innerHTML += `<pre>${JSON.stringify(files, null, 2)}</pre>`;
+                    renderFiles();
+                } else {
+                    debugInfo.innerHTML += `<p style="color: red;">加载失败: ${response.status}</p>`;
+                }
+            } catch (error) {
+                const debugInfo = document.getElementById('fileDebugInfo');
+                debugInfo.innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            }
+        }
+        
+        // 渲染文件
+        function renderFiles() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            files.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} (${item.type})`;
+                fileList.appendChild(li);
+            });
+        }
+        
+        // 加载留言
+        async function loadComments() {
+            try {
+                const response = await fetch('/api/comments');
+                const debugInfo = document.getElementById('commentDebugInfo');
+                
+                debugInfo.innerHTML = `<p>状态码: ${response.status}</p>`;
+                
+                if (response.ok) {
+                    comments = await response.json();
+                    debugInfo.innerHTML += `<p>留言数量: ${comments.length}</p>`;
+                    debugInfo.innerHTML += `<pre>${JSON.stringify(comments, null, 2)}</pre>`;
+                    renderComments();
+                } else {
+                    debugInfo.innerHTML += `<p style="color: red;">加载失败: ${response.status}</p>`;
+                }
+            } catch (error) {
+                const debugInfo = document.getElementById('commentDebugInfo');
+                debugInfo.innerHTML = `<p style="color: red;">错误: ${error.message}</p>`;
+            }
+        }
+        
+        // 渲染留言
+        function renderComments() {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = '';
+            
+            comments.forEach(comment => {
+                const div = document.createElement('div');
+                div.className = 'comment-item';
+                div.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-name">${comment.name}</span>
+                    </div>
+                    <div class="comment-content">${comment.content}</div>
+                `;
+                commentsList.appendChild(div);
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loadFilesBtn').addEventListener('click', loadFiles);
+            document.getElementById('loadCommentsBtn').addEventListener('click', loadComments);
+        });
+    </script>
+</body>
+</html>

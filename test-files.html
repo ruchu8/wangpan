@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件列表测试</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>文件列表测试</h1>
+        <section class="file-list">
+            <h2>文件列表</h2>
+            <ul id="fileList">
+                <li>测试项目1</li>
+                <li>测试项目2</li>
+            </ul>
+        </section>
+    </div>
+    <script>
+        // 测试数据
+        const testFiles = [
+            {
+                name: "测试文件夹",
+                type: "folder",
+                url: "#",
+                note: "这是一个测试备注",
+                children: [
+                    { name: "子文件1.txt", type: "file", url: "#" },
+                    { name: "子文件2.jpg", type: "file", url: "#" }
+                ],
+                expanded: false
+            },
+            {
+                name: "测试文件.pdf",
+                type: "file",
+                url: "#",
+                note: "这是另一个测试备注"
+            }
+        ];
+        
+        // 渲染文件列表
+        function renderTestFiles() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            testFiles.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.name;
+                fileList.appendChild(li);
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTestFiles();
+        });
+    </script>
+</body>
+</html>

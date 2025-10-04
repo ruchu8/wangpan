@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简化版首页</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>简化版首页</h1>
+        
+        <section id="files" class="file-list">
+            <h2>文件列表</h2>
+            <button id="loadFilesBtn">加载文件</button>
+            <ul id="fileList"></ul>
+        </section>
+    </div>
+    
+    <script>
+        let files = [];
+        
+        // 加载文件
+        async function loadFiles() {
+            try {
+                const response = await fetch('/api/files');
+                if (response.ok) {
+                    files = await response.json();
+                    renderFileList();
+                } else {
+                    document.getElementById('fileList').innerHTML = '<li>加载失败</li>';
+                }
+            } catch (error) {
+                console.error('Error fetching files:', error);
+                document.getElementById('fileList').innerHTML = '<li>加载出错</li>';
+            }
+        }
+        
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            function renderItem(item) {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = item.url || '#';
+                a.className = 'file-name';
+                
+                // 将文件名和备注放在同一行显示
+                if (item.note) {
+                    a.innerHTML = `${item.name} <span class="file-note">${item.note}</span>`;
+                } else {
+                    a.textContent = item.name;
+                }
+                
+                if (item.type === 'folder') {
+                    a.href += '/';
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        item.expanded = !item.expanded;
+                        renderFileList();
+                    });
+                }
+                li.appendChild(a);
+                fileList.appendChild(li);
+                
+                if (item.type === 'folder' && item.expanded && item.children && Array.isArray(item.children)) {
+                    const ul = document.createElement('ul');
+                    ul.style.display = 'block';
+                    ul.style.paddingLeft = '0px';
+                    ul.style.marginTop = '0px';
+                    item.children.forEach(child => {
+                        const childLi = renderItem(child);
+                        ul.appendChild(childLi);
+                    });
+                    li.appendChild(ul);
+                }
+                return li;
+            }
+            
+            // 确保 files 是数组
+            if (Array.isArray(files)) {
+                if (files.length === 0) {
+                    fileList.innerHTML = '<li>暂无文件</li>';
+                } else {
+                    files.forEach(item => renderItem(item));
+                }
+            } else {
+                fileList.innerHTML = '<li>数据格式错误</li>';
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loadFilesBtn').addEventListener('click', loadFiles);
+        });
+    </script>
+</body>
+</html>

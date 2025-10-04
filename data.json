@@ -1,0 +1,231 @@
+{
+  "comments": [
+    {
+      "id": "1759548551688",
+      "name": "1",
+      "content": "1",
+      "date": "2025-10-04T03:29:11.688Z",
+      "approved": false
+    },
+    {
+      "id": "1759548932103",
+      "name": "名字",
+      "content": "内容",
+      "date": "2025-10-04T03:35:32.103Z",
+      "approved": false
+    },
+    {
+      "id": "1759549310745",
+      "name": "QQ:123456",
+      "content": "deaeqe",
+      "date": "2025-10-04T03:41:50.745Z",
+      "approved": true
+    },
+    {
+      "id": "1759549395478",
+      "name": "微信:123456789",
+      "content": "qqq",
+      "date": "2025-10-04T03:43:15.478Z",
+      "approved": true,
+      "reply": "是的"
+    },
+    {
+      "id": "1759550462117",
+      "name": "QQ:312222",
+      "content": "3213312222",
+      "date": "2025-10-04T04:01:02.117Z",
+      "approved": true
+    },
+    {
+      "id": "1759550635232",
+      "name": "QQ:哈哈",
+      "content": "哈哈",
+      "date": "2025-10-04T04:03:55.232Z",
+      "approved": true
+    },
+    {
+      "id": "1759550665946",
+      "name": "QQ:QQW",
+      "content": "内容哦",
+      "date": "2025-10-04T04:04:25.946Z",
+      "approved": true
+    },
+    {
+      "id": "1759550807832",
+      "name": "QQ:111",
+      "content": "额哇",
+      "date": "2025-10-04T04:06:47.832Z",
+      "approved": false
+    },
+    {
+      "id": "1759550959071",
+      "name": "QQ:cscs",
+      "content": "测试隐藏内容",
+      "date": "2025-10-04T04:09:19.071Z",
+      "approved": false
+    },
+    {
+      "id": "1759551345589",
+      "name": "QQ:1",
+      "content": "3",
+      "date": "2025-10-04T04:15:45.589Z",
+      "approved": false
+    },
+    {
+      "id": "1759551354205",
+      "name": "QQ:33",
+      "content": "33",
+      "date": "2025-10-04T04:15:54.205Z",
+      "approved": false
+    },
+    {
+      "id": "1759551368701",
+      "name": "QQ:12",
+      "content": "12",
+      "date": "2025-10-04T04:16:08.701Z",
+      "approved": false
+    },
+    {
+      "id": "1759551457892",
+      "name": "QQ:123456789",
+      "content": "qq隐藏测试",
+      "date": "2025-10-04T04:17:37.892Z",
+      "approved": false
+    }
+  ],
+  "files": [
+    {
+      "name": "BOSS计时器下载专区",
+      "type": "folder",
+      "url": "",
+      "note": "BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】",
+      "children": [
+        {
+          "name": "7.5---BOSS计时器--修复已知BUG【修复无法打开问题】_20251004",
+          "type": "file",
+          "url": "https://ruchu888.lanzn.com/iYHVC343yeuj",
+          "createdAt": "2025-10-04 11:45"
+        },
+        {
+          "name": "网页版在线版BOSS计时器",
+          "type": "file",
+          "url": "网页版在线版BOSS计时器",
+          "createdAt": "2025-10-04 11:45"
+        },
+        {
+          "name": "所有地图刷怪时间【适用于170-176】",
+          "type": "file",
+          "url": "所有地图刷怪时间【适用于170-176】",
+          "createdAt": "2025-10-04 11:45"
+        }
+      ],
+      "expanded": false
+    },
+    {
+      "name": "辅助类相关工具下载（易语言编写部分杀毒会报毒）",
+      "type": "folder",
+      "url": "",
+      "note": "部分杀毒会误报毒。介意勿下载",
+      "children": [
+        {
+          "name": "战士双烈火计时器V1.4【带声音提示】【还可以当称号使用】【不会被检测】",
+          "type": "file",
+          "url": "https://ruchu888.lanzn.com/iLFzt343yeti",
+          "createdAt": "2025-10-04 11:46"
+        },
+        {
+          "name": "施法框+称号V3.6【刺杀。激光。开天位】【称号无需绑定】【施法框大小调节滑块】",
+          "type": "file",
+          "url": "施法框+称号V3.6【刺杀。激光。开天位】【称号无需绑定】【施法框大小调节滑块】",
+          "createdAt": "2025-10-04 11:46"
+        }
+      ],
+      "expanded": false
+    },
+    {
+      "name": "1",
+      "type": "folder",
+      "url": "",
+      "note": "1",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "2",
+      "type": "folder",
+      "url": "",
+      "note": "2",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "3",
+      "type": "folder",
+      "url": "",
+      "note": "3",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "44",
+      "type": "folder",
+      "url": "",
+      "note": "44",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "a5",
+      "type": "folder",
+      "url": "",
+      "note": "5",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "6",
+      "type": "folder",
+      "url": "",
+      "note": "6",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "7",
+      "type": "folder",
+      "url": "",
+      "note": "7",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "88",
+      "type": "folder",
+      "url": "",
+      "note": "88",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "99",
+      "type": "folder",
+      "url": "",
+      "note": "99",
+      "children": [],
+      "expanded": false
+    },
+    {
+      "name": "11",
+      "type": "folder",
+      "url": "",
+      "note": "",
+      "children": [],
+      "expanded": false
+    }
+  ],
+  "admin_credentials": {
+    "username": "admin",
+    "password": "admin123"
+  },
+  "admin_token": "test-token"
+}

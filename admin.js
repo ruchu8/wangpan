@@ -2,8 +2,11 @@
 let authToken = localStorage.getItem('adminToken');
 let filesList = [];
 let commentsList = [];
+let currentCommentsPage = 1;
+let totalCommentsPages = 1;
+let totalCommentsCount = 0;
 
-// DOM 加载完成后执行
+// 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
     // 检查是否已登录
     checkAuth();
@@ -14,19 +17,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 退出登录按钮事件
     document.getElementById('logoutBtn').addEventListener('click', logout);
 
-    // 添加文件按钮事件
+    // 添加文件夹按钮事件
     document.getElementById('addFileBtn').addEventListener('click', () => {
-        document.getElementById('fileModalTitle').textContent = '添加文件/文件夹';
+        document.getElementById('fileModalTitle').textContent = '添加文件夹';
         document.getElementById('fileForm').reset();
         document.getElementById('fileIndex').value = '';
-        document.getElementById('childrenContainer').style.display = 'none';
-        document.getElementById('childrenList').innerHTML = '';
+        document.getElementById('fileType').value = 'folder';
+        document.getElementById('fileType').disabled = true; // 禁用类型选择
+        document.getElementById('fileUrl').closest('.form-group').style.display = 'none'; // 隐藏URL字段
+        document.getElementById('childrenContainer').style.display = 'none'; // 隐藏子文件容器
         
         const fileModal = new bootstrap.Modal(document.getElementById('fileModal'));
         fileModal.show();
     });
 
-    // 文件类型变更事件
+    // 文件类型变更事件（虽然禁用了，但保留以防需要）
     document.getElementById('fileType').addEventListener('change', function() {
         const childrenContainer = document.getElementById('childrenContainer');
         if (this.value === 'folder') {
@@ -163,6 +168,12 @@ function renderFilesList() {
     filesList.forEach((file, index) => {
         const tr = document.createElement('tr');
         
+        // 为文件夹添加"添加文件"按钮
+        let addFileButton = '';
+        if (file.type === 'folder') {
+            addFileButton = `<button class="btn btn-sm btn-info btn-action add-file" data-index="${index}">添加文件</button>`;
+        }
+        
         tr.innerHTML = `
             <td>${file.name}</td>
             <td>${file.type === 'folder' ? '文件夹' : '文件'}</td>
@@ -170,6 +181,7 @@ function renderFilesList() {
             <td>${file.note || '-'}</td>
             <td>
                 <button class="btn btn-sm btn-primary btn-action edit-file" data-index="${index}">编辑</button>
+                ${addFileButton}
                 <button class="btn btn-sm btn-danger btn-action delete-file" data-index="${index}">删除</button>
             </td>
         `;
@@ -177,10 +189,17 @@ function renderFilesList() {
         tbody.appendChild(tr);
     });
     
-    // 添加编辑和删除事件
+    // 添加编辑、添加文件和删除事件
     document.querySelectorAll('.edit-file').forEach(btn => {
         btn.addEventListener('click', function() {
             editFile(parseInt(this.getAttribute('data-index')));
+        });
+    });
+    
+    document.querySelectorAll('.add-file').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const folderIndex = parseInt(this.getAttribute('data-index'));
+            showAddFileModal(folderIndex);
         });
     });
     
@@ -188,6 +207,68 @@ function renderFilesList() {
         btn.addEventListener('click', function() {
             deleteFile(parseInt(this.getAttribute('data-index')));
         });
+    });
+}
+
+// 显示添加文件到文件夹的模态框
+function showAddFileModal(folderIndex) {
+    // 创建模态框HTML
+    const modalHtml = `
+        <div class="modal fade" id="addFileModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">添加文件到文件夹</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addFileForm">
+                            <input type="hidden" id="folderIndex" value="${folderIndex}">
+                            <div class="form-group">
+                                <label for="addFileName">文件名称</label>
+                                <input type="text" class="form-control" id="addFileName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addFileUrl">文件URL</label>
+                                <input type="text" class="form-control" id="addFileUrl" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveAddFileBtn">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // 添加模态框到页面
+    if (document.getElementById('addFileModal')) {
+        document.getElementById('addFileModal').remove();
+    }
+    
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+    
+    // 显示模态框
+    const addFileModal = new bootstrap.Modal(document.getElementById('addFileModal'));
+    addFileModal.show();
+    
+    // 保存文件事件
+    document.getElementById('saveAddFileBtn').addEventListener('click', function() {
+        const fileName = document.getElementById('addFileName').value;
+        const fileUrl = document.getElementById('addFileUrl').value;
+        const folderIndex = parseInt(document.getElementById('folderIndex').value);
+        
+        if (!fileName || !fileUrl) {
+            alert('请填写完整的文件信息');
+            return;
+        }
+        
+        addFileToFolder(folderIndex, fileName, fileUrl);
+        addFileModal.hide();
     });
 }
 
@@ -254,54 +335,30 @@ function addChildField(child = null, childIndex = null) {
 async function saveFile() {
     const index = document.getElementById('fileIndex').value;
     const name = document.getElementById('fileName').value;
-    const type = document.getElementById('fileType').value;
-    const url = document.getElementById('fileUrl').value;
     const note = document.getElementById('fileNote').value;
     
     if (!name) {
-        alert('请输入名称');
+        alert('请输入文件夹名称');
         return;
     }
     
-    // 添加时间戳到文件名
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-    const fileNameWithTimestamp = `${name}_${timestamp}`;
+    // 强制设置为文件夹类型
+    const type = 'folder';
     
     let file = {
-        name: fileNameWithTimestamp,
+        name: name,
         type,
-        url,
-        note
+        url: '', // 文件夹不需要URL
+        note,
+        children: [],
+        expanded: false
     };
-    
-    if (type === 'folder') {
-        file.children = [];
-        file.expanded = false;
-        
-        document.querySelectorAll('.child-item').forEach(childItem => {
-            const childName = childItem.querySelector('.child-name').value;
-            const childUrl = childItem.querySelector('.child-url').value;
-            
-            if (childName) {
-                // 为子文件也添加时间戳
-                const childTimestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-                const childNameWithTimestamp = `${childName}_${childTimestamp}`;
-                
-                file.children.push({
-                    name: childNameWithTimestamp,
-                    type: 'file',
-                    url: childUrl
-                });
-            }
-        });
-    }
     
     try {
         let response;
         
         if (index === '') {
-            // 添加新文件
+            // 添加新文件夹
             response = await fetch('/api/files', {
                 method: 'POST',
                 headers: {
@@ -311,7 +368,7 @@ async function saveFile() {
                 body: JSON.stringify(file)
             });
         } else {
-            // 更新现有文件
+            // 更新现有文件夹
             response = await fetch('/api/files', {
                 method: 'PUT',
                 headers: {
@@ -334,12 +391,68 @@ async function saveFile() {
             bootstrap.Modal.getInstance(document.getElementById('fileModal')).hide();
             loadFiles();
         } else {
-            const error = await response.json();
-            alert(error.error || '保存失败');
+            const errorData = await response.json();
+            alert(errorData.error || '保存失败');
         }
     } catch (error) {
         console.error('Error saving file:', error);
-        alert('保存文件失败');
+        alert('保存文件失败: ' + error.message);
+    }
+}
+
+// 添加一个新函数来处理向现有文件夹添加文件
+async function addFileToFolder(folderIndex, fileName, fileUrl) {
+    // 获取现有文件列表
+    const response = await fetch('/api/files', {
+        headers: {
+            'Authorization': `Bearer ${authToken}`
+        }
+    });
+    
+    if (!response.ok) {
+        alert('无法获取文件列表');
+        return;
+    }
+    
+    const files = await response.json();
+    
+    if (folderIndex < 0 || folderIndex >= files.length || files[folderIndex].type !== 'folder') {
+        alert('无效的文件夹索引');
+        return;
+    }
+    
+    // 添加时间戳到文件名
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    const fileNameWithTimestamp = `${fileName}_${timestamp}`;
+    
+    // 添加文件到文件夹
+    const newFile = {
+        name: fileNameWithTimestamp,
+        type: 'file',
+        url: fileUrl
+    };
+    
+    files[folderIndex].children.push(newFile);
+    
+    // 更新文件夹
+    const updateResponse = await fetch('/api/files', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+            index: folderIndex,
+            file: files[folderIndex]
+        })
+    });
+    
+    if (updateResponse.ok) {
+        loadFiles();
+    } else {
+        const errorData = await updateResponse.json();
+        alert(errorData.error || '添加文件失败');
     }
 }
 
@@ -377,9 +490,9 @@ async function deleteFile(index) {
 }
 
 // 加载留言列表
-async function loadComments() {
+async function loadComments(page = 1) {
     try {
-        const response = await fetch('/api/comments', {
+        const response = await fetch(`/api/comments?page=${page}&limit=10`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             }
@@ -391,8 +504,14 @@ async function loadComments() {
         }
         
         if (response.ok) {
-            commentsList = await response.json();
+            const data = await response.json();
+            commentsList = data.comments;
+            currentCommentsPage = data.currentPage;
+            totalCommentsPages = data.totalPages;
+            totalCommentsCount = data.totalComments;
             renderCommentsList();
+            renderAdminCommentsStats();
+            renderCommentsPagination();
         } else {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -411,6 +530,12 @@ function renderCommentsList() {
         const tr = document.createElement('tr');
         const date = new Date(comment.date).toLocaleString();
         
+        // 显示完整的联系方式给管理员（不进行隐私保护处理）
+        let contactDisplay = comment.name;
+        
+        // 后台显示原始留言内容，不显示提示信息
+        let contentDisplay = comment.content;
+        
         // 显示管理员回复
         let replySection = '';
         if (comment.reply) {
@@ -422,9 +547,9 @@ function renderCommentsList() {
         }
         
         tr.innerHTML = `
-            <td>${comment.name}</td>
+            <td>${contactDisplay}</td>
             <td>
-                ${comment.content}
+                ${contentDisplay}
                 ${replySection}
             </td>
             <td>${date}</td>
@@ -459,6 +584,100 @@ function renderCommentsList() {
     document.querySelectorAll('.reply-comment').forEach(btn => {
         btn.addEventListener('click', function() {
             replyComment(this.getAttribute('data-id'));
+        });
+    });
+}
+
+// 渲染后台留言统计信息
+function renderAdminCommentsStats() {
+    const statsElement = document.getElementById('adminCommentsStats');
+    if (!statsElement) return;
+    
+    statsElement.innerHTML = `<small class="text-muted">共 <strong>${totalCommentsCount}</strong> 条留言</small>`;
+}
+
+// 渲染留言分页控件
+function renderCommentsPagination() {
+    const paginationContainer = document.querySelector('#commentsTab .pagination');
+    if (!paginationContainer) return;
+    
+    // 如果只有一页或没有留言，不显示分页控件
+    if (totalCommentsPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '';
+    
+    // 上一页按钮
+    if (currentCommentsPage > 1) {
+        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentCommentsPage - 1}">上一页</a></li>`;
+    } else {
+        paginationHTML += `<li class="page-item disabled"><span class="page-link">上一页</span></li>`;
+    }
+    
+    // 页码按钮（最多显示5个页码）
+    let startPage, endPage;
+    if (totalCommentsPages <= 5) {
+        // 如果总页数小于等于5，显示所有页码
+        startPage = 1;
+        endPage = totalCommentsPages;
+    } else {
+        // 如果总页数大于5，显示当前页和前后各2页
+        if (currentCommentsPage <= 3) {
+            startPage = 1;
+            endPage = 5;
+        } else if (currentCommentsPage + 2 >= totalCommentsPages) {
+            startPage = totalCommentsPages - 4;
+            endPage = totalCommentsPages;
+        } else {
+            startPage = currentCommentsPage - 2;
+            endPage = currentCommentsPage + 2;
+        }
+    }
+    
+    // 显示第一页和省略号
+    if (startPage > 1) {
+        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>`;
+        if (startPage > 2) {
+            paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+    }
+    
+    // 显示页码
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentCommentsPage) {
+            paginationHTML += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+        } else {
+            paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+        }
+    }
+    
+    // 显示最后一页和省略号
+    if (endPage < totalCommentsPages) {
+        if (endPage < totalCommentsPages - 1) {
+            paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${totalCommentsPages}">${totalCommentsPages}</a></li>`;
+    }
+    
+    // 下一页按钮
+    if (currentCommentsPage < totalCommentsPages) {
+        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentCommentsPage + 1}">下一页</a></li>`;
+    } else {
+        paginationHTML += `<li class="page-item disabled"><span class="page-link">下一页</span></li>`;
+    }
+    
+    paginationContainer.innerHTML = paginationHTML;
+    
+    // 添加分页点击事件
+    paginationContainer.querySelectorAll('.page-link:not(.disabled)').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = parseInt(this.getAttribute('data-page'));
+            if (page && page !== currentCommentsPage) {
+                loadComments(page);
+            }
         });
     });
 }
