@@ -2,7 +2,15 @@ require('dotenv').config(); // 加载环境变量
 const { Client } = require('@neondatabase/serverless');
 
 // 数据库配置
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_uQK81FdVvOjX@ep-bold-mode-a1z19z94-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+// 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
+const DATABASE_URL = process.env.POSTGRES_URL || process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_uQK81FdVvOjX@ep-bold-mode-a1z19z94-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+
+if (!DATABASE_URL) {
+  console.error('Database URL not found in environment variables');
+  throw new Error('Database URL not found in environment variables');
+}
+
+console.log('Using database URL:', DATABASE_URL.substring(0, 50) + '...'); // 只显示前50个字符以保护隐私
 
 // 创建数据库表的函数
 async function initializeDatabase() {

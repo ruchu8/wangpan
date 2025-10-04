@@ -2,7 +2,13 @@
 const { neon } = require('@neondatabase/serverless');
 
 // 初始化 Neon PostgreSQL 客户端
-const sql = neon(process.env.DATABASE_URL);
+// 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
+const databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+if (!databaseUrl) {
+  console.error('Database URL not found in environment variables');
+  throw new Error('Database URL not found in environment variables');
+}
+const sql = neon(databaseUrl);
 
 // 创建数据库表（如果不存在）
 async function initializeDatabase() {

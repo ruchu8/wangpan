@@ -35,7 +35,7 @@
 - **图标库**: Bootstrap Icons
 - **动画库**: Animate.css
 - **后端**: Node.js, Express
-- **数据存储**: Redis (通过 Upstash)
+- **数据存储**: PostgreSQL (通过 Neon DB)
 
 ## 安装与运行
 
@@ -56,6 +56,18 @@ npm run dev
 ```
 
 4. 访问 http://localhost:3000 查看网站
+
+## 部署到 Vercel
+
+### 环境变量配置
+
+在 Vercel 控制台的 Environment Variables 设置中添加以下环境变量：
+
+| 名称 | 值 |
+|------|-----|
+| POSTGRES_URL | `postgresql://neondb_owner:npg_uQK81FdVvOjX@ep-bold-mode-a1z19z94-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require` |
+
+详细部署说明请参考 [VERCEL_DEPLOYMENT_INSTRUCTIONS.md](VERCEL_DEPLOYMENT_INSTRUCTIONS.md)
 
 ## 项目结构
 
