@@ -24,7 +24,13 @@ module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
     // GET 请求不需要身份验证，公开访问文件列表
     try {
-      const files = await redis.get('files') || [];
+      let files = await redis.get('files') || [];
+      
+      // 确保 files 是数组
+      if (!Array.isArray(files)) {
+        files = [];
+      }
+      
       return res.status(200).json(files);
     } catch (error) {
       console.error('Failed to fetch files:', error);

@@ -23,8 +23,29 @@ module.exports = async function handler(req, res) {
   // Handle different HTTP methods
   if (req.method === 'GET') {
     try {
-      const comments = await redis.get('comments') || [];
-      return res.status(200).json(comments);
+      let comments = await redis.get('comments') || [];
+      
+      // 确保 comments 是数组
+      if (!Array.isArray(comments)) {
+        comments = [];
+      }
+      
+      // 获取分页参数
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      
+      // 分割评论数组
+      const paginatedComments = comments.slice(startIndex, endIndex);
+      
+      // 返回分页结果
+      return res.status(200).json({
+        comments: paginatedComments,
+        currentPage: page,
+        totalPages: Math.ceil(comments.length / limit),
+        totalComments: comments.length
+      });
     } catch (error) {
       console.error('Failed to fetch comments:', error);
       return res.status(500).json({ error: 'Failed to fetch comments' });

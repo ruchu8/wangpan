@@ -228,6 +228,10 @@ function renderFileList() {
         }
     } else {
         console.error('filteredFiles is not an array:', filteredFiles);
+        // 如果不是数组，设置为空数组
+        filteredFiles = [];
+        fileList.classList.add('d-none');
+        noFiles.classList.remove('d-none');
     }
 }
 
