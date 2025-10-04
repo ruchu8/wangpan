@@ -10,6 +10,7 @@ async function fetchFiles() {
             files = await response.json();
         } else {
             // 如果API不可用，使用默认数据
+            console.warn('Failed to fetch files from API, using default data');
             files = [
                 {
                     name: '文件夹1',
@@ -118,6 +119,7 @@ async function fetchComments() {
             comments = await response.json();
             renderComments();
         } else {
+            console.warn('Failed to fetch comments from API');
             document.getElementById('commentsList').innerHTML = '<p>暂无留言</p>';
         }
     } catch (error) {

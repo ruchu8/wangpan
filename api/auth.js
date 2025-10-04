@@ -1,7 +1,7 @@
 // Vercel Serverless Function for authentication
-import { kv } from '@vercel/kv';
+const { kv } = require('@vercel/kv');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -53,9 +53,10 @@ export default async function handler(req, res) {
         });
       }
     } catch (error) {
+      console.error('Authentication error:', error);
       return res.status(500).json({ error: 'Authentication failed' });
     }
   } else {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-}
+};

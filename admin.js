@@ -98,7 +98,7 @@ async function login() {
         
         const data = await response.json();
         
-        if (data.success) {
+        if (response.ok && data.success) {
             authToken = data.token;
             localStorage.setItem('adminToken', authToken);
             checkAuth();
@@ -143,11 +143,15 @@ async function loadFiles() {
             return;
         }
         
-        filesList = await response.json();
-        renderFilesList();
+        if (response.ok) {
+            filesList = await response.json();
+            renderFilesList();
+        } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
     } catch (error) {
         console.error('Error loading files:', error);
-        alert('加载文件列表失败');
+        alert('加载文件列表失败: ' + error.message);
     }
 }
 
@@ -377,11 +381,15 @@ async function loadComments() {
             return;
         }
         
-        commentsList = await response.json();
-        renderCommentsList();
+        if (response.ok) {
+            commentsList = await response.json();
+            renderCommentsList();
+        } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
     } catch (error) {
         console.error('Error loading comments:', error);
-        alert('加载留言列表失败');
+        alert('加载留言列表失败: ' + error.message);
     }
 }
 

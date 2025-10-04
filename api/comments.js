@@ -1,7 +1,7 @@
 // Vercel Serverless Function for comment management
-import { kv } from '@vercel/kv';
+const { kv } = require('@vercel/kv');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,6 +20,7 @@ export default async function handler(req, res) {
       const comments = await kv.get('comments') || [];
       return res.status(200).json(comments);
     } catch (error) {
+      console.error('Failed to fetch comments:', error);
       return res.status(500).json({ error: 'Failed to fetch comments' });
     }
   } else if (req.method === 'POST') {
@@ -44,6 +45,7 @@ export default async function handler(req, res) {
       await kv.set('comments', comments);
       return res.status(201).json(newComment);
     } catch (error) {
+      console.error('Failed to add comment:', error);
       return res.status(500).json({ error: 'Failed to add comment' });
     }
   } else if (req.method === 'PUT') {
@@ -79,6 +81,7 @@ export default async function handler(req, res) {
       
       return res.status(200).json(comments[commentIndex]);
     } catch (error) {
+      console.error('Failed to update comment:', error);
       return res.status(500).json({ error: 'Failed to update comment' });
     }
   } else if (req.method === 'DELETE') {
@@ -113,9 +116,10 @@ export default async function handler(req, res) {
       
       return res.status(200).json({ message: 'Comment deleted successfully' });
     } catch (error) {
+      console.error('Failed to delete comment:', error);
       return res.status(500).json({ error: 'Failed to delete comment' });
     }
   } else {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-}
+};

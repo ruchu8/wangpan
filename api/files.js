@@ -1,7 +1,7 @@
 // Vercel Serverless Function for file management
-import { kv } from '@vercel/kv';
+const { kv } = require('@vercel/kv');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,6 +33,7 @@ export default async function handler(req, res) {
       const files = await kv.get('files') || [];
       return res.status(200).json(files);
     } catch (error) {
+      console.error('Failed to fetch files:', error);
       return res.status(500).json({ error: 'Failed to fetch files' });
     }
   } else if (req.method === 'POST') {
@@ -49,6 +50,7 @@ export default async function handler(req, res) {
       await kv.set('files', files);
       return res.status(201).json(newFile);
     } catch (error) {
+      console.error('Failed to add file:', error);
       return res.status(500).json({ error: 'Failed to add file' });
     }
   } else if (req.method === 'PUT') {
@@ -70,6 +72,7 @@ export default async function handler(req, res) {
       
       return res.status(200).json(file);
     } catch (error) {
+      console.error('Failed to update file:', error);
       return res.status(500).json({ error: 'Failed to update file' });
     }
   } else if (req.method === 'DELETE') {
@@ -91,9 +94,10 @@ export default async function handler(req, res) {
       
       return res.status(200).json({ message: 'File deleted successfully' });
     } catch (error) {
+      console.error('Failed to delete file:', error);
       return res.status(500).json({ error: 'Failed to delete file' });
     }
   } else {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-}
+};
