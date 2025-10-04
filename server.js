@@ -1,8 +1,17 @@
+require('dotenv').config(); // 加载环境变量
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-const storage = require('./storage'); // 引入文件存储模块
+const storage = require('./postgres-storage'); // 引入 PostgreSQL 存储模块
+const fs = require('fs');
+
+// 创建日志函数
+function logToFile(message) {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] ${message}\n`;
+  fs.appendFileSync('server.log', logMessage);
+}
 
 // 创建 Express 应用
 const app = express();
@@ -14,8 +23,9 @@ app.use(bodyParser.json());
 app.use(express.static('.'));
 
 // API 路由
-app.get('/api/comments', (req, res) => {
-  let comments = storage.get('comments') || [];
+app.get('/api/comments', async (req, res) => {
+  logToFile('GET /api/comments called');
+  let comments = await storage.get('comments') || [];
   
   // 获取分页参数
   const page = parseInt(req.query.page) || 1;
@@ -27,11 +37,12 @@ app.get('/api/comments', (req, res) => {
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];
-    const adminToken = storage.get('admin_token');
+    const adminToken = await storage.get('admin_token');
     
     if (adminToken && token === adminToken) {
       // 管理员访问，返回所有留言，包括未审核的，并显示完整联系方式和内容
       const paginatedComments = comments.slice(startIndex, endIndex);
+      logToFile(`Returning ${paginatedComments.length} comments to admin`);
       return res.json({
         comments: paginatedComments,
         totalPages: Math.ceil(comments.length / limit),
@@ -84,6 +95,7 @@ app.get('/api/comments', (req, res) => {
   // 分页处理
   const paginatedComments = processedComments.slice(startIndex, endIndex);
   
+  logToFile(`Returning ${paginatedComments.length} comments to user`);
   res.json({
     comments: paginatedComments,
     totalPages: Math.ceil(processedComments.length / limit),
@@ -92,10 +104,12 @@ app.get('/api/comments', (req, res) => {
   });
 });
 
-app.post('/api/comments', (req, res) => {
+app.post('/api/comments', async (req, res) => {
+  logToFile('POST /api/comments called');
   const { name, content } = req.body;
   
   if (!name || !content) {
+    logToFile('Invalid request: name or content missing');
     return res.status(400).json({ error: 'Name and content are required' });
   }
 
@@ -107,82 +121,115 @@ app.post('/api/comments', (req, res) => {
     approved: false
   };
 
-  let comments = storage.get('comments') || [];
+  let comments = await storage.get('comments') || [];
   comments.push(newComment);
   
-  storage.set('comments', comments);
-  res.status(201).json(newComment);
+  const result = await storage.set('comments', comments);
+  if (result) {
+    logToFile(`Comment created with ID: ${newComment.id}`);
+    res.status(201).json(newComment);
+  } else {
+    logToFile('Failed to save comment');
+    res.status(500).json({ error: 'Failed to save comment data' });
+  }
 });
 
-app.put('/api/comments', (req, res) => {
+app.put('/api/comments', async (req, res) => {
+  logToFile('PUT /api/comments called');
   const { id, approved, reply } = req.body;
   
   if (!id) {
+    logToFile('Invalid request: comment ID missing');
     return res.status(400).json({ error: 'Comment ID is required' });
   }
 
-  let comments = storage.get('comments') || [];
+  let comments = await storage.get('comments') || [];
   const commentIndex = comments.findIndex(comment => comment.id === id);
   
   if (commentIndex === -1) {
+    logToFile(`Comment not found with ID: ${id}`);
     return res.status(404).json({ error: 'Comment not found' });
   }
   
   // 更新评论状态或回复
   if (approved !== undefined) {
     comments[commentIndex].approved = approved;
+    logToFile(`Comment ${id} approved status updated to: ${approved}`);
   }
   
   if (reply !== undefined) {
     comments[commentIndex].reply = reply;
+    logToFile(`Comment ${id} reply updated`);
   }
   
-  storage.set('comments', comments);
-  res.json(comments[commentIndex]);
+  const result = await storage.set('comments', comments);
+  if (result) {
+    logToFile(`Comment ${id} updated successfully`);
+    res.json(comments[commentIndex]);
+  } else {
+    logToFile(`Failed to update comment ${id}`);
+    res.status(500).json({ error: 'Failed to update comment data' });
+  }
 });
 
-app.delete('/api/comments', (req, res) => {
+app.delete('/api/comments', async (req, res) => {
+  logToFile('DELETE /api/comments called');
   const { id } = req.body;
   
   if (!id) {
+    logToFile('Invalid request: comment ID missing');
     return res.status(400).json({ error: 'Comment ID is required' });
   }
 
-  let comments = storage.get('comments') || [];
+  let comments = await storage.get('comments') || [];
   const initialLength = comments.length;
   comments = comments.filter(comment => comment.id !== id);
   
   if (comments.length === initialLength) {
+    logToFile(`Comment not found with ID: ${id}`);
     return res.status(404).json({ error: 'Comment not found' });
   }
   
-  storage.set('comments', comments);
-  res.json({ message: 'Comment deleted successfully' });
+  const result = await storage.set('comments', comments);
+  if (result) {
+    logToFile(`Comment ${id} deleted successfully`);
+    res.json({ message: 'Comment deleted successfully' });
+  } else {
+    logToFile(`Failed to delete comment ${id}`);
+    res.status(500).json({ error: 'Failed to delete comment data' });
+  }
 });
 
-app.post('/api/auth', (req, res) => {
+app.post('/api/auth', async (req, res) => {
+  logToFile('POST /api/auth called');
   const { username, password } = req.body;
   
   if (!username || !password) {
+    logToFile('Invalid request: username or password missing');
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
   // 检查管理员凭证是否存在，如果不存在则创建默认凭证
-  if (!storage.exists('admin_credentials')) {
-    storage.set('admin_credentials', { username: 'admin', password: 'admin123' });
-    storage.set('admin_token', 'test-token');
+  let adminCredentials = await storage.get('admin_credentials');
+  let adminToken = await storage.get('admin_token');
+  
+  if (!adminCredentials) {
+    adminCredentials = { username: 'admin', password: 'admin123' };
+    await storage.set('admin_credentials', adminCredentials);
+    adminToken = 'test-token';
+    await storage.set('admin_token', adminToken);
+    logToFile('Default admin credentials created');
   }
 
-  const adminCredentials = storage.get('admin_credentials');
-  const adminToken = storage.get('admin_token');
-  
   if (username === adminCredentials.username && password === adminCredentials.password) {
+    logToFile('Admin login successful');
     return res.json({ 
       success: true, 
       token: adminToken,
       message: 'Login successful' 
     });
   } else {
+    logToFile('Admin login failed: invalid credentials');
     return res.status(401).json({ 
       success: false, 
       message: 'Invalid credentials' 
@@ -190,22 +237,27 @@ app.post('/api/auth', (req, res) => {
   }
 });
 
-app.get('/api/files', (req, res) => {
+app.get('/api/files', async (req, res) => {
+  logToFile('GET /api/files called');
   // GET 请求不需要身份验证，公开访问文件列表
-  const files = storage.get('files') || [];
+  const files = await storage.get('files') || [];
+  logToFile(`Returning ${files.length} files`);
   res.json(files);
 });
 
-app.post('/api/files', (req, res) => {
+app.post('/api/files', async (req, res) => {
+  logToFile('POST /api/files called');
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    logToFile('Unauthorized access attempt');
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const token = authHeader.split(' ')[1];
-  const adminToken = storage.get('admin_token');
+  const adminToken = await storage.get('admin_token');
   
   if (!adminToken || token !== adminToken) {
+    logToFile('Invalid token');
     return res.status(401).json({ error: 'Invalid token' });
   }
 
@@ -213,6 +265,7 @@ app.post('/api/files', (req, res) => {
   
   // 验证文件数据
   if (!newFile || !newFile.name || !newFile.type) {
+    logToFile('Invalid file data: name or type missing');
     return res.status(400).json({ error: 'Invalid file data: name and type are required' });
   }
 
@@ -226,77 +279,112 @@ app.post('/api/files', (req, res) => {
     }
   }
 
-  let files = storage.get('files') || [];
+  let files = await storage.get('files') || [];
+  logToFile(`Current files before adding: ${JSON.stringify(files)}`);
   files.push(newFile);
+  logToFile(`Files after adding new file: ${JSON.stringify(files)}`);
   
-  storage.set('files', files);
-  res.status(201).json(newFile);
+  const result = await storage.set('files', files);
+  logToFile(`Storage set result: ${result}`);
+  
+  if (result) {
+    logToFile(`File created successfully: ${newFile.name}`);
+    res.status(201).json(newFile);
+  } else {
+    logToFile('Failed to save file data');
+    res.status(500).json({ error: 'Failed to save file data' });
+  }
 });
 
-app.put('/api/files', (req, res) => {
+app.put('/api/files', async (req, res) => {
+  logToFile('PUT /api/files called');
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    logToFile('Unauthorized access attempt');
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const token = authHeader.split(' ')[1];
-  const adminToken = storage.get('admin_token');
+  const adminToken = await storage.get('admin_token');
   
   if (!adminToken || token !== adminToken) {
+    logToFile('Invalid token');
     return res.status(401).json({ error: 'Invalid token' });
   }
 
   const { index, file } = req.body;
   
   if (index === undefined || !file) {
+    logToFile('Invalid update data: index or file missing');
     return res.status(400).json({ error: 'Invalid update data' });
   }
 
-  let files = storage.get('files') || [];
+  let files = await storage.get('files') || [];
   
   if (index < 0 || index >= files.length) {
+    logToFile(`File not found at index: ${index}`);
     return res.status(404).json({ error: 'File not found' });
   }
   
   files[index] = file;
-  storage.set('files', files);
+  const result = await storage.set('files', files);
   
-  res.json(file);
+  if (result) {
+    logToFile(`File at index ${index} updated successfully`);
+    res.json(file);
+  } else {
+    logToFile(`Failed to update file at index ${index}`);
+    res.status(500).json({ error: 'Failed to update file data' });
+  }
 });
 
-app.delete('/api/files', (req, res) => {
+app.delete('/api/files', async (req, res) => {
+  logToFile('DELETE /api/files called');
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    logToFile('Unauthorized access attempt');
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const token = authHeader.split(' ')[1];
-  const adminToken = storage.get('admin_token');
+  const adminToken = await storage.get('admin_token');
   
   if (!adminToken || token !== adminToken) {
+    logToFile('Invalid token');
     return res.status(401).json({ error: 'Invalid token' });
   }
 
   const { index } = req.body;
   
   if (index === undefined) {
+    logToFile('Invalid delete request: index missing');
     return res.status(400).json({ error: 'Invalid delete request' });
   }
 
-  let files = storage.get('files') || [];
+  let files = await storage.get('files') || [];
   
   if (index < 0 || index >= files.length) {
+    logToFile(`File not found at index: ${index}`);
     return res.status(404).json({ error: 'File not found' });
   }
   
   files.splice(index, 1);
-  storage.set('files', files);
+  const result = await storage.set('files', files);
   
-  res.json({ message: 'File deleted successfully' });
+  if (result) {
+    logToFile(`File at index ${index} deleted successfully`);
+    res.json({ message: 'File deleted successfully' });
+  } else {
+    logToFile(`Failed to delete file at index ${index}`);
+    res.status(500).json({ error: 'Failed to delete file data' });
+  }
 });
 
 // 启动服务器
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  const message = `Server is running on http://localhost:${PORT}`;
+  console.log(message);
+  logToFile(message);
   console.log(`Open http://localhost:${PORT} in your browser to view the application`);
+  logToFile(`Open http://localhost:${PORT} in your browser to view the application`);
 });

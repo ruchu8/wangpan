@@ -523,7 +523,7 @@ async function getClientIP() {
             const response = await fetch('https://api.ipify.org?format=json', {
                 method: 'GET',
                 mode: 'cors',
-                timeout: 5000 // 5秒超时
+                timeout: 3000 // 3秒超时，减少等待时间
             });
             
             if (!response.ok) {
@@ -544,7 +544,7 @@ async function getClientIP() {
             const response = await fetch('https://httpbin.org/ip', {
                 method: 'GET',
                 mode: 'cors',
-                timeout: 5000 // 5秒超时
+                timeout: 3000 // 3秒超时，减少等待时间
             });
             
             if (!response.ok) {
@@ -558,55 +558,6 @@ async function getClientIP() {
             }
         } catch (error) {
             console.warn('Failed to get IP from httpbin.org:', error);
-        }
-        
-        // 如果第二种方法也失败，尝试第三种方法
-        try {
-            const response = await fetch('https://api.myip.com', {
-                method: 'GET',
-                mode: 'cors',
-                timeout: 5000 // 5秒超时
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            if (data && data.ip) {
-                console.log('IP obtained from myip.com:', data.ip);
-                return data.ip;
-            }
-        } catch (error) {
-            console.warn('Failed to get IP from myip.com:', error);
-        }
-        
-        // 如果所有方法都失败，尝试从请求头获取
-        try {
-            // 创建一个临时的fetch请求来获取原始IP
-            const tempResponse = await fetch('https://httpbin.org/headers', {
-                method: 'GET',
-                mode: 'cors',
-                timeout: 5000
-            });
-            
-            if (tempResponse.ok) {
-                const data = await tempResponse.json();
-                // 尝试从X-Forwarded-For或X-Real-IP头获取IP
-                if (data.headers && data.headers['X-Forwarded-For']) {
-                    const forwardedIP = data.headers['X-Forwarded-For'].split(',')[0].trim();
-                    console.log('IP obtained from X-Forwarded-For header:', forwardedIP);
-                    return forwardedIP;
-                }
-                
-                if (data.headers && data.headers['X-Real-IP']) {
-                    const realIP = data.headers['X-Real-IP'].trim();
-                    console.log('IP obtained from X-Real-IP header:', realIP);
-                    return realIP;
-                }
-            }
-        } catch (error) {
-            console.warn('Failed to get IP from headers:', error);
         }
         
         console.error('All IP detection methods failed');
@@ -624,7 +575,7 @@ async function submitComment(event) {
     const contactType = document.getElementById('contactType').value;
     const contactInfo = document.getElementById('contactInfo').value;
     const content = document.getElementById('commentContent').value;
-    const statusElement = document.getElementById('commentStatus');
+    const submitButton = document.getElementById('submitCommentBtn');
     
     console.log('Submitting comment:', { contactType, contactInfo, content });
     
@@ -633,21 +584,34 @@ async function submitComment(event) {
         return;
     }
     
-    // 获取IP地址
-    const ip = await getClientIP();
-    console.log('Client IP:', ip);
+    // 禁用提交按钮并显示加载状态，防止重复提交
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = '提交中...';
+    }
     
-    // 组合联系方式显示名称
-    const name = `${contactType}:${contactInfo}`;
+    // 显示提交状态
+    showCommentStatus('正在提交留言...', 'info');
     
     try {
+        // 并行获取IP地址和提交留言，减少等待时间
+        const ipPromise = getClientIP();
+        
+        // 组合联系方式显示名称
+        const name = `${contactType}:${contactInfo}`;
+        
+        // 先提交留言，不等待IP地址获取完成
         const response = await fetch('/api/comments', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, content, ip })
+            body: JSON.stringify({ name, content })
         });
+        
+        // 等待IP地址获取完成
+        const ip = await ipPromise;
+        console.log('Client IP:', ip);
         
         console.log('Comment API response:', response.status);
         
@@ -662,6 +626,12 @@ async function submitComment(event) {
     } catch (error) {
         console.error('Error submitting comment:', error);
         showCommentStatus('提交失败，请稍后再试', 'error');
+    } finally {
+        // 恢复提交按钮状态
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = '提交留言';
+        }
     }
 }
 
@@ -669,11 +639,21 @@ async function submitComment(event) {
 function showCommentStatus(message, type) {
     const statusElement = document.getElementById('commentStatus');
     statusElement.textContent = message;
-    statusElement.className = 'comment-status ' + type;
     
-    setTimeout(() => {
-        statusElement.className = 'comment-status';
-    }, 5000);
+    // 清除之前的类名
+    statusElement.className = 'comment-status';
+    
+    // 添加新的类名
+    if (type) {
+        statusElement.classList.add(type);
+    }
+    
+    // 如果是info类型，不自动隐藏
+    if (type !== 'info') {
+        setTimeout(() => {
+            statusElement.className = 'comment-status';
+        }, 5000);
+    }
 }
 
 // 返回顶部功能
