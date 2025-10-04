@@ -8,7 +8,7 @@
 - 使用 Bootstrap 5 框架构建响应式界面
 - 美观的渐变背景和动画效果
 - 专业的卡片式布局
-- 优雅的悬停效果和过渡动画
+- 优雅的悬.hover效果和过渡动画
 
 ### 📁 文件管理
 - 直观的文件列表展示
@@ -101,6 +101,13 @@ Database connection string provided to `neon()` is not a valid URL
 如果登录或留言功能不正常，可能是数据库表未正确初始化：
 1. 访问 `https://你的域名/api/init-db` 并发送POST请求
 2. 等待初始化完成后再测试功能
+
+#### 文件管理功能异常
+如果遇到"加载文件列表失败: HTTP error! status: 500"或"保存文件失败: Unexpected token"等错误：
+
+1. 测试文件API：访问 `https://你的域名/api/test-files-api` 检查文件API状态
+2. 检查Vercel函数日志中[api/files.js](file:///c:/Users/Administrator/Desktop/test/api/files.js)的错误信息
+3. 确保数据库表结构正确（files表应该存在且包含data字段）
 
 ### 默认管理员凭据
 

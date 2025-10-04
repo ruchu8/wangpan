@@ -204,3 +204,13 @@
 [2025-10-04T07:01:47.739Z] GET /api/comments called
 [2025-10-04T07:01:48.104Z] Returning 1 comments to user
 [2025-10-04T07:01:48.138Z] Returning 3 files
+[2025-10-04T07:15:46.721Z] GET /api/files called
+[2025-10-04T07:15:46.723Z] GET /api/comments called
+[2025-10-04T07:15:47.282Z] Returning 1 comments to user
+[2025-10-04T07:15:47.456Z] Returning 3 files
+[2025-10-04T07:15:56.317Z] GET /api/comments called
+[2025-10-04T07:15:57.451Z] Returning 1 comments to admin
+[2025-10-04T07:16:01.370Z] GET /api/files called
+[2025-10-04T07:16:01.371Z] GET /api/comments called
+[2025-10-04T07:16:01.894Z] Returning 3 files
+[2025-10-04T07:16:01.996Z] Returning 1 comments to user

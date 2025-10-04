@@ -2,11 +2,42 @@
 const { neon } = require('@neondatabase/serverless');
 
 // 初始化 Neon PostgreSQL 客户端
-const sql = neon(process.env.DATABASE_URL);
+// 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
+let databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+
+// 清理数据库URL，移除可能的空格和其他无效字符
+if (databaseUrl) {
+  databaseUrl = databaseUrl.trim();
+}
+
+if (!databaseUrl) {
+  console.error('❌ Database URL not found in environment variables');
+  // 不立即抛出错误，而是在处理请求时再检查
+}
+
+let sql;
 
 // 创建数据库表（如果不存在）
 async function initializeDatabase() {
   try {
+    // 确保数据库连接已初始化
+    if (!databaseUrl) {
+      throw new Error('Database URL not found in environment variables');
+    }
+    
+    // 验证URL格式
+    try {
+      new URL(databaseUrl);
+    } catch (urlError) {
+      throw new Error('Database URL format is invalid: ' + databaseUrl);
+    }
+    
+    if (!sql) {
+      sql = neon(databaseUrl);
+    }
+    
+    console.log('Initializing files database tables...');
+    
     await sql`
       CREATE TABLE IF NOT EXISTS files (
         id SERIAL PRIMARY KEY,
@@ -25,25 +56,41 @@ async function initializeDatabase() {
     `;
     
     // 检查是否有管理员令牌，如果没有则创建一个默认的
-    const result = await sql`SELECT * FROM admin_tokens LIMIT 1`;
-    if (result.length === 0) {
+    const result = await sql`SELECT COUNT(*) as count FROM admin_tokens`;
+    if (parseInt(result[0].count) === 0) {
       // 创建默认管理员令牌
       await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
+      console.log('✅ Default admin token created');
+    } else {
+      console.log('✅ Admin token already exists');
     }
     
     // 检查是否有文件数据，如果没有则创建一个空数组
-    const filesResult = await sql`SELECT * FROM files LIMIT 1`;
-    if (filesResult.length === 0) {
+    const filesResult = await sql`SELECT COUNT(*) as count FROM files`;
+    if (parseInt(filesResult[0].count) === 0) {
       // 创建默认文件数据
-      await sql`INSERT INTO files (data) VALUES ($1)`, [JSON.stringify([])];
+      await sql`INSERT INTO files (data) VALUES (${JSON.stringify([])})`;
+      console.log('✅ Default files data created');
+    } else {
+      console.log('✅ Files data already exists');
     }
+    
+    console.log('✅ Files database initialization completed');
+    return true;
   } catch (error) {
-    console.error('Failed to initialize database:', error);
+    console.error('❌ Failed to initialize files database:', error);
+    return false;
   }
 }
 
-// 初始化数据库
-initializeDatabase();
+// 确保数据库已初始化
+let dbInitialized = false;
+async function ensureDatabaseInitialized() {
+  if (!dbInitialized) {
+    dbInitialized = await initializeDatabase();
+  }
+  return dbInitialized;
+}
 
 module.exports = async function handler(req, res) {
   // CORS headers
@@ -58,130 +105,161 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  // Handle different HTTP methods
-  if (req.method === 'GET') {
-    // GET 请求不需要身份验证，公开访问文件列表
+  try {
+    // 确保数据库已初始化
+    const isDbReady = await ensureDatabaseInitialized();
+    if (!isDbReady) {
+      return res.status(500).json({ error: 'Database initialization failed' });
+    }
+    
+    // 确保数据库连接已初始化
+    if (!databaseUrl) {
+      return res.status(500).json({ error: 'Database URL not found in environment variables' });
+    }
+    
+    // 验证URL格式
     try {
-      const result = await sql`SELECT data FROM files LIMIT 1`;
-      const files = result.length > 0 ? JSON.parse(result[0].data) : [];
-      
-      return res.status(200).json(files);
-    } catch (error) {
-      console.error('Failed to fetch files:', error);
-      return res.status(500).json({ error: 'Failed to fetch files' });
-    }
-  } else {
-    // 其他请求（POST, PUT, DELETE）需要身份验证
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    const token = authHeader.split(' ')[1];
-    const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
-    
-    if (adminTokenResult.length === 0) {
-      return res.status(401).json({ error: 'Invalid token' });
+      new URL(databaseUrl);
+    } catch (urlError) {
+      return res.status(500).json({ 
+        error: 'Database URL format is invalid',
+        url: databaseUrl,
+        message: urlError.message
+      });
     }
     
-    // Handle POST, PUT, DELETE methods
-    if (req.method === 'POST') {
-      try {
-        const newFile = req.body;
-        
-        // 验证文件数据
-        if (!newFile || !newFile.name || !newFile.type) {
-          return res.status(400).json({ error: 'Invalid file data: name and type are required' });
-        }
+    if (!sql) {
+      sql = neon(databaseUrl);
+    }
 
-        // 获取现有文件数据
-        const result = await sql`SELECT data FROM files LIMIT 1`;
-        let files = result.length > 0 ? JSON.parse(result[0].data) : [];
-        
-        // 确保 files 是数组
-        if (!Array.isArray(files)) {
-          files = [];
-        }
-        
-        files.push(newFile);
-        
-        // 更新文件数据
-        await sql`DELETE FROM files`;
-        await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
-        
-        return res.status(201).json(newFile);
-      } catch (error) {
-        console.error('Failed to add file:', error);
-        return res.status(500).json({ error: 'Failed to add file: ' + error.message });
-      }
-    } else if (req.method === 'PUT') {
+    // Handle different HTTP methods
+    if (req.method === 'GET') {
+      // GET 请求不需要身份验证，公开访问文件列表
       try {
-        const { index, file } = req.body;
-        
-        if (index === undefined || !file) {
-          return res.status(400).json({ error: 'Invalid update data' });
-        }
-
-        // 获取现有文件数据
         const result = await sql`SELECT data FROM files LIMIT 1`;
-        let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+        const files = result.length > 0 ? JSON.parse(result[0].data) : [];
         
-        // 确保 files 是数组
-        if (!Array.isArray(files)) {
-          files = [];
-        }
-        
-        if (index < 0 || index >= files.length) {
-          return res.status(404).json({ error: 'File not found' });
-        }
-        
-        // 更新文件
-        files[index] = file;
-        
-        // 更新文件数据
-        await sql`DELETE FROM files`;
-        await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
-        
-        return res.status(200).json(file);
+        return res.status(200).json(files);
       } catch (error) {
-        console.error('Failed to update file:', error);
-        return res.status(500).json({ error: 'Failed to update file' });
-      }
-    } else if (req.method === 'DELETE') {
-      try {
-        const { index } = req.body;
-        
-        if (index === undefined) {
-          return res.status(400).json({ error: 'Invalid delete request' });
-        }
-
-        // 获取现有文件数据
-        const result = await sql`SELECT data FROM files LIMIT 1`;
-        let files = result.length > 0 ? JSON.parse(result[0].data) : [];
-        
-        // 确保 files 是数组
-        if (!Array.isArray(files)) {
-          files = [];
-        }
-        
-        if (index < 0 || index >= files.length) {
-          return res.status(404).json({ error: 'File not found' });
-        }
-        
-        // 删除文件
-        files.splice(index, 1);
-        
-        // 更新文件数据
-        await sql`DELETE FROM files`;
-        await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
-        
-        return res.status(200).json({ message: 'File deleted successfully' });
-      } catch (error) {
-        console.error('Failed to delete file:', error);
-        return res.status(500).json({ error: 'Failed to delete file' });
+        console.error('❌ Failed to fetch files:', error);
+        return res.status(500).json({ error: 'Failed to fetch files: ' + error.message });
       }
     } else {
-      return res.status(405).json({ error: 'Method not allowed' });
+      // 其他请求（POST, PUT, DELETE）需要身份验证
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const token = authHeader.split(' ')[1];
+      const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
+      
+      if (adminTokenResult.length === 0) {
+        return res.status(401).json({ error: 'Invalid token' });
+      }
+      
+      // Handle POST, PUT, DELETE methods
+      if (req.method === 'POST') {
+        try {
+          const newFile = req.body;
+          
+          // 验证文件数据
+          if (!newFile || !newFile.name || !newFile.type) {
+            return res.status(400).json({ error: 'Invalid file data: name and type are required' });
+          }
+
+          // 获取现有文件数据
+          const result = await sql`SELECT data FROM files LIMIT 1`;
+          let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+          
+          // 确保 files 是数组
+          if (!Array.isArray(files)) {
+            files = [];
+          }
+          
+          files.push(newFile);
+          
+          // 更新文件数据
+          await sql`DELETE FROM files`;
+          await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
+          
+          return res.status(201).json(newFile);
+        } catch (error) {
+          console.error('❌ Failed to add file:', error);
+          return res.status(500).json({ error: 'Failed to add file: ' + error.message });
+        }
+      } else if (req.method === 'PUT') {
+        try {
+          const { index, file } = req.body;
+          
+          if (index === undefined || !file) {
+            return res.status(400).json({ error: 'Invalid update data' });
+          }
+
+          // 获取现有文件数据
+          const result = await sql`SELECT data FROM files LIMIT 1`;
+          let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+          
+          // 确保 files 是数组
+          if (!Array.isArray(files)) {
+            files = [];
+          }
+          
+          if (index < 0 || index >= files.length) {
+            return res.status(404).json({ error: 'File not found' });
+          }
+          
+          // 更新文件
+          files[index] = file;
+          
+          // 更新文件数据
+          await sql`DELETE FROM files`;
+          await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
+          
+          return res.status(200).json(file);
+        } catch (error) {
+          console.error('❌ Failed to update file:', error);
+          return res.status(500).json({ error: 'Failed to update file: ' + error.message });
+        }
+      } else if (req.method === 'DELETE') {
+        try {
+          const { index } = req.body;
+          
+          if (index === undefined) {
+            return res.status(400).json({ error: 'Invalid delete request' });
+          }
+
+          // 获取现有文件数据
+          const result = await sql`SELECT data FROM files LIMIT 1`;
+          let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+          
+          // 确保 files 是数组
+          if (!Array.isArray(files)) {
+            files = [];
+          }
+          
+          if (index < 0 || index >= files.length) {
+            return res.status(404).json({ error: 'File not found' });
+          }
+          
+          // 删除文件
+          files.splice(index, 1);
+          
+          // 更新文件数据
+          await sql`DELETE FROM files`;
+          await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
+          
+          return res.status(200).json({ message: 'File deleted successfully' });
+        } catch (error) {
+          console.error('❌ Failed to delete file:', error);
+          return res.status(500).json({ error: 'Failed to delete file: ' + error.message });
+        }
+      } else {
+        return res.status(405).json({ error: 'Method not allowed' });
+      }
     }
+  } catch (error) {
+    console.error('❌ Unexpected error in files API:', error);
+    return res.status(500).json({ error: 'Unexpected error: ' + error.message });
   }
 };

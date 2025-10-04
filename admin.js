@@ -158,7 +158,15 @@ async function loadFiles() {
             filesList = await response.json();
             renderFilesList();
         } else {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // 安全地解析错误响应
+            try {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            } catch (parseError) {
+                // 如果无法解析JSON，显示状态文本
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}\n${errorText.substring(0, 200)}...`);
+            }
         }
     } catch (error) {
         console.error('Error loading files:', error);
@@ -397,8 +405,15 @@ async function saveFile() {
             bootstrap.Modal.getInstance(document.getElementById('fileModal')).hide();
             loadFiles();
         } else {
-            const errorData = await response.json();
-            alert(errorData.error || '保存失败');
+            // 安全地解析错误响应
+            try {
+                const errorData = await response.json();
+                alert(errorData.error || '保存失败');
+            } catch (parseError) {
+                // 如果无法解析JSON，显示状态文本
+                const errorText = await response.text();
+                alert(`保存失败: ${response.status} ${response.statusText}\n${errorText.substring(0, 200)}...`);
+            }
         }
     } catch (error) {
         console.error('Error saving file:', error);
@@ -408,57 +423,77 @@ async function saveFile() {
 
 // 添加一个新函数来处理向现有文件夹添加文件
 async function addFileToFolder(folderIndex, fileName, fileUrl) {
-    // 获取现有文件列表
-    const response = await fetch('/api/files', {
-        headers: {
-            'Authorization': `Bearer ${authToken}`
+    try {
+        // 获取现有文件列表
+        const response = await fetch('/api/files', {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (!response.ok) {
+            // 安全地解析错误响应
+            try {
+                const errorData = await response.json();
+                alert('无法获取文件列表: ' + (errorData.error || response.statusText));
+            } catch (parseError) {
+                // 如果无法解析JSON，显示状态文本
+                const errorText = await response.text();
+                alert(`无法获取文件列表: ${response.status} ${response.statusText}\n${errorText.substring(0, 200)}...`);
+            }
+            return;
         }
-    });
-    
-    if (!response.ok) {
-        alert('无法获取文件列表');
-        return;
-    }
-    
-    const files = await response.json();
-    
-    if (folderIndex < 0 || folderIndex >= files.length || files[folderIndex].type !== 'folder') {
-        alert('无效的文件夹索引');
-        return;
-    }
-    
-    // 添加时间戳到文件名
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-    const fileNameWithTimestamp = `${fileName}_${timestamp}`;
-    
-    // 添加文件到文件夹
-    const newFile = {
-        name: fileNameWithTimestamp,
-        type: 'file',
-        url: fileUrl
-    };
-    
-    files[folderIndex].children.push(newFile);
-    
-    // 更新文件夹
-    const updateResponse = await fetch('/api/files', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
-        },
-        body: JSON.stringify({
-            index: folderIndex,
-            file: files[folderIndex]
-        })
-    });
-    
-    if (updateResponse.ok) {
-        loadFiles();
-    } else {
-        const errorData = await updateResponse.json();
-        alert(errorData.error || '添加文件失败');
+        
+        const files = await response.json();
+        
+        if (folderIndex < 0 || folderIndex >= files.length || files[folderIndex].type !== 'folder') {
+            alert('无效的文件夹索引');
+            return;
+        }
+        
+        // 添加时间戳到文件名
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+        const fileNameWithTimestamp = `${fileName}_${timestamp}`;
+        
+        // 添加文件到文件夹
+        const newFile = {
+            name: fileNameWithTimestamp,
+            type: 'file',
+            url: fileUrl
+        };
+        
+        files[folderIndex].children.push(newFile);
+        
+        // 更新文件夹
+        const updateResponse = await fetch('/api/files', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                index: folderIndex,
+                file: files[folderIndex]
+            })
+        });
+        
+        if (updateResponse.ok) {
+            loadFiles();
+        } else {
+            // 安全地解析错误响应
+            try {
+                const errorData = await updateResponse.json();
+                alert(errorData.error || '添加文件失败');
+            } catch (parseError) {
+                // 如果无法解析JSON，显示状态文本
+                const errorText = await updateResponse.text();
+                alert(`添加文件失败: ${updateResponse.status} ${updateResponse.statusText}\n${errorText.substring(0, 200)}...`);
+            }
+        }
+    } catch (error) {
+        console.error('Error adding file to folder:', error);
+        alert('添加文件失败: ' + error.message);
     }
 }
 
@@ -486,12 +521,19 @@ async function deleteFile(index) {
         if (response.ok) {
             loadFiles();
         } else {
-            const error = await response.json();
-            alert(error.error || '删除失败');
+            // 安全地解析错误响应
+            try {
+                const errorData = await response.json();
+                alert(errorData.error || '删除失败');
+            } catch (parseError) {
+                // 如果无法解析JSON，显示状态文本
+                const errorText = await response.text();
+                alert(`删除失败: ${response.status} ${response.statusText}\n${errorText.substring(0, 200)}...`);
+            }
         }
     } catch (error) {
         console.error('Error deleting file:', error);
-        alert('删除文件失败');
+        alert('删除文件失败: ' + error.message);
     }
 }
 
