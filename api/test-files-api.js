@@ -60,22 +60,64 @@ module.exports = async function handler(req, res) {
       const versionResult = await sql`SELECT version()`;
       console.log('✅ Database connection successful');
       
-      // 检查files表是否存在
-      console.log('Checking files table...');
-      const filesResult = await sql`
+      // 检查所有表
+      console.log('Checking all tables...');
+      const tablesResult = await sql`
         SELECT table_name 
         FROM information_schema.tables 
-        WHERE table_schema = 'public' AND table_name = 'files'
+        WHERE table_schema = 'public'
       `;
       
-      if (filesResult.length === 0) {
+      const tableNames = tablesResult.map(row => row.table_name);
+      console.log('✅ Available tables:', tableNames);
+      
+      // 检查files表是否存在
+      console.log('Checking files table...');
+      if (!tableNames.includes('files')) {
         console.log('❌ Files table does not exist');
         return res.status(500).json({ 
-          error: 'Files table does not exist'
+          error: 'Files table does not exist',
+          availableTables: tableNames
         });
       }
       
       console.log('✅ Files table exists');
+      
+      // 检查表结构
+      try {
+        console.log('Checking files table structure...');
+        const columnsResult = await sql`
+          SELECT column_name, data_type 
+          FROM information_schema.columns 
+          WHERE table_name = 'files'
+        `;
+        
+        const columns = columnsResult.map(row => ({
+          name: row.column_name,
+          type: row.data_type
+        }));
+        
+        console.log('Files table columns:', columns);
+        
+        // 检查必需的列是否存在
+        const requiredColumns = ['id', 'data'];
+        const missingColumns = requiredColumns.filter(col => !columns.some(c => c.name === col));
+        
+        if (missingColumns.length > 0) {
+          console.log('❌ Files table is missing required columns:', missingColumns);
+          return res.status(500).json({ 
+            error: 'Files table is missing required columns',
+            missingColumns: missingColumns,
+            tableColumns: columns
+          });
+        }
+      } catch (structureError) {
+        console.error('❌ Error checking files table structure:', structureError);
+        return res.status(500).json({ 
+          error: 'Error checking files table structure',
+          message: structureError.message
+        });
+      }
       
       // 检查表中的数据
       try {
@@ -87,6 +129,8 @@ module.exports = async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: 'Files API is working correctly',
+          databaseVersion: versionResult[0].version,
+          availableTables: tableNames,
           filesCount: files.length,
           sampleData: files.slice(0, 3) // 只返回前3个文件作为示例
         });

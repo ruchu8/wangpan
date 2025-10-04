@@ -109,6 +109,13 @@ Database connection string provided to `neon()` is not a valid URL
 2. 检查Vercel函数日志中[api/files.js](file:///c:/Users/Administrator/Desktop/test/api/files.js)的错误信息
 3. 确保数据库表结构正确（files表应该存在且包含data字段）
 
+#### 文件数据格式错误
+如果遇到"Unexpected token 'o', "[object Obj"... is not valid JSON"错误：
+
+1. 这表示数据库中的文件数据格式不正确
+2. 访问 `https://你的域名/api/fix-files-data` 并发送POST请求来修复数据格式
+3. 等待修复完成后重新测试文件管理功能
+
 ### 默认管理员凭据
 
 - 用户名：`admin`
@@ -121,7 +128,11 @@ wangpan/
 ├── api/                 # API 路由
 │   ├── auth.js
 │   ├── comments.js
-│   └── files.js
+│   ├── files.js
+│   ├── fix-files-data.js
+│   ├── init-db.js
+│   ├── test-db.js
+│   └── test-files-api.js
 ├── index.html           # 主页面
 ├── style.css            # 自定义样式
 ├── script.js            # 前端脚本

@@ -92,6 +92,47 @@ async function ensureDatabaseInitialized() {
   return dbInitialized;
 }
 
+// 安全地解析数据库中的数据
+function safeParseData(data) {
+  try {
+    // 如果data已经是对象，直接返回
+    if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
+      console.log('Data is already an object, converting to array if needed');
+      // 如果是单个对象，包装成数组
+      return [data];
+    }
+    
+    // 如果data是数组，直接返回
+    if (Array.isArray(data)) {
+      return data;
+    }
+    
+    // 如果data是字符串，尝试解析JSON
+    if (typeof data === 'string') {
+      // 检查是否是"[object Object]"这样的字符串
+      if (data.startsWith('[object') && data.endsWith(']')) {
+        console.log('Data is object string representation, returning empty array');
+        return [];
+      }
+      
+      // 尝试解析JSON
+      try {
+        const parsed = JSON.parse(data);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      } catch (parseError) {
+        console.log('Failed to parse JSON, returning empty array');
+        return [];
+      }
+    }
+    
+    // 其他情况返回空数组
+    return [];
+  } catch (error) {
+    console.error('Error in safeParseData:', error);
+    return [];
+  }
+}
+
 module.exports = async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -137,7 +178,11 @@ module.exports = async function handler(req, res) {
       // GET 请求不需要身份验证，公开访问文件列表
       try {
         const result = await sql`SELECT data FROM files LIMIT 1`;
-        const files = result.length > 0 ? JSON.parse(result[0].data) : [];
+        let files = [];
+        
+        if (result.length > 0) {
+          files = safeParseData(result[0].data);
+        }
         
         return res.status(200).json(files);
       } catch (error) {
@@ -170,7 +215,11 @@ module.exports = async function handler(req, res) {
 
           // 获取现有文件数据
           const result = await sql`SELECT data FROM files LIMIT 1`;
-          let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+          let files = [];
+          
+          if (result.length > 0) {
+            files = safeParseData(result[0].data);
+          }
           
           // 确保 files 是数组
           if (!Array.isArray(files)) {
@@ -198,7 +247,11 @@ module.exports = async function handler(req, res) {
 
           // 获取现有文件数据
           const result = await sql`SELECT data FROM files LIMIT 1`;
-          let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+          let files = [];
+          
+          if (result.length > 0) {
+            files = safeParseData(result[0].data);
+          }
           
           // 确保 files 是数组
           if (!Array.isArray(files)) {
@@ -231,7 +284,11 @@ module.exports = async function handler(req, res) {
 
           // 获取现有文件数据
           const result = await sql`SELECT data FROM files LIMIT 1`;
-          let files = result.length > 0 ? JSON.parse(result[0].data) : [];
+          let files = [];
+          
+          if (result.length > 0) {
+            files = safeParseData(result[0].data);
+          }
           
           // 确保 files 是数组
           if (!Array.isArray(files)) {
