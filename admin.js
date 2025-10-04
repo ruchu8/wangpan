@@ -73,6 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // 定期刷新文件列表
+    setInterval(() => {
+        if (document.getElementById('adminContent').style.display !== 'none') {
+            loadFiles();
+        }
+    }, 30000); // 每30秒刷新一次
 });
 
 // 检查认证状态
@@ -315,15 +322,21 @@ function addChildField(child = null, childIndex = null) {
     const childDiv = document.createElement('div');
     childDiv.className = 'child-item border p-2 mb-2';
     
+    // 格式化日期，如果存在的话
+    const childDate = child && child.date ? child.date : new Date().toISOString().split('T')[0];
+    
     childDiv.innerHTML = `
         <div class="row">
-            <div class="col-5">
+            <div class="col-3">
                 <input type="text" class="form-control form-control-sm child-name" placeholder="名称" value="${child ? child.name : ''}">
             </div>
-            <div class="col-5">
+            <div class="col-3">
                 <input type="text" class="form-control form-control-sm child-url" placeholder="URL" value="${child ? child.url : ''}">
             </div>
-            <div class="col-2">
+            <div class="col-3">
+                <input type="date" class="form-control form-control-sm child-date" value="${childDate}">
+            </div>
+            <div class="col-3">
                 <button type="button" class="btn btn-sm btn-danger remove-child">删除</button>
             </div>
         </div>
@@ -351,12 +364,33 @@ async function saveFile() {
     // 强制设置为文件夹类型
     const type = 'folder';
     
+    // 收集子文件数据
+    const childrenList = document.getElementById('childrenList');
+    const children = [];
+    
+    if (childrenList && childrenList.children.length > 0) {
+        Array.from(childrenList.children).forEach(childDiv => {
+            const childName = childDiv.querySelector('.child-name').value;
+            const childUrl = childDiv.querySelector('.child-url').value;
+            const childDate = childDiv.querySelector('.child-date').value;
+            
+            if (childName && childUrl) {
+                children.push({
+                    name: childName,
+                    type: 'file',
+                    url: childUrl,
+                    date: childDate || new Date().toISOString().split('T')[0] // 添加日期，格式为 YYYY-MM-DD
+                });
+            }
+        });
+    }
+    
     let file = {
         name: name,
         type,
         url: '', // 文件夹不需要URL
         note,
-        children: [],
+        children: children,
         expanded: false
     };
     
@@ -396,6 +430,8 @@ async function saveFile() {
         if (response.ok) {
             bootstrap.Modal.getInstance(document.getElementById('fileModal')).hide();
             loadFiles();
+            // 同时刷新前台页面的文件列表
+            refreshFrontendFileList();
         } else {
             // 安全地解析错误响应
             try {
@@ -452,7 +488,8 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
         const newFile = {
             name: fileNameWithTimestamp,
             type: 'file',
-            url: fileUrl
+            url: fileUrl,
+            date: new Date().toISOString().split('T')[0] // 添加日期，格式为 YYYY-MM-DD
         };
         
         // 确保children数组存在
@@ -480,6 +517,8 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
             // 这里我们设置一个全局变量来记住应该展开的文件夹索引
             window.expandedFolderIndex = folderIndex;
             loadFiles();
+            // 同时刷新前台页面的文件列表
+            refreshFrontendFileList();
         } else {
             // 安全地解析错误响应
             try {
@@ -520,6 +559,8 @@ async function deleteFile(index) {
         
         if (response.ok) {
             loadFiles();
+            // 同时刷新前台页面的文件列表
+            refreshFrontendFileList();
         } else {
             // 安全地解析错误响应
             try {
@@ -534,6 +575,23 @@ async function deleteFile(index) {
     } catch (error) {
         console.error('Error deleting file:', error);
         alert('删除文件失败: ' + error.message);
+    }
+}
+
+// 刷新前台页面的文件列表
+function refreshFrontendFileList() {
+    // 通过向所有打开的窗口发送消息来刷新文件列表
+    if (window.opener) {
+        window.opener.postMessage('refresh-files', '*');
+    }
+    
+    // 如果是在同一个标签页中打开的，尝试直接调用刷新函数
+    if (window !== window.parent) {
+        try {
+            window.parent.postMessage('refresh-files', '*');
+        } catch (e) {
+            console.log('无法向父窗口发送消息:', e);
+        }
     }
 }
 
@@ -997,6 +1055,8 @@ async function importData(event) {
                 // 刷新数据
                 loadFiles();
                 loadComments();
+                // 同时刷新前台页面的文件列表
+                refreshFrontendFileList();
                 
                 alert('数据导入成功！');
                 event.target.value = ''; // 清空文件输入
@@ -1047,4 +1107,15 @@ async function submitComment(event) {
         console.error('Error submitting comment:', error);
         showCommentStatus('提交失败，请稍后再试', 'error');
     }
+}
+
+// 显示留言状态
+function showCommentStatus(message, type) {
+    const statusElement = document.getElementById('commentStatus');
+    statusElement.textContent = message;
+    statusElement.className = 'comment-status ' + (type || '');
+    
+    setTimeout(() => {
+        statusElement.className = 'comment-status';
+    }, 3000);
 }

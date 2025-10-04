@@ -193,6 +193,28 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://fastly.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 添加消息监听器来刷新文件列表 -->
+    <script>
+        // 监听来自后台的刷新消息
+        window.addEventListener('message', function(event) {
+            if (event.data === 'refresh-files') {
+                // 调用刷新文件列表函数
+                if (typeof fetchFiles === 'function') {
+                    fetchFiles();
+                }
+            }
+        });
+        
+        // 页面加载完成后也执行一次文件列表获取
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保script.js中的函数可用
+            if (typeof fetchFiles === 'function') {
+                fetchFiles();
+            }
+        });
+    </script>
+    
     <script src="script.js"></script>
 </body>
 </html>

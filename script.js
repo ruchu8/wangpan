@@ -178,8 +178,17 @@ function renderFileList() {
         }
         
         // 只有文件才显示创建时间
-        if (item.type === 'file' && item.createdAt) {
-            displayContent += ` <span class="file-date">新增日期${item.createdAt}</span>`;
+        if (item.type === 'file') {
+            let displayDate = item.date;
+            // 如果没有日期或日期格式不正确，使用当前日期
+            if (!displayDate) {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                displayDate = `${year}-${month}-${day}`;
+            }
+            displayContent += ` <span class="file-date">新增日期${displayDate}</span>`;
         }
         
         a.innerHTML = displayContent;
@@ -310,6 +319,9 @@ document.addEventListener('DOMContentLoaded', function() {
             searchTimeout = setTimeout(searchFiles, 300); // 300ms延迟
         });
     }
+    
+    // 定期刷新文件列表以确保同步
+    setInterval(fetchFiles, 30000); // 每30秒刷新一次
 });
 
 // 从API获取留言列表
@@ -374,24 +386,31 @@ function renderComments() {
                 <span class="comment-name">${contactDisplay}</span>
                 <span class="comment-date">${date}</span>
             </div>
-            <div class="comment-ip">IP: ${ipDisplay}</div>
         `;
+        
+        // 留言内容区域
+        let contentHtml = '';
         
         // 如果留言未公开，显示提示信息
         if (!comment.approved) {
-            commentContent += `<div class="comment-content"><em>此留言不公开，管理员回复后才能公开留言</em></div>`;
+            contentHtml = `<em>此留言不公开，管理员回复后才能公开留言</em>`;
         } else {
-            commentContent += `<div class="comment-content">${comment.content}</div>`;
-            
-            // 如果有管理员回复，则显示
-            if (comment.reply) {
-                commentContent += `
-                    <div class="admin-reply mt-2 p-2 bg-light rounded">
-                        <strong>管理员回复:</strong> ${comment.reply}
-                    </div>
-                `;
-            }
+            contentHtml = comment.content;
         }
+        
+        // 如果有管理员回复，则显示
+        if (comment.reply) {
+            contentHtml += `
+                <div class="admin-reply mt-2 p-2 bg-light rounded">
+                    <strong>管理员回复:</strong> ${comment.reply}
+                </div>
+            `;
+        }
+        
+        // 添加IP地址到留言内容的右下角
+        contentHtml += `<div class="comment-ip">IP: ${ipDisplay}</div>`;
+        
+        commentContent += `<div class="comment-content">${contentHtml}</div>`;
         
         commentItem.innerHTML = commentContent;
         
@@ -524,46 +543,106 @@ function maskContactInfo(contactInfo) {
 // 获取客户端IP地址
 async function getClientIP() {
     try {
-        // 尝试使用第一种方法
+        // 尝试使用第一种方法 - ip.sb (对中国国内友好)
         try {
-            const response = await fetch('https://api.ipify.org?format=json', {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+            
+            const response = await fetch('https://api.ip.sb/ip', {
                 method: 'GET',
                 mode: 'cors',
-                timeout: 3000 // 3秒超时，减少等待时间
+                signal: controller.signal
             });
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            clearTimeout(timeoutId);
             
-            const data = await response.json();
-            if (data && data.ip) {
-                console.log('IP obtained from ipify.org:', data.ip);
-                return data.ip;
+            if (response.ok) {
+                const ip = await response.text();
+                if (ip && ip.trim()) {
+                    console.log('IP obtained from ip.sb:', ip.trim());
+                    return ip.trim();
+                }
             }
         } catch (error) {
-            console.warn('Failed to get IP from ipify.org:', error);
+            console.warn('Failed to get IP from ip.sb:', error);
         }
         
-        // 如果第一种方法失败，尝试第二种方法
+        // 如果第一种方法失败，尝试第二种方法 - ipapi.co (对中国国内友好)
         try {
-            const response = await fetch('https://httpbin.org/ip', {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+            
+            const response = await fetch('https://ipapi.co/json/', {
                 method: 'GET',
                 mode: 'cors',
-                timeout: 3000 // 3秒超时，减少等待时间
+                signal: controller.signal
             });
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            clearTimeout(timeoutId);
             
-            const data = await response.json();
-            if (data && data.origin) {
-                console.log('IP obtained from httpbin.org:', data.origin);
-                return data.origin;
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.ip) {
+                    console.log('IP obtained from ipapi.co:', data.ip);
+                    return data.ip;
+                }
             }
         } catch (error) {
-            console.warn('Failed to get IP from httpbin.org:', error);
+            console.warn('Failed to get IP from ipapi.co:', error);
+        }
+        
+        // 如果前两种方法都失败，尝试第三种方法 - ipinfo.io (对中国国内友好)
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+            
+            const response = await fetch('https://ipinfo.io/json', {
+                method: 'GET',
+                mode: 'cors',
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.ip) {
+                    console.log('IP obtained from ipinfo.io:', data.ip);
+                    return data.ip;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from ipinfo.io:', error);
+        }
+        
+        // 如果前三种方法都失败，尝试第四种方法 - 通过服务器端获取
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3秒超时
+            
+            const response = await fetch('/api/ip', {
+                method: 'GET',
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.ip) {
+                    console.log('IP obtained from server:', data.ip);
+                    return data.ip;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from server:', error);
+        }
+        
+        // 如果所有方法都失败，使用本地存储的IP（如果有）
+        const storedIP = localStorage.getItem('clientIP');
+        if (storedIP) {
+            console.log('Using stored IP:', storedIP);
+            return storedIP;
         }
         
         console.error('All IP detection methods failed');
@@ -725,6 +804,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 设置平滑滚动
     setupSmoothScroll();
+    
+    // 定期刷新文件列表以确保同步
+    setInterval(fetchFiles, 30000); // 每30秒刷新一次
 });
 
 // 添加一个窗口加载事件作为备选方案

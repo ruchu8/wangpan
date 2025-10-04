@@ -262,14 +262,20 @@ module.exports = async function handler(req, res) {
             return res.status(404).json({ error: 'File not found' });
           }
           
-          // 更新文件
-          files[index] = file;
+          // 更新文件，保留原有的 children 属性（如果存在）
+          const existingFile = files[index];
+          files[index] = {
+            ...existingFile,
+            ...file,
+            // 确保 children 属性被保留
+            children: file.children !== undefined ? file.children : (existingFile.children || [])
+          };
           
           // 更新文件数据
           await sql`DELETE FROM files`;
           await sql`INSERT INTO files (data) VALUES (${JSON.stringify(files)})`;
           
-          return res.status(200).json(file);
+          return res.status(200).json(files[index]);
         } catch (error) {
           console.error('❌ Failed to update file:', error);
           return res.status(500).json({ error: 'Failed to update file: ' + error.message });

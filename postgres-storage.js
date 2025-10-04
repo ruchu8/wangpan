@@ -14,9 +14,12 @@ console.log('Using database URL:', DATABASE_URL.substring(0, 50) + '...'); // �
 
 // 创建数据库表的函数
 async function initializeDatabase() {
+  console.log('Initializing database...');
   const client = new Client(DATABASE_URL);
   try {
+    console.log('Connecting to database...');
     await client.connect();
+    console.log('Connected to database successfully');
     
     // 创建 comments 表
     await client.query(`
@@ -74,8 +77,10 @@ async function initializeDatabase() {
     }
     
     console.log('Database initialized successfully');
+    return true;
   } catch (error) {
     console.error('Error initializing database:', error);
+    return false;
   } finally {
     await client.end();
   }
@@ -83,6 +88,7 @@ async function initializeDatabase() {
 
 // 获取指定键的值
 async function get(key) {
+  console.log(`Getting key: ${key}`);
   const client = new Client(DATABASE_URL);
   try {
     await client.connect();
@@ -137,6 +143,7 @@ async function get(key) {
 
 // 设置指定键的值
 async function set(key, value) {
+  console.log(`Setting key: ${key}`);
   const client = new Client(DATABASE_URL);
   try {
     await client.connect();

@@ -128,7 +128,17 @@ Database connection string provided to `neon()` is not a valid URL
 
 1. 确保已正确登录后台管理系统
 2. 检查认证令牌是否有效
-3. 使用测试页面 [test-add-file.html](file:///c:/Users/Administrator/Desktop/test/test-add-file.html) 来诊断问题
+3. 使用测试页面 [debug-files.html](file:///c:/Users/Administrator/Desktop/test/debug-files.html) 来诊断问题
+4. 确保添加文件后文件夹处于展开状态以查看新添加的文件
+
+#### 文件添加后前台不显示问题
+如果在后台添加文件后，前台页面没有显示新添加的文件：
+
+1. 这是由于前后端状态未正确同步导致的
+2. 解决方案已在[FILE_ADDING_SOLUTION.md](file:///c:/Users/Administrator/Desktop/test/FILE_ADDING_SOLUTION.md)中详细说明
+3. 前台页面现在会定期自动刷新文件列表（每30秒）
+4. 后台操作完成后会主动通知前台刷新显示
+5. 也可以手动刷新页面查看最新文件列表
 
 ### 默认管理员凭据
 
