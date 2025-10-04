@@ -116,6 +116,20 @@ Database connection string provided to `neon()` is not a valid URL
 2. 访问 `https://你的域名/api/fix-files-data` 并发送POST请求来修复数据格式
 3. 等待修复完成后重新测试文件管理功能
 
+#### 留言提交问题
+如果遇到"Failed to add comment: column "ip" of relation "comments" does not exist"错误：
+
+1. 这表示comments表结构不正确，缺少ip列
+2. 访问 `https://你的域名/api/fix-comments-table` 并发送POST请求来修复表结构
+3. 等待修复完成后重新测试留言功能
+
+#### 后台添加子文件问题
+如果后台无法添加子文件：
+
+1. 确保已正确登录后台管理系统
+2. 检查认证令牌是否有效
+3. 使用测试页面 [test-add-file.html](file:///c:/Users/Administrator/Desktop/test/test-add-file.html) 来诊断问题
+
 ### 默认管理员凭据
 
 - 用户名：`admin`
@@ -129,6 +143,7 @@ wangpan/
 │   ├── auth.js
 │   ├── comments.js
 │   ├── files.js
+│   ├── fix-comments-table.js
 │   ├── fix-files-data.js
 │   ├── init-db.js
 │   ├── test-db.js

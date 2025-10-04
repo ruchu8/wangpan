@@ -600,18 +600,18 @@ async function submitComment(event) {
         // 组合联系方式显示名称
         const name = `${contactType}:${contactInfo}`;
         
-        // 先提交留言，不等待IP地址获取完成
+        // 等待IP地址获取完成
+        const ip = await ipPromise;
+        console.log('Client IP:', ip);
+        
+        // 提交留言，包含IP地址
         const response = await fetch('/api/comments', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, content })
+            body: JSON.stringify({ name, content, ip })
         });
-        
-        // 等待IP地址获取完成
-        const ip = await ipPromise;
-        console.log('Client IP:', ip);
         
         console.log('Comment API response:', response.status);
         

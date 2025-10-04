@@ -38,7 +38,7 @@ async function initializeDatabase() {
     
     console.log('Initializing comments table...');
     
-    // 创建留言表
+    // 创建留言表（使用新的语法确保表结构正确）
     await sql`
       CREATE TABLE IF NOT EXISTS comments (
         id TEXT PRIMARY KEY,
@@ -50,7 +50,36 @@ async function initializeDatabase() {
         reply TEXT
       )
     `;
-    console.log('✅ comments table ensured');
+    
+    // 检查现有表结构并修复（如果需要）
+    try {
+      // 尝试添加缺失的列
+      try {
+        await sql`ALTER TABLE comments ADD COLUMN ip TEXT`;
+        console.log('✅ Added ip column (if it was missing)');
+      } catch (e) {
+        // 列可能已经存在，忽略错误
+        console.log('ℹ️  ip column already exists or error adding it');
+      }
+      
+      try {
+        await sql`ALTER TABLE comments ADD COLUMN reply TEXT`;
+        console.log('✅ Added reply column (if it was missing)');
+      } catch (e) {
+        // 列可能已经存在，忽略错误
+        console.log('ℹ️  reply column already exists or error adding it');
+      }
+      
+      try {
+        await sql`ALTER TABLE comments ADD COLUMN approved BOOLEAN DEFAULT false`;
+        console.log('✅ Added approved column (if it was missing)');
+      } catch (e) {
+        // 列可能已经存在，忽略错误
+        console.log('ℹ️  approved column already exists or error adding it');
+      }
+    } catch (alterError) {
+      console.log('ℹ️  Column check/alter completed');
+    }
     
     console.log('✅ Comments database initialization completed');
     return true;

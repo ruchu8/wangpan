@@ -222,3 +222,33 @@
 [2025-10-04T07:19:54.900Z] Comment created with ID: 1759562393709
 [2025-10-04T07:19:57.958Z] GET /api/comments called
 [2025-10-04T07:19:58.334Z] Returning 2 comments to user
+[2025-10-04T07:28:18.818Z] GET /api/files called
+[2025-10-04T07:28:18.820Z] GET /api/comments called
+[2025-10-04T07:28:19.248Z] Returning 4 files
+[2025-10-04T07:28:19.342Z] GET /api/files called
+[2025-10-04T07:28:19.657Z] Returning 2 comments to admin
+[2025-10-04T07:28:19.762Z] Returning 4 files
+[2025-10-04T07:28:23.638Z] PUT /api/files called
+[2025-10-04T07:28:25.433Z] File at index 0 updated successfully
+[2025-10-04T07:28:25.437Z] GET /api/files called
+[2025-10-04T07:28:25.824Z] Returning 4 files
+[2025-10-04T07:28:28.468Z] GET /api/files called
+[2025-10-04T07:28:28.469Z] GET /api/comments called
+[2025-10-04T07:28:28.863Z] Returning 2 comments to user
+[2025-10-04T07:28:28.882Z] Returning 4 files
+[2025-10-04T07:28:30.273Z] GET /api/files called
+[2025-10-04T07:28:30.274Z] GET /api/comments called
+[2025-10-04T07:28:30.739Z] Returning 4 files
+[2025-10-04T07:28:30.815Z] Returning 2 comments to user
+[2025-10-04T07:28:36.753Z] PUT /api/files called
+[2025-10-04T07:28:38.255Z] File at index 0 updated successfully
+[2025-10-04T07:28:38.265Z] GET /api/files called
+[2025-10-04T07:28:38.612Z] Returning 4 files
+[2025-10-04T07:28:43.783Z] PUT /api/files called
+[2025-10-04T07:28:45.055Z] File at index 0 updated successfully
+[2025-10-04T07:28:45.063Z] GET /api/files called
+[2025-10-04T07:28:45.507Z] Returning 4 files
+[2025-10-04T07:28:56.733Z] PUT /api/files called
+[2025-10-04T07:28:58.029Z] File at index 0 updated successfully
+[2025-10-04T07:28:58.032Z] GET /api/files called
+[2025-10-04T07:28:58.547Z] Returning 4 files
