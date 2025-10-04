@@ -76,10 +76,10 @@ module.exports = async function handler(req, res) {
         return res.status(401).json({ error: 'Invalid token' });
       }
 
-      const { id, approved } = req.body;
+      const { id, approved, reply } = req.body;
       
-      if (!id || approved === undefined) {
-        return res.status(400).json({ error: 'Invalid update data' });
+      if (!id) {
+        return res.status(400).json({ error: 'Comment ID is required' });
       }
 
       let comments = await redis.get('comments') || [];
@@ -95,7 +95,15 @@ module.exports = async function handler(req, res) {
         return res.status(404).json({ error: 'Comment not found' });
       }
       
-      comments[commentIndex].approved = approved;
+      // 更新评论状态或回复
+      if (approved !== undefined) {
+        comments[commentIndex].approved = approved;
+      }
+      
+      if (reply !== undefined) {
+        comments[commentIndex].reply = reply;
+      }
+      
       await redis.set('comments', comments);
       
       return res.status(200).json(comments[commentIndex]);

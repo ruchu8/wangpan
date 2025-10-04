@@ -147,13 +147,25 @@ function renderComments() {
         
         const date = new Date(comment.date).toLocaleString();
         
-        commentItem.innerHTML = `
+        // 构建留言内容，包括管理员回复
+        let commentContent = `
             <div class="comment-header">
                 <span class="comment-name">${comment.name}</span>
                 <span class="comment-date">${date}</span>
             </div>
             <div class="comment-content">${comment.content}</div>
         `;
+        
+        // 如果有管理员回复，则显示
+        if (comment.reply) {
+            commentContent += `
+                <div class="admin-reply mt-2 p-2 bg-light rounded">
+                    <strong>管理员回复:</strong> ${comment.reply}
+                </div>
+            `;
+        }
+        
+        commentItem.innerHTML = commentContent;
         
         commentsList.appendChild(commentItem);
     });

@@ -284,3 +284,12 @@ footer {
     padding-left: 0; /* 确保子文件列表项靠左边显示 */
     margin-left: 0; /* 确保子文件列表项靠左边显示 */
 }
+
+.admin-reply {
+    border-left: 3px solid #4CAF50;
+    margin-top: 10px;
+}
+
+.admin-reply strong {
+    color: #4CAF50;
+}

@@ -263,8 +263,13 @@ async function saveFile() {
         return;
     }
     
+    // 添加时间戳到文件名
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    const fileNameWithTimestamp = `${name}_${timestamp}`;
+    
     let file = {
-        name,
+        name: fileNameWithTimestamp,
         type,
         url,
         note
@@ -279,8 +284,12 @@ async function saveFile() {
             const childUrl = childItem.querySelector('.child-url').value;
             
             if (childName) {
+                // 为子文件也添加时间戳
+                const childTimestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+                const childNameWithTimestamp = `${childName}_${childTimestamp}`;
+                
                 file.children.push({
-                    name: childName,
+                    name: childNameWithTimestamp,
                     type: 'file',
                     url: childUrl
                 });
@@ -402,13 +411,30 @@ function renderCommentsList() {
         const tr = document.createElement('tr');
         const date = new Date(comment.date).toLocaleString();
         
+        // 显示管理员回复
+        let replySection = '';
+        if (comment.reply) {
+            replySection = `
+                <div class="mt-2 p-2 bg-light rounded">
+                    <strong>管理员回复:</strong> ${comment.reply}
+                </div>
+            `;
+        }
+        
         tr.innerHTML = `
             <td>${comment.name}</td>
-            <td>${comment.content}</td>
-            <td>${date}</td>
-            <td>${comment.approved ? '<span class="badge bg-success">已审核</span>' : '<span class="badge bg-warning">待审核</span>'}</td>
             <td>
-                ${!comment.approved ? `<button class="btn btn-sm btn-success btn-action approve-comment" data-id="${comment.id}">通过</button>` : ''}
+                ${comment.content}
+                ${replySection}
+            </td>
+            <td>${date}</td>
+            <td>
+                ${comment.approved ? '<span class="badge bg-success">已公开</span>' : '<span class="badge bg-warning">待审核</span>'}
+                ${comment.reply ? '<span class="badge bg-info ms-1">已回复</span>' : '<span class="badge bg-secondary ms-1">未回复</span>'}
+            </td>
+            <td>
+                ${!comment.approved ? `<button class="btn btn-sm btn-success btn-action approve-comment" data-id="${comment.id}">公开</button>` : ''}
+                <button class="btn btn-sm btn-info btn-action reply-comment" data-id="${comment.id}">回复</button>
                 <button class="btn btn-sm btn-danger btn-action delete-comment" data-id="${comment.id}">删除</button>
             </td>
         `;
@@ -428,9 +454,102 @@ function renderCommentsList() {
             deleteComment(this.getAttribute('data-id'));
         });
     });
+    
+    // 添加回复事件
+    document.querySelectorAll('.reply-comment').forEach(btn => {
+        btn.addEventListener('click', function() {
+            replyComment(this.getAttribute('data-id'));
+        });
+    });
 }
 
-// 审核留言
+// 回复留言
+function replyComment(id) {
+    const comment = commentsList.find(c => c.id === id);
+    if (!comment) return;
+    
+    // 创建回复模态框
+    const modalHtml = `
+        <div class="modal fade" id="replyModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">回复留言</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label"><strong>用户留言:</strong></label>
+                            <div class="p-2 bg-light rounded">${comment.content}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="replyContent" class="form-label">回复内容:</label>
+                            <textarea class="form-control" id="replyContent" rows="3">${comment.reply || ''}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="saveReplyBtn">保存回复</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // 添加模态框到页面
+    if (document.getElementById('replyModal')) {
+        document.getElementById('replyModal').remove();
+    }
+    
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+    
+    // 显示模态框
+    const replyModal = new bootstrap.Modal(document.getElementById('replyModal'));
+    replyModal.show();
+    
+    // 保存回复事件
+    document.getElementById('saveReplyBtn').addEventListener('click', function() {
+        const replyContent = document.getElementById('replyContent').value;
+        saveReply(id, replyContent);
+        replyModal.hide();
+    });
+}
+
+// 保存回复
+async function saveReply(id, replyContent) {
+    try {
+        const response = await fetch('/api/comments', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                id,
+                reply: replyContent
+            })
+        });
+        
+        if (response.status === 401) {
+            logout();
+            return;
+        }
+        
+        if (response.ok) {
+            loadComments();
+        } else {
+            const error = await response.json();
+            alert(error.error || '回复保存失败');
+        }
+    } catch (error) {
+        console.error('Error saving reply:', error);
+        alert('回复保存失败');
+    }
+}
+
+// 审核留言 (修改为公开留言)
 async function approveComment(id) {
     try {
         const response = await fetch('/api/comments', {
@@ -454,11 +573,11 @@ async function approveComment(id) {
             loadComments();
         } else {
             const error = await response.json();
-            alert(error.error || '审核失败');
+            alert(error.error || '公开留言失败');
         }
     } catch (error) {
         console.error('Error approving comment:', error);
-        alert('审核留言失败');
+        alert('公开留言失败');
     }
 }
 
