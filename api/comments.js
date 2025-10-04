@@ -13,6 +13,7 @@ const sql = neon(databaseUrl);
 // 创建数据库表（如果不存在）
 async function initializeDatabase() {
   try {
+    // 创建留言表
     await sql`
       CREATE TABLE IF NOT EXISTS comments (
         id TEXT PRIMARY KEY,
@@ -25,20 +26,7 @@ async function initializeDatabase() {
       )
     `;
     
-    await sql`
-      CREATE TABLE IF NOT EXISTS admin_tokens (
-        id SERIAL PRIMARY KEY,
-        token TEXT NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `;
-    
-    // 检查是否有管理员令牌，如果没有则创建一个默认的
-    const result = await sql`SELECT * FROM admin_tokens LIMIT 1`;
-    if (result.length === 0) {
-      // 创建默认管理员令牌
-      await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
-    }
+    // 注意：admin_tokens表应该在auth.js中创建和管理
   } catch (error) {
     console.error('Failed to initialize database:', error);
   }
@@ -101,6 +89,7 @@ module.exports = async function handler(req, res) {
       
       if (authHeader && authHeader.startsWith('Bearer ')) {
         const token = authHeader.split(' ')[1];
+        // 验证令牌是否有效
         const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
         if (adminTokenResult.length > 0) {
           isAdmin = true;
@@ -110,7 +99,7 @@ module.exports = async function handler(req, res) {
       
       if (isAdmin && adminToken) {
         // 管理员访问，返回所有留言，包括未审核的，并显示完整联系方式和内容
-        const countResult = await sql`SELECT COUNT(*) FROM comments`;
+        const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
         const totalComments = parseInt(countResult[0].count);
         
         const commentsResult = await sql`
@@ -237,6 +226,7 @@ module.exports = async function handler(req, res) {
       }
 
       const token = authHeader.split(' ')[1];
+      // 验证令牌是否有效
       const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
       
       if (adminTokenResult.length === 0) {
@@ -298,6 +288,7 @@ module.exports = async function handler(req, res) {
       }
 
       const token = authHeader.split(' ')[1];
+      // 验证令牌是否有效
       const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
       
       if (adminTokenResult.length === 0) {

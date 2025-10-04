@@ -13,35 +13,39 @@ const sql = neon(databaseUrl);
 // 创建数据库表（如果不存在）
 async function initializeDatabase() {
   try {
+    // 创建管理员凭证表
     await sql`
       CREATE TABLE IF NOT EXISTS admin_credentials (
         id SERIAL PRIMARY KEY,
-        username TEXT NOT NULL,
+        username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
     `;
     
+    // 创建管理员令牌表
     await sql`
       CREATE TABLE IF NOT EXISTS admin_tokens (
         id SERIAL PRIMARY KEY,
-        token TEXT NOT NULL,
+        token TEXT NOT NULL UNIQUE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
     `;
     
     // 检查是否有管理员凭证，如果没有则创建默认的
-    const result = await sql`SELECT * FROM admin_credentials LIMIT 1`;
-    if (result.length === 0) {
+    const result = await sql`SELECT COUNT(*) as count FROM admin_credentials`;
+    if (parseInt(result[0].count) === 0) {
       // 创建默认管理员凭证
       await sql`INSERT INTO admin_credentials (username, password) VALUES ('admin', 'admin123')`;
+      console.log('Default admin credentials created');
     }
     
     // 检查是否有管理员令牌，如果没有则创建一个默认的
-    const tokenResult = await sql`SELECT * FROM admin_tokens LIMIT 1`;
-    if (tokenResult.length === 0) {
+    const tokenResult = await sql`SELECT COUNT(*) as count FROM admin_tokens`;
+    if (parseInt(tokenResult[0].count) === 0) {
       // 创建默认管理员令牌
       await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
+      console.log('Default admin token created');
     }
   } catch (error) {
     console.error('Failed to initialize database:', error);
@@ -73,22 +77,27 @@ module.exports = async function handler(req, res) {
       }
 
       // 获取管理员凭证
-      const adminCredentialsResult = await sql`SELECT * FROM admin_credentials LIMIT 1`;
+      const adminCredentialsResult = await sql`SELECT * FROM admin_credentials WHERE username = ${username} LIMIT 1`;
       
       if (adminCredentialsResult.length === 0) {
-        return res.status(500).json({ error: 'Admin credentials not initialized' });
+        return res.status(401).json({ 
+          success: false, 
+          message: 'Invalid credentials' 
+        });
       }
       
       const adminCredentials = adminCredentialsResult[0];
-      const adminTokenResult = await sql`SELECT * FROM admin_tokens LIMIT 1`;
       
-      if (adminTokenResult.length === 0) {
-        return res.status(500).json({ error: 'Admin token not initialized' });
-      }
-      
-      const adminToken = adminTokenResult[0].token;
-      
-      if (username === adminCredentials.username && password === adminCredentials.password) {
+      if (password === adminCredentials.password) {
+        // 获取管理员令牌
+        const adminTokenResult = await sql`SELECT * FROM admin_tokens LIMIT 1`;
+        
+        if (adminTokenResult.length === 0) {
+          return res.status(500).json({ error: 'Admin token not initialized' });
+        }
+        
+        const adminToken = adminTokenResult[0].token;
+        
         return res.status(200).json({ 
           success: true, 
           token: adminToken,

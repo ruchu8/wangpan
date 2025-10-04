@@ -165,3 +165,42 @@
 [2025-10-04T06:54:45.292Z] GET /api/comments called
 [2025-10-04T06:54:45.675Z] Returning 2 files
 [2025-10-04T06:54:46.415Z] Returning 1 comments to admin
+[2025-10-04T06:55:49.375Z] GET /api/files called
+[2025-10-04T06:55:49.376Z] GET /api/comments called
+[2025-10-04T06:55:49.881Z] Returning 2 files
+[2025-10-04T06:55:50.309Z] GET /api/files called
+[2025-10-04T06:55:50.347Z] Returning 1 comments to admin
+[2025-10-04T06:55:50.348Z] GET /api/comments called
+[2025-10-04T06:55:50.684Z] Returning 2 files
+[2025-10-04T06:55:50.758Z] Returning 1 comments to user
+[2025-10-04T07:00:16.668Z] GET /api/files called
+[2025-10-04T07:00:16.671Z] GET /api/comments called
+[2025-10-04T07:00:17.094Z] Returning 1 comments to user
+[2025-10-04T07:00:17.095Z] Returning 2 files
+[2025-10-04T07:01:21.503Z] GET /api/files called
+[2025-10-04T07:01:21.505Z] GET /api/comments called
+[2025-10-04T07:01:21.920Z] Returning 2 files
+[2025-10-04T07:01:21.953Z] Returning 1 comments to user
+[2025-10-04T07:01:39.039Z] GET /api/files called
+[2025-10-04T07:01:39.041Z] GET /api/comments called
+[2025-10-04T07:01:39.428Z] Returning 1 comments to user
+[2025-10-04T07:01:39.465Z] Returning 2 files
+[2025-10-04T07:01:39.502Z] GET /api/files called
+[2025-10-04T07:01:39.504Z] GET /api/comments called
+[2025-10-04T07:01:39.905Z] Returning 2 files
+[2025-10-04T07:01:40.409Z] Returning 1 comments to admin
+[2025-10-04T07:01:40.667Z] GET /api/comments called
+[2025-10-04T07:01:41.530Z] GET /api/files called
+[2025-10-04T07:01:41.532Z] Returning 1 comments to admin
+[2025-10-04T07:01:41.942Z] Returning 2 files
+[2025-10-04T07:01:44.627Z] POST /api/files called
+[2025-10-04T07:01:45.586Z] Current files before adding: [{"url":"","name":"2","note":"2","type":"folder","children":[],"expanded":false},{"url":"","name":"w菜市场","note":"测试","type":"folder","children":[],"expanded":false}]
+[2025-10-04T07:01:45.587Z] Files after adding new file: [{"url":"","name":"2","note":"2","type":"folder","children":[],"expanded":false},{"url":"","name":"w菜市场","note":"测试","type":"folder","children":[],"expanded":false},{"name":"1","type":"folder","url":"","note":"1","children":[],"expanded":false}]
+[2025-10-04T07:01:46.114Z] Storage set result: true
+[2025-10-04T07:01:46.114Z] File created successfully: 1
+[2025-10-04T07:01:46.118Z] GET /api/files called
+[2025-10-04T07:01:46.525Z] Returning 3 files
+[2025-10-04T07:01:47.737Z] GET /api/files called
+[2025-10-04T07:01:47.739Z] GET /api/comments called
+[2025-10-04T07:01:48.104Z] Returning 1 comments to user
+[2025-10-04T07:01:48.138Z] Returning 3 files

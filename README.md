@@ -69,6 +69,21 @@ npm run dev
 
 详细部署说明请参考 [VERCEL_DEPLOYMENT_INSTRUCTIONS.md](VERCEL_DEPLOYMENT_INSTRUCTIONS.md)
 
+### Vercel部署后问题解决
+
+如果部署后出现无法留言或无法登录后台的问题，请执行以下步骤：
+
+1. 运行数据库修复脚本：
+   ```bash
+   node fix-database.js
+   ```
+
+2. 检查管理员凭证：
+   - 默认用户名：`admin`
+   - 默认密码：`admin123`
+
+3. 如果问题仍然存在，请检查Vercel函数日志以获取更多信息。
+
 ## 项目结构
 
 ```
