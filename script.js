@@ -203,14 +203,18 @@ function renderFileList() {
         fileList.appendChild(li);
 
         // 只有当前文件夹是展开状态时才显示子文件
-        if (item.type === 'folder' && expandedFolderIndex === index && item.children && Array.isArray(item.children)) {
-            const ul = document.createElement('ul');
-            ul.className = 'ms-3 mt-1';
-            item.children.forEach((child, childIndex) => {
-                const childLi = renderItem(child, childIndex, true);
-                ul.appendChild(childLi);
-            });
-            li.appendChild(ul);
+        if (item.type === 'folder' && expandedFolderIndex === index && item.children) {
+            // 确保 children 是数组
+            const childrenArray = Array.isArray(item.children) ? item.children : [];
+            if (childrenArray.length > 0) {
+                const ul = document.createElement('ul');
+                ul.className = 'ms-3 mt-1';
+                childrenArray.forEach((child, childIndex) => {
+                    const childLi = renderItem(child, childIndex, true);
+                    ul.appendChild(childLi);
+                });
+                li.appendChild(ul);
+            }
         }
         return li;
     }

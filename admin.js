@@ -908,18 +908,18 @@ async function importData(event) {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${authToken}`
                         },
-<<<<<<< Updated upstream
-                        body: JSON.stringify(importedData.files)
-=======
                         body: JSON.stringify({
                             filesList: importedData.files || []
                         })
->>>>>>> Stashed changes
                     });
                     
                     if (!filesResponse.ok) {
-                        throw new Error('导入文件数据失败');
+                        const errorData = await filesResponse.json();
+                        throw new Error(errorData.error || '导入文件数据失败');
                     }
+                    
+                    const result = await filesResponse.json();
+                    console.log('Files imported successfully:', result);
                 } catch (error) {
                     console.error('Error importing files:', error);
                     alert('导入文件数据失败: ' + error.message);
@@ -934,12 +934,18 @@ async function importData(event) {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${authToken}`
                         },
-                        body: JSON.stringify(importedData.comments)
+                        body: JSON.stringify({
+                            commentsList: importedData.comments
+                        })
                     });
                     
                     if (!commentsResponse.ok) {
-                        throw new Error('导入留言数据失败');
+                        const errorData = await commentsResponse.json();
+                        throw new Error(errorData.error || '导入留言数据失败');
                     }
+                    
+                    const result = await commentsResponse.json();
+                    console.log('Comments imported successfully:', result);
                 } catch (error) {
                     console.error('Error importing comments:', error);
                     alert('导入留言数据失败: ' + error.message);
