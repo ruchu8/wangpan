@@ -93,26 +93,53 @@ module.exports = async function handler(req, res) {
         let fixedCount = 0;
         for (const row of result) {
           const id = row.id;
-          const data = row.data;
+          const rawData = row.data;
           
-          console.log(`Checking row ${id}:`, typeof data, data);
+          console.log(`Checking row ${id}:`, typeof rawData, JSON.stringify(rawData));
+          
+          // 检查数据是否需要修复
+          let needsFix = false;
+          let fixedData = [];
           
           // 如果data不是字符串，或者不是有效的JSON，我们需要修复它
-          if (typeof data !== 'string') {
-            console.log(`Fixing row ${id} - data is not a string`);
-            await sql`UPDATE files SET data = ${JSON.stringify([])} WHERE id = ${id}`;
-            fixedCount++;
+          if (typeof rawData !== 'string') {
+            console.log(`Fixing row ${id} - data is not a string:`, typeof rawData);
+            needsFix = true;
+            fixedData = [];
           } else {
-            try {
-              // 尝试解析JSON
-              JSON.parse(data);
-              console.log(`Row ${id} data is valid JSON`);
-            } catch (parseError) {
-              console.log(`Fixing row ${id} - data is invalid JSON:`, data);
-              // 如果解析失败，设置为空数组
-              await sql`UPDATE files SET data = ${JSON.stringify([])} WHERE id = ${id}`;
-              fixedCount++;
+            // 检查是否是"[object Object]"这样的字符串
+            if (rawData.startsWith('[object') && rawData.endsWith(']')) {
+              console.log(`Fixing row ${id} - data is object string representation:`, rawData);
+              needsFix = true;
+              fixedData = [];
+            } else {
+              try {
+                // 尝试解析JSON
+                const parsed = JSON.parse(rawData);
+                // 检查解析后的数据是否是数组
+                if (!Array.isArray(parsed)) {
+                  console.log(`Fixing row ${id} - parsed data is not an array:`, typeof parsed);
+                  needsFix = true;
+                  // 如果是对象，转换为数组
+                  fixedData = parsed ? [parsed] : [];
+                } else {
+                  console.log(`Row ${id} data is valid`);
+                  // 数据有效，不需要修复
+                  continue;
+                }
+              } catch (parseError) {
+                console.log(`Fixing row ${id} - data is invalid JSON:`, rawData);
+                needsFix = true;
+                fixedData = [];
+              }
             }
+          }
+          
+          if (needsFix) {
+            // 修复数据
+            await sql`UPDATE files SET data = ${JSON.stringify(fixedData)} WHERE id = ${id}`;
+            fixedCount++;
+            console.log(`✅ Row ${id} fixed with data:`, JSON.stringify(fixedData));
           }
         }
         

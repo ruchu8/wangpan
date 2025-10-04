@@ -122,9 +122,52 @@ module.exports = async function handler(req, res) {
       // 检查表中的数据
       try {
         console.log('Checking files data...');
-        const result = await sql`SELECT data FROM files LIMIT 1`;
-        const files = result.length > 0 ? JSON.parse(result[0].data) : [];
-        console.log('✅ Files data retrieved successfully');
+        const result = await sql`SELECT id, data FROM files`;
+        
+        if (result.length === 0) {
+          console.log('No data found in files table');
+          return res.status(200).json({
+            success: true,
+            message: 'Files API is working correctly, but no data found',
+            databaseVersion: versionResult[0].version,
+            availableTables: tableNames,
+            filesCount: 0,
+            sampleData: []
+          });
+        }
+        
+        // 检查每一行的数据格式
+        const dataCheck = result.map(row => {
+          const id = row.id;
+          const rawData = row.data;
+          
+          return {
+            id: id,
+            dataType: typeof rawData,
+            isString: typeof rawData === 'string',
+            isJson: typeof rawData === 'string' ? (() => {
+              try {
+                JSON.parse(rawData);
+                return true;
+              } catch {
+                return false;
+              }
+            })() : false,
+            isObjectString: typeof rawData === 'string' && rawData.startsWith('[object') && rawData.endsWith(']'),
+            dataPreview: typeof rawData === 'string' ? rawData.substring(0, 50) : String(rawData)
+          };
+        });
+        
+        // 尝试解析第一行数据
+        let files = [];
+        let parseError = null;
+        try {
+          files = result.length > 0 ? JSON.parse(result[0].data) : [];
+        } catch (error) {
+          parseError = error.message;
+        }
+        
+        console.log('✅ Files data check completed');
         
         return res.status(200).json({
           success: true,
@@ -132,6 +175,8 @@ module.exports = async function handler(req, res) {
           databaseVersion: versionResult[0].version,
           availableTables: tableNames,
           filesCount: files.length,
+          dataCheck: dataCheck,
+          parseError: parseError,
           sampleData: files.slice(0, 3) // 只返回前3个文件作为示例
         });
       } catch (dataError) {
