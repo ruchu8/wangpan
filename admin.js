@@ -479,14 +479,9 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
             return;
         }
         
-        // 添加时间戳到文件名
-        const now = new Date();
-        const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-        const fileNameWithTimestamp = `${fileName}_${timestamp}`;
-        
-        // 添加文件到文件夹
+        // 添加文件到文件夹（不添加时间戳到文件名）
         const newFile = {
-            name: fileNameWithTimestamp,
+            name: fileName,
             type: 'file',
             url: fileUrl,
             date: new Date().toISOString().split('T')[0] // 添加日期，格式为 YYYY-MM-DD

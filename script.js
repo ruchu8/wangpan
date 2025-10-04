@@ -170,7 +170,7 @@ function renderFileList() {
             displayContent = `<i class="bi ${iconClass}"></i> ${item.name}`;
         } else {
             // 文件使用tu.png图标
-            displayContent = `<img src="tu.png" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${item.name}`;
+            displayContent = `<img src="img/tu.png" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${item.name}`;
         }
         
         // 如果有备注，添加备注

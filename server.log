@@ -1962,3 +1962,364 @@
 [2025-10-04T09:36:33.932Z] GET /api/files called
 [2025-10-04T09:36:33.965Z] Returning 10 comments to user
 [2025-10-04T09:36:34.341Z] Returning 6 files
+[2025-10-04T09:36:49.579Z] GET /api/files called
+[2025-10-04T09:36:49.976Z] Returning 6 files
+[2025-10-04T09:36:54.358Z] DELETE /api/files called
+[2025-10-04T09:36:55.552Z] File at index 0 deleted successfully
+[2025-10-04T09:36:55.555Z] GET /api/files called
+[2025-10-04T09:36:55.925Z] Returning 5 files
+[2025-10-04T09:36:55.926Z] DELETE /api/files called
+[2025-10-04T09:36:57.192Z] File at index 1 deleted successfully
+[2025-10-04T09:36:57.223Z] GET /api/files called
+[2025-10-04T09:36:57.225Z] GET /api/comments called
+[2025-10-04T09:36:57.588Z] Returning 4 files
+[2025-10-04T09:36:58.084Z] Returning 10 comments to admin
+[2025-10-04T09:36:58.335Z] DELETE /api/files called
+[2025-10-04T09:36:59.700Z] File at index 0 deleted successfully
+[2025-10-04T09:36:59.702Z] DELETE /api/files called
+[2025-10-04T09:36:59.705Z] GET /api/files called
+[2025-10-04T09:37:00.116Z] Returning 3 files
+[2025-10-04T09:37:00.194Z] DELETE /api/files called
+[2025-10-04T09:37:00.935Z] File not found at index: 2
+[2025-10-04T09:37:00.983Z] File at index 1 deleted successfully
+[2025-10-04T09:37:01.519Z] GET /api/files called
+[2025-10-04T09:37:01.939Z] Returning 2 files
+[2025-10-04T09:37:02.282Z] DELETE /api/files called
+[2025-10-04T09:37:03.630Z] File at index 1 deleted successfully
+[2025-10-04T09:37:03.631Z] DELETE /api/files called
+[2025-10-04T09:37:03.633Z] GET /api/files called
+[2025-10-04T09:37:04.000Z] Returning 1 files
+[2025-10-04T09:37:04.002Z] GET /api/files called
+[2025-10-04T09:37:04.413Z] Returning 1 files
+[2025-10-04T09:37:04.415Z] GET /api/files called
+[2025-10-04T09:37:04.776Z] Returning 0 files
+[2025-10-04T09:37:04.843Z] File at index 0 deleted successfully
+[2025-10-04T09:37:04.849Z] GET /api/files called
+[2025-10-04T09:37:05.268Z] Returning 0 files
+[2025-10-04T09:37:27.418Z] GET /api/files called
+[2025-10-04T09:37:27.820Z] Returning 0 files
+[2025-10-04T09:37:34.407Z] GET /api/files called
+[2025-10-04T09:37:34.846Z] Returning 0 files
+[2025-10-04T09:37:34.847Z] GET /api/files called
+[2025-10-04T09:37:35.265Z] Returning 0 files
+[2025-10-04T09:37:40.821Z] POST /api/files called
+[2025-10-04T09:37:41.644Z] Current files before adding: []
+[2025-10-04T09:37:41.645Z] Files after adding new file: [{"name":"BOSS计时器下载专区-","type":"folder","url":"","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","children":[],"expanded":false}]
+[2025-10-04T09:37:42.100Z] Storage set result: true
+[2025-10-04T09:37:42.100Z] File created successfully: BOSS计时器下载专区-
+[2025-10-04T09:37:42.104Z] GET /api/files called
+[2025-10-04T09:37:42.470Z] Returning 1 files
+[2025-10-04T09:37:48.317Z] POST /api/files called
+[2025-10-04T09:37:49.109Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false}]
+[2025-10-04T09:37:49.109Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","type":"folder","url":"","note":"部分杀毒会误报毒。介意勿下载","children":[],"expanded":false}]
+[2025-10-04T09:37:49.618Z] Storage set result: true
+[2025-10-04T09:37:49.619Z] File created successfully: 辅助类相关工具下载（易语言编写部分杀毒会报毒）
+[2025-10-04T09:37:49.622Z] GET /api/files called
+[2025-10-04T09:37:50.062Z] Returning 2 files
+[2025-10-04T09:37:57.234Z] GET /api/files called
+[2025-10-04T09:37:57.631Z] Returning 2 files
+[2025-10-04T09:37:58.183Z] POST /api/files called
+[2025-10-04T09:37:58.952Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false}]
+[2025-10-04T09:37:58.952Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"name":"石墓祖玛阁不迷路补丁(带房间补丁版)","type":"folder","url":"","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","children":[],"expanded":false}]
+[2025-10-04T09:37:59.432Z] Storage set result: true
+[2025-10-04T09:37:59.432Z] File created successfully: 石墓祖玛阁不迷路补丁(带房间补丁版)
+[2025-10-04T09:37:59.435Z] GET /api/files called
+[2025-10-04T09:37:59.810Z] Returning 3 files
+[2025-10-04T09:38:04.414Z] GET /api/files called
+[2025-10-04T09:38:04.835Z] Returning 3 files
+[2025-10-04T09:38:04.836Z] GET /api/files called
+[2025-10-04T09:38:05.231Z] Returning 3 files
+[2025-10-04T09:38:08.078Z] GET /api/files called
+[2025-10-04T09:38:08.450Z] Returning 3 files
+[2025-10-04T09:38:08.456Z] PUT /api/files called
+[2025-10-04T09:38:09.409Z] GET /api/comments called
+[2025-10-04T09:38:09.704Z] File at index 0 updated successfully
+[2025-10-04T09:38:09.706Z] GET /api/files called
+[2025-10-04T09:38:09.709Z] GET /api/files called
+[2025-10-04T09:38:09.848Z] Returning 10 comments to user
+[2025-10-04T09:38:10.112Z] Returning 3 files
+[2025-10-04T09:38:10.129Z] Returning 3 files
+[2025-10-04T09:38:10.131Z] GET /api/files called
+[2025-10-04T09:38:10.497Z] Returning 3 files
+[2025-10-04T09:38:27.414Z] GET /api/files called
+[2025-10-04T09:38:27.832Z] Returning 3 files
+[2025-10-04T09:38:40.424Z] GET /api/files called
+[2025-10-04T09:38:40.832Z] Returning 3 files
+[2025-10-04T09:38:40.834Z] GET /api/files called
+[2025-10-04T09:38:41.231Z] Returning 3 files
+[2025-10-04T09:38:57.232Z] GET /api/files called
+[2025-10-04T09:38:57.903Z] Returning 3 files
+[2025-10-04T09:39:09.814Z] POST /api/files called
+[2025-10-04T09:39:10.417Z] GET /api/files called
+[2025-10-04T09:39:10.587Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false}]
+[2025-10-04T09:39:10.587Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"name":"怪物以及BOSS射线提示补丁","type":"folder","url":"","note":"【怪物专区】","children":[{"name":"测试_20251004","type":"file","url":"测试","date":"2025-10-04"}],"expanded":false}]
+[2025-10-04T09:39:10.824Z] Returning 3 files
+[2025-10-04T09:39:10.826Z] GET /api/files called
+[2025-10-04T09:39:11.201Z] Returning 3 files
+[2025-10-04T09:39:11.347Z] Storage set result: true
+[2025-10-04T09:39:11.347Z] File created successfully: 怪物以及BOSS射线提示补丁
+[2025-10-04T09:39:11.351Z] GET /api/files called
+[2025-10-04T09:39:11.769Z] Returning 4 files
+[2025-10-04T09:39:19.606Z] POST /api/files called
+[2025-10-04T09:39:20.380Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false}]
+[2025-10-04T09:39:20.380Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","type":"folder","url":"","note":"【技能补丁专区】","children":[{"name":"测试_20251004","type":"file","url":"测试","date":"2025-10-04"}],"expanded":false}]
+[2025-10-04T09:39:20.845Z] Storage set result: true
+[2025-10-04T09:39:20.846Z] File created successfully: 蓝盾、小火墙、小冰咆哮 等技能类 补丁
+[2025-10-04T09:39:20.849Z] GET /api/files called
+[2025-10-04T09:39:21.274Z] Returning 5 files
+[2025-10-04T09:39:27.225Z] GET /api/files called
+[2025-10-04T09:39:27.651Z] Returning 5 files
+[2025-10-04T09:39:28.654Z] POST /api/files called
+[2025-10-04T09:39:29.471Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false}]
+[2025-10-04T09:39:29.472Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"name":"大小地板砖贴图-","type":"folder","url":"","note":"【地砖专区】","children":[{"name":"测试_20251004","type":"file","url":"测试","date":"2025-10-04"}],"expanded":false}]
+[2025-10-04T09:39:29.934Z] Storage set result: true
+[2025-10-04T09:39:29.934Z] File created successfully: 大小地板砖贴图-
+[2025-10-04T09:39:29.942Z] GET /api/files called
+[2025-10-04T09:39:30.327Z] Returning 6 files
+[2025-10-04T09:39:36.734Z] POST /api/files called
+[2025-10-04T09:39:37.503Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false}]
+[2025-10-04T09:39:37.503Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"name":"地图类补丁","type":"folder","url":"","note":"【地图专区】","children":[{"name":"测试_20251004","type":"file","url":"测试","date":"2025-10-04"}],"expanded":false}]
+[2025-10-04T09:39:37.982Z] Storage set result: true
+[2025-10-04T09:39:37.983Z] File created successfully: 地图类补丁
+[2025-10-04T09:39:37.987Z] GET /api/files called
+[2025-10-04T09:39:38.356Z] Returning 7 files
+[2025-10-04T09:39:39.414Z] GET /api/files called
+[2025-10-04T09:39:39.553Z] GET /api/files called
+[2025-10-04T09:39:39.554Z] GET /api/comments called
+[2025-10-04T09:39:39.849Z] Returning 7 files
+[2025-10-04T09:39:39.939Z] Returning 7 files
+[2025-10-04T09:39:39.940Z] GET /api/files called
+[2025-10-04T09:39:39.953Z] Returning 10 comments to user
+[2025-10-04T09:39:40.348Z] Returning 7 files
+[2025-10-04T09:39:49.031Z] GET /api/files called
+[2025-10-04T09:39:49.461Z] Returning 7 files
+[2025-10-04T09:39:49.467Z] PUT /api/files called
+[2025-10-04T09:39:50.664Z] File at index 0 updated successfully
+[2025-10-04T09:39:50.667Z] GET /api/files called
+[2025-10-04T09:39:51.079Z] Returning 7 files
+[2025-10-04T09:39:57.229Z] GET /api/files called
+[2025-10-04T09:39:57.567Z] Returning 7 files
+[2025-10-04T09:39:59.592Z] PUT /api/files called
+[2025-10-04T09:40:00.914Z] File at index 0 updated successfully
+[2025-10-04T09:40:00.919Z] GET /api/files called
+[2025-10-04T09:40:01.313Z] Returning 7 files
+[2025-10-04T09:40:01.917Z] GET /api/files called
+[2025-10-04T09:40:01.918Z] GET /api/comments called
+[2025-10-04T09:40:02.312Z] Returning 10 comments to user
+[2025-10-04T09:40:02.329Z] Returning 7 files
+[2025-10-04T09:40:02.331Z] GET /api/files called
+[2025-10-04T09:40:02.748Z] Returning 7 files
+[2025-10-04T09:40:08.884Z] GET /api/files called
+[2025-10-04T09:40:08.889Z] GET /api/comments called
+[2025-10-04T09:40:09.302Z] Returning 7 files
+[2025-10-04T09:40:09.996Z] Returning 10 comments to admin
+[2025-10-04T09:40:14.831Z] GET /api/files called
+[2025-10-04T09:40:15.244Z] Returning 7 files
+[2025-10-04T09:40:15.253Z] PUT /api/files called
+[2025-10-04T09:40:16.561Z] File at index 0 updated successfully
+[2025-10-04T09:40:16.566Z] GET /api/files called
+[2025-10-04T09:40:16.951Z] Returning 7 files
+[2025-10-04T09:40:26.993Z] PUT /api/files called
+[2025-10-04T09:40:28.607Z] File at index 0 updated successfully
+[2025-10-04T09:40:28.610Z] GET /api/files called
+[2025-10-04T09:40:29.023Z] Returning 7 files
+[2025-10-04T09:40:29.737Z] GET /api/files called
+[2025-10-04T09:40:29.739Z] GET /api/comments called
+[2025-10-04T09:40:30.120Z] Returning 10 comments to user
+[2025-10-04T09:40:30.160Z] Returning 7 files
+[2025-10-04T09:40:30.161Z] GET /api/files called
+[2025-10-04T09:40:30.506Z] Returning 7 files
+[2025-10-04T09:40:38.897Z] GET /api/files called
+[2025-10-04T09:40:39.324Z] Returning 7 files
+[2025-10-04T09:40:39.326Z] PUT /api/files called
+[2025-10-04T09:40:40.584Z] File at index 4 updated successfully
+[2025-10-04T09:40:40.590Z] GET /api/files called
+[2025-10-04T09:40:40.992Z] Returning 7 files
+[2025-10-04T09:40:40.995Z] PUT /api/files called
+[2025-10-04T09:40:42.375Z] File at index 4 updated successfully
+[2025-10-04T09:40:42.379Z] GET /api/files called
+[2025-10-04T09:40:42.817Z] Returning 7 files
+[2025-10-04T09:40:54.477Z] POST /api/files called
+[2025-10-04T09:40:55.355Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false}]
+[2025-10-04T09:40:55.355Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"name":"NPC传送员增大增粗-","type":"folder","url":"","note":"防止道士召狗堵门","children":[],"expanded":false}]
+[2025-10-04T09:40:56.097Z] Storage set result: true
+[2025-10-04T09:40:56.098Z] File created successfully: NPC传送员增大增粗-
+[2025-10-04T09:40:56.105Z] GET /api/files called
+[2025-10-04T09:40:56.515Z] Returning 8 files
+[2025-10-04T09:41:00.407Z] GET /api/files called
+[2025-10-04T09:41:00.844Z] Returning 8 files
+[2025-10-04T09:41:00.846Z] GET /api/files called
+[2025-10-04T09:41:01.246Z] Returning 8 files
+[2025-10-04T09:41:06.214Z] POST /api/files called
+[2025-10-04T09:41:07.001Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"NPC传送员增大增粗-","note":"防止道士召狗堵门","type":"folder","children":[],"expanded":false}]
+[2025-10-04T09:41:07.001Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"NPC传送员增大增粗-","note":"防止道士召狗堵门","type":"folder","children":[],"expanded":false},{"name":"极品补丁装备射线补丁","type":"folder","url":"","note":"【装备射线专区】","children":[],"expanded":false}]
+[2025-10-04T09:41:07.417Z] Storage set result: true
+[2025-10-04T09:41:07.418Z] File created successfully: 极品补丁装备射线补丁
+[2025-10-04T09:41:07.421Z] GET /api/files called
+[2025-10-04T09:41:08.082Z] Returning 9 files
+[2025-10-04T09:41:08.885Z] GET /api/files called
+[2025-10-04T09:41:09.282Z] Returning 9 files
+[2025-10-04T09:41:12.120Z] GET /api/files called
+[2025-10-04T09:41:12.127Z] GET /api/comments called
+[2025-10-04T09:41:12.503Z] Returning 10 comments to user
+[2025-10-04T09:41:12.557Z] Returning 9 files
+[2025-10-04T09:41:12.558Z] GET /api/files called
+[2025-10-04T09:41:12.973Z] Returning 9 files
+[2025-10-04T09:41:21.454Z] POST /api/files called
+[2025-10-04T09:41:22.288Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"NPC传送员增大增粗-","note":"防止道士召狗堵门","type":"folder","children":[],"expanded":false},{"url":"","name":"极品补丁装备射线补丁","note":"【装备射线专区】","type":"folder","children":[],"expanded":false}]
+[2025-10-04T09:41:22.289Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"NPC传送员增大增粗-","note":"防止道士召狗堵门","type":"folder","children":[],"expanded":false},{"url":"","name":"极品补丁装备射线补丁","note":"【装备射线专区】","type":"folder","children":[],"expanded":false},{"name":"神兽以及其他宝宝宠物补丁","type":"folder","url":"","note":"【宠物专区】","children":[],"expanded":false}]
+[2025-10-04T09:41:22.803Z] Storage set result: true
+[2025-10-04T09:41:22.803Z] File created successfully: 神兽以及其他宝宝宠物补丁
+[2025-10-04T09:41:22.807Z] GET /api/files called
+[2025-10-04T09:41:23.173Z] Returning 10 files
+[2025-10-04T09:41:32.150Z] POST /api/files called
+[2025-10-04T09:41:33.139Z] Current files before adding: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"NPC传送员增大增粗-","note":"防止道士召狗堵门","type":"folder","children":[],"expanded":false},{"url":"","name":"极品补丁装备射线补丁","note":"【装备射线专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"神兽以及其他宝宝宠物补丁","note":"【宠物专区】","type":"folder","children":[],"expanded":false}]
+[2025-10-04T09:41:33.139Z] Files after adding new file: [{"url":"","name":"BOSS计时器下载专区-","note":"BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】","type":"folder","children":[],"expanded":false},{"url":"","name":"辅助类相关工具下载（易语言编写部分杀毒会报毒）","note":"部分杀毒会误报毒。介意勿下载","type":"folder","children":[],"expanded":false},{"url":"","name":"石墓祖玛阁不迷路补丁(带房间补丁版)","note":"祖玛阁石墓阵带房间编号带每个房间GPS导航","type":"folder","children":[],"expanded":false},{"url":"","name":"怪物以及BOSS射线提示补丁","note":"【怪物专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"蓝盾、小火墙、小冰咆哮 等技能类 补丁","note":"【技能补丁专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"大小地板砖贴图-","note":"【地砖专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"地图类补丁","note":"【地图专区】","type":"folder","children":[{"url":"测试","date":"2025-10-04","name":"测试_20251004","type":"file"}],"expanded":false},{"url":"","name":"NPC传送员增大增粗-","note":"防止道士召狗堵门","type":"folder","children":[],"expanded":false},{"url":"","name":"极品补丁装备射线补丁","note":"【装备射线专区】","type":"folder","children":[],"expanded":false},{"url":"","name":"神兽以及其他宝宝宠物补丁","note":"【宠物专区】","type":"folder","children":[],"expanded":false},{"name":"网上搬运的补丁","type":"folder","url":"","note":"网上下载非本人自作。部分补丁未亲测","children":[],"expanded":false}]
+[2025-10-04T09:41:33.641Z] Storage set result: true
+[2025-10-04T09:41:33.642Z] File created successfully: 网上搬运的补丁
+[2025-10-04T09:41:33.645Z] GET /api/files called
+[2025-10-04T09:41:34.043Z] Returning 11 files
+[2025-10-04T09:41:38.901Z] GET /api/files called
+[2025-10-04T09:41:39.346Z] Returning 11 files
+[2025-10-04T09:41:40.859Z] GET /api/files called
+[2025-10-04T09:41:40.860Z] GET /api/comments called
+[2025-10-04T09:41:41.251Z] Returning 10 comments to user
+[2025-10-04T09:41:41.252Z] Returning 11 files
+[2025-10-04T09:41:41.254Z] GET /api/files called
+[2025-10-04T09:41:41.656Z] Returning 11 files
+[2025-10-04T09:42:09.416Z] GET /api/files called
+[2025-10-04T09:42:09.780Z] Returning 11 files
+[2025-10-04T09:42:11.409Z] GET /api/files called
+[2025-10-04T09:42:11.817Z] Returning 11 files
+[2025-10-04T09:42:11.819Z] GET /api/files called
+[2025-10-04T09:42:12.251Z] Returning 11 files
+[2025-10-04T09:42:39.412Z] GET /api/files called
+[2025-10-04T09:42:39.866Z] Returning 11 files
+[2025-10-04T09:42:41.415Z] GET /api/files called
+[2025-10-04T09:42:41.848Z] Returning 11 files
+[2025-10-04T09:42:41.850Z] GET /api/files called
+[2025-10-04T09:42:42.223Z] Returning 11 files
+[2025-10-04T09:43:09.421Z] GET /api/files called
+[2025-10-04T09:43:09.805Z] Returning 11 files
+[2025-10-04T09:43:11.417Z] GET /api/files called
+[2025-10-04T09:43:11.840Z] Returning 11 files
+[2025-10-04T09:43:11.843Z] GET /api/files called
+[2025-10-04T09:43:12.227Z] Returning 11 files
+[2025-10-04T09:43:39.417Z] GET /api/files called
+[2025-10-04T09:43:40.084Z] Returning 11 files
+[2025-10-04T09:43:41.416Z] GET /api/files called
+[2025-10-04T09:43:41.783Z] Returning 11 files
+[2025-10-04T09:43:41.784Z] GET /api/files called
+[2025-10-04T09:43:42.189Z] Returning 11 files
+[2025-10-04T09:44:11.412Z] GET /api/files called
+[2025-10-04T09:44:11.825Z] Returning 11 files
+[2025-10-04T09:44:11.828Z] GET /api/files called
+[2025-10-04T09:44:12.216Z] Returning 11 files
+[2025-10-04T09:44:29.421Z] GET /api/files called
+[2025-10-04T09:44:29.873Z] Returning 11 files
+[2025-10-04T09:44:41.414Z] GET /api/files called
+[2025-10-04T09:44:41.792Z] Returning 11 files
+[2025-10-04T09:44:41.795Z] GET /api/files called
+[2025-10-04T09:44:42.333Z] Returning 11 files
+[2025-10-04T09:44:45.884Z] GET /api/files called
+[2025-10-04T09:44:46.291Z] Returning 11 files
+[2025-10-04T09:45:09.421Z] GET /api/files called
+[2025-10-04T09:45:09.835Z] Returning 11 files
+[2025-10-04T09:45:11.408Z] GET /api/files called
+[2025-10-04T09:45:11.811Z] Returning 11 files
+[2025-10-04T09:45:11.813Z] GET /api/files called
+[2025-10-04T09:45:12.191Z] Returning 11 files
+[2025-10-04T09:45:33.519Z] PUT /api/files called
+[2025-10-04T09:45:34.801Z] File at index 0 updated successfully
+[2025-10-04T09:45:34.806Z] GET /api/files called
+[2025-10-04T09:45:35.172Z] Returning 11 files
+[2025-10-04T09:45:37.289Z] GET /api/files called
+[2025-10-04T09:45:37.290Z] GET /api/comments called
+[2025-10-04T09:45:37.656Z] Returning 11 files
+[2025-10-04T09:45:37.657Z] GET /api/files called
+[2025-10-04T09:45:37.669Z] Returning 10 comments to user
+[2025-10-04T09:45:38.050Z] Returning 11 files
+[2025-10-04T09:45:39.415Z] GET /api/files called
+[2025-10-04T09:45:39.837Z] Returning 11 files
+[2025-10-04T09:45:53.789Z] GET /api/files called
+[2025-10-04T09:45:53.791Z] GET /api/comments called
+[2025-10-04T09:45:54.192Z] Returning 11 files
+[2025-10-04T09:45:54.194Z] Returning 10 comments to user
+[2025-10-04T09:45:54.195Z] GET /api/files called
+[2025-10-04T09:45:54.620Z] Returning 11 files
+[2025-10-04T09:46:08.886Z] GET /api/files called
+[2025-10-04T09:46:09.292Z] Returning 11 files
+[2025-10-04T09:46:24.419Z] GET /api/files called
+[2025-10-04T09:46:24.821Z] Returning 11 files
+[2025-10-04T09:46:24.825Z] GET /api/files called
+[2025-10-04T09:46:25.208Z] Returning 11 files
+[2025-10-04T09:46:33.806Z] PUT /api/files called
+[2025-10-04T09:46:35.013Z] File at index 1 updated successfully
+[2025-10-04T09:46:35.017Z] GET /api/files called
+[2025-10-04T09:46:35.421Z] Returning 11 files
+[2025-10-04T09:46:38.890Z] GET /api/files called
+[2025-10-04T09:46:39.288Z] Returning 11 files
+[2025-10-04T09:46:49.702Z] GET /api/files called
+[2025-10-04T09:46:49.704Z] GET /api/comments called
+[2025-10-04T09:46:50.130Z] Returning 11 files
+[2025-10-04T09:46:50.133Z] GET /api/files called
+[2025-10-04T09:46:50.151Z] Returning 10 comments to user
+[2025-10-04T09:46:50.525Z] Returning 11 files
+[2025-10-04T09:47:09.417Z] GET /api/files called
+[2025-10-04T09:47:09.845Z] Returning 11 files
+[2025-10-04T09:47:18.290Z] GET /api/files called
+[2025-10-04T09:47:18.293Z] GET /api/comments called
+[2025-10-04T09:47:18.681Z] Returning 11 files
+[2025-10-04T09:47:18.683Z] GET /api/files called
+[2025-10-04T09:47:18.705Z] Returning 10 comments to user
+[2025-10-04T09:47:19.118Z] Returning 11 files
+[2025-10-04T09:47:22.854Z] GET /api/files called
+[2025-10-04T09:47:22.855Z] GET /api/files called
+[2025-10-04T09:47:22.856Z] GET /api/comments called
+[2025-10-04T09:47:23.262Z] Returning 11 files
+[2025-10-04T09:47:23.269Z] Returning 11 files
+[2025-10-04T09:47:23.305Z] Returning 10 comments to user
+[2025-10-04T09:47:39.420Z] GET /api/files called
+[2025-10-04T09:47:39.819Z] Returning 11 files
+[2025-10-04T09:47:53.418Z] GET /api/files called
+[2025-10-04T09:47:53.773Z] Returning 11 files
+[2025-10-04T09:47:53.777Z] GET /api/files called
+[2025-10-04T09:47:54.200Z] Returning 11 files
+[2025-10-04T09:47:54.529Z] GET /api/files called
+[2025-10-04T09:47:54.531Z] GET /api/comments called
+[2025-10-04T09:47:54.923Z] Returning 10 comments to user
+[2025-10-04T09:47:54.955Z] Returning 11 files
+[2025-10-04T09:47:54.957Z] GET /api/files called
+[2025-10-04T09:47:55.308Z] Returning 11 files
+[2025-10-04T09:48:09.358Z] GET /api/files called
+[2025-10-04T09:48:09.770Z] Returning 11 files
+[2025-10-04T09:48:13.783Z] PUT /api/files called
+[2025-10-04T09:48:15.136Z] File at index 1 updated successfully
+[2025-10-04T09:48:15.142Z] GET /api/files called
+[2025-10-04T09:48:15.564Z] Returning 11 files
+[2025-10-04T09:48:25.420Z] GET /api/files called
+[2025-10-04T09:48:25.814Z] Returning 11 files
+[2025-10-04T09:48:25.816Z] GET /api/files called
+[2025-10-04T09:48:26.200Z] Returning 11 files
+[2025-10-04T09:48:39.421Z] GET /api/files called
+[2025-10-04T09:48:39.856Z] Returning 11 files
+[2025-10-04T09:48:51.457Z] GET /api/files called
+[2025-10-04T09:48:51.459Z] GET /api/comments called
+[2025-10-04T09:48:51.840Z] Returning 10 comments to user
+[2025-10-04T09:48:51.868Z] Returning 11 files
+[2025-10-04T09:48:51.870Z] GET /api/files called
+[2025-10-04T09:48:52.269Z] Returning 11 files
+[2025-10-04T09:49:07.994Z] GET /api/files called
+[2025-10-04T09:49:07.997Z] GET /api/comments called
+[2025-10-04T09:49:08.379Z] Returning 10 comments to user
+[2025-10-04T09:49:08.422Z] Returning 11 files
+[2025-10-04T09:49:08.424Z] GET /api/files called
+[2025-10-04T09:49:08.764Z] Returning 11 files
+[2025-10-04T09:49:09.419Z] GET /api/files called
+[2025-10-04T09:49:09.818Z] Returning 11 files
+[2025-10-04T09:49:24.289Z] GET /api/files called
+[2025-10-04T09:49:24.290Z] GET /api/comments called
+[2025-10-04T09:49:24.684Z] Returning 11 files
+[2025-10-04T09:49:24.687Z] GET /api/files called
+[2025-10-04T09:49:24.727Z] Returning 10 comments to user
+[2025-10-04T09:49:25.086Z] Returning 11 files

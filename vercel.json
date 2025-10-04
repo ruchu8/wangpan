@@ -24,6 +24,14 @@
     {
       "src": "*.png",
       "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.ico",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "img/(.*)",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
