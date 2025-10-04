@@ -3,7 +3,12 @@ const { neon } = require('@neondatabase/serverless');
 
 // 初始化 Neon PostgreSQL 客户端
 // 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
-const databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+let databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+
+// 清理数据库URL，移除可能的空格和其他无效字符
+if (databaseUrl) {
+  databaseUrl = databaseUrl.trim();
+}
 
 if (!databaseUrl) {
   console.error('❌ Database URL not found in environment variables');
@@ -18,6 +23,13 @@ async function initializeDatabase() {
     // 确保数据库连接已初始化
     if (!databaseUrl) {
       throw new Error('Database URL not found in environment variables');
+    }
+    
+    // 验证URL格式
+    try {
+      new URL(databaseUrl);
+    } catch (urlError) {
+      throw new Error('Database URL format is invalid: ' + databaseUrl);
     }
     
     if (!sql) {
@@ -110,6 +122,17 @@ module.exports = async function handler(req, res) {
       // 确保数据库连接已初始化
       if (!databaseUrl) {
         return res.status(500).json({ error: 'Database URL not found in environment variables' });
+      }
+      
+      // 验证URL格式
+      try {
+        new URL(databaseUrl);
+      } catch (urlError) {
+        return res.status(500).json({ 
+          error: 'Database URL format is invalid',
+          url: databaseUrl,
+          message: urlError.message
+        });
       }
       
       if (!sql) {

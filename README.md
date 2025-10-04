@@ -79,11 +79,28 @@ npm run dev
 2. **测试数据库连接**：
    访问 `https://你的域名/api/test-db` 来测试数据库连接状态。
 
-3. **检查Vercel函数日志**：
+3. **手动初始化数据库**：
+   如果表结构有问题，可以访问 `https://你的域名/api/init-db` 并发送POST请求来手动初始化数据库。
+
+4. **检查Vercel函数日志**：
    在Vercel控制台的"Functions"部分查看[api/auth.js](file:///c:/Users/Administrator/Desktop/test/api/auth.js)和[api/comments.js](file:///c:/Users/Administrator/Desktop/test/api/comments.js)的日志。
 
-4. **手动初始化数据库**：
-   如果表结构有问题，可以临时添加一个API端点来重新初始化数据库。
+### 常见问题及解决方案
+
+#### 数据库连接字符串格式错误
+如果遇到类似以下错误：
+```
+Database connection string provided to `neon()` is not a valid URL
+```
+
+这通常是由于环境变量值前后有空格或其他不可见字符导致的。请检查：
+1. Vercel控制台中的环境变量配置是否正确
+2. 环境变量值前后不应有空格
+
+#### 数据库表未正确初始化
+如果登录或留言功能不正常，可能是数据库表未正确初始化：
+1. 访问 `https://你的域名/api/init-db` 并发送POST请求
+2. 等待初始化完成后再测试功能
 
 ### 默认管理员凭据
 

@@ -20,9 +20,20 @@ module.exports = async function handler(req, res) {
       
       // 初始化 Neon PostgreSQL 客户端
       // 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
-      const databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+      let databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
       
-      console.log('Environment variables:', {
+      console.log('Raw environment variables:', {
+        POSTGRES_URL: process.env.POSTGRES_URL,
+        DATABASE_URL: process.env.DATABASE_URL
+      });
+      
+      // 清理数据库URL，移除可能的空格和其他无效字符
+      if (databaseUrl) {
+        databaseUrl = databaseUrl.trim();
+        console.log('Trimmed database URL:', databaseUrl.substring(0, 50) + '...');
+      }
+      
+      console.log('Environment variables status:', {
         POSTGRES_URL: process.env.POSTGRES_URL ? 'SET' : 'NOT SET',
         DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET'
       });
@@ -35,6 +46,19 @@ module.exports = async function handler(req, res) {
             POSTGRES_URL: process.env.POSTGRES_URL ? 'SET' : 'NOT SET',
             DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET'
           }
+        });
+      }
+
+      // 验证URL格式
+      try {
+        new URL(databaseUrl);
+        console.log('✅ Database URL format is valid');
+      } catch (urlError) {
+        console.error('❌ Database URL format is invalid:', databaseUrl);
+        return res.status(500).json({ 
+          error: 'Database URL format is invalid',
+          url: databaseUrl,
+          message: urlError.message
         });
       }
 
