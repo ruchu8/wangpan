@@ -351,12 +351,20 @@ function renderComments() {
             contactDisplay = `${contactType}: ${maskedContactInfo}`;
         }
         
+        // 对IP地址进行隐私保护处理（前台隐藏最后一位）
+        let ipDisplay = comment.ip || '未知';
+        if (ipDisplay !== '未知' && ipDisplay.length > 3) {
+            // 隐藏IP地址的最后一位
+            ipDisplay = ipDisplay.substring(0, ipDisplay.length - 1) + '*';
+        }
+        
         // 构建留言内容
         let commentContent = `
             <div class="comment-header">
                 <span class="comment-name">${contactDisplay}</span>
                 <span class="comment-date">${date}</span>
             </div>
+            <div class="comment-ip">IP: ${ipDisplay}</div>
         `;
         
         // 如果留言未公开，显示提示信息
@@ -503,6 +511,108 @@ function maskContactInfo(contactInfo) {
     return `${start}**${end}`;
 }
 
+// 获取客户端IP地址
+async function getClientIP() {
+    try {
+        // 尝试使用第一种方法
+        try {
+            const response = await fetch('https://api.ipify.org?format=json', {
+                method: 'GET',
+                mode: 'cors',
+                timeout: 5000 // 5秒超时
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            if (data && data.ip) {
+                console.log('IP obtained from ipify.org:', data.ip);
+                return data.ip;
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from ipify.org:', error);
+        }
+        
+        // 如果第一种方法失败，尝试第二种方法
+        try {
+            const response = await fetch('https://httpbin.org/ip', {
+                method: 'GET',
+                mode: 'cors',
+                timeout: 5000 // 5秒超时
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            if (data && data.origin) {
+                console.log('IP obtained from httpbin.org:', data.origin);
+                return data.origin;
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from httpbin.org:', error);
+        }
+        
+        // 如果第二种方法也失败，尝试第三种方法
+        try {
+            const response = await fetch('https://api.myip.com', {
+                method: 'GET',
+                mode: 'cors',
+                timeout: 5000 // 5秒超时
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            if (data && data.ip) {
+                console.log('IP obtained from myip.com:', data.ip);
+                return data.ip;
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from myip.com:', error);
+        }
+        
+        // 如果所有方法都失败，尝试从请求头获取
+        try {
+            // 创建一个临时的fetch请求来获取原始IP
+            const tempResponse = await fetch('https://httpbin.org/headers', {
+                method: 'GET',
+                mode: 'cors',
+                timeout: 5000
+            });
+            
+            if (tempResponse.ok) {
+                const data = await tempResponse.json();
+                // 尝试从X-Forwarded-For或X-Real-IP头获取IP
+                if (data.headers && data.headers['X-Forwarded-For']) {
+                    const forwardedIP = data.headers['X-Forwarded-For'].split(',')[0].trim();
+                    console.log('IP obtained from X-Forwarded-For header:', forwardedIP);
+                    return forwardedIP;
+                }
+                
+                if (data.headers && data.headers['X-Real-IP']) {
+                    const realIP = data.headers['X-Real-IP'].trim();
+                    console.log('IP obtained from X-Real-IP header:', realIP);
+                    return realIP;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from headers:', error);
+        }
+        
+        console.error('All IP detection methods failed');
+        return '未知';
+    } catch (error) {
+        console.error('Unexpected error in getClientIP:', error);
+        return '未知';
+    }
+}
+
 // 提交留言
 async function submitComment(event) {
     event.preventDefault();
@@ -519,6 +629,10 @@ async function submitComment(event) {
         return;
     }
     
+    // 获取IP地址
+    const ip = await getClientIP();
+    console.log('Client IP:', ip);
+    
     // 组合联系方式显示名称
     const name = `${contactType}:${contactInfo}`;
     
@@ -528,7 +642,7 @@ async function submitComment(event) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, content })
+            body: JSON.stringify({ name, content, ip })
         });
         
         console.log('Comment API response:', response.status);

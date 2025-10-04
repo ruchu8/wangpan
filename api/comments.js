@@ -63,7 +63,8 @@ module.exports = async function handler(req, res) {
         name,
         content,
         date: new Date().toISOString(),
-        approved: false
+        approved: false,
+        ip: req.body.ip || '未知'
       };
 
       // 获取现有评论或初始化为空数组

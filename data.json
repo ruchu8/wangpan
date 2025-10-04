@@ -1,95 +1,17 @@
 {
   "comments": [
     {
-      "id": "1759548551688",
-      "name": "1",
-      "content": "1",
-      "date": "2025-10-04T03:29:11.688Z",
-      "approved": false
-    },
-    {
-      "id": "1759548932103",
-      "name": "名字",
-      "content": "内容",
-      "date": "2025-10-04T03:35:32.103Z",
-      "approved": false
-    },
-    {
-      "id": "1759549310745",
-      "name": "QQ:123456",
-      "content": "deaeqe",
-      "date": "2025-10-04T03:41:50.745Z",
-      "approved": true
-    },
-    {
-      "id": "1759549395478",
-      "name": "微信:123456789",
-      "content": "qqq",
-      "date": "2025-10-04T03:43:15.478Z",
-      "approved": true,
-      "reply": "是的"
-    },
-    {
-      "id": "1759550462117",
-      "name": "QQ:312222",
-      "content": "3213312222",
-      "date": "2025-10-04T04:01:02.117Z",
-      "approved": true
-    },
-    {
-      "id": "1759550635232",
-      "name": "QQ:哈哈",
-      "content": "哈哈",
-      "date": "2025-10-04T04:03:55.232Z",
-      "approved": true
-    },
-    {
-      "id": "1759550665946",
-      "name": "QQ:QQW",
-      "content": "内容哦",
-      "date": "2025-10-04T04:04:25.946Z",
-      "approved": true
-    },
-    {
-      "id": "1759550807832",
-      "name": "QQ:111",
-      "content": "额哇",
-      "date": "2025-10-04T04:06:47.832Z",
-      "approved": false
-    },
-    {
-      "id": "1759550959071",
-      "name": "QQ:cscs",
-      "content": "测试隐藏内容",
-      "date": "2025-10-04T04:09:19.071Z",
-      "approved": false
-    },
-    {
-      "id": "1759551345589",
+      "id": "1759556136174",
       "name": "QQ:1",
-      "content": "3",
-      "date": "2025-10-04T04:15:45.589Z",
-      "approved": false
+      "content": "2",
+      "date": "2025-10-04T05:35:36.174Z",
+      "approved": true
     },
     {
-      "id": "1759551354205",
-      "name": "QQ:33",
-      "content": "33",
-      "date": "2025-10-04T04:15:54.205Z",
-      "approved": false
-    },
-    {
-      "id": "1759551368701",
-      "name": "QQ:12",
-      "content": "12",
-      "date": "2025-10-04T04:16:08.701Z",
-      "approved": false
-    },
-    {
-      "id": "1759551457892",
-      "name": "QQ:123456789",
-      "content": "qq隐藏测试",
-      "date": "2025-10-04T04:17:37.892Z",
+      "id": "1759556136446",
+      "name": "QQ:1",
+      "content": "2",
+      "date": "2025-10-04T05:35:36.446Z",
       "approved": false
     }
   ],

@@ -30,6 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const fileModal = new bootstrap.Modal(document.getElementById('fileModal'));
         fileModal.show();
     });
+    
+    // 导出数据按钮事件
+    document.getElementById('exportDataBtn').addEventListener('click', exportData);
+    
+    // 导入数据按钮事件
+    document.getElementById('importFile').addEventListener('change', importData);
 
     // 文件类型变更事件（虽然禁用了，但保留以防需要）
     document.getElementById('fileType').addEventListener('change', function() {
@@ -533,6 +539,9 @@ function renderCommentsList() {
         // 显示完整的联系方式给管理员（不进行隐私保护处理）
         let contactDisplay = comment.name;
         
+        // 后台显示原始IP地址（完整）
+        let ipDisplay = comment.ip || '未知';
+        
         // 后台显示原始留言内容，不显示提示信息
         let contentDisplay = comment.content;
         
@@ -548,6 +557,7 @@ function renderCommentsList() {
         
         tr.innerHTML = `
             <td>${contactDisplay}</td>
+            <td>${ipDisplay}</td>
             <td>
                 ${contentDisplay}
                 ${replySection}
@@ -830,6 +840,122 @@ async function deleteComment(id) {
     } catch (error) {
         console.error('Error deleting comment:', error);
         alert('删除留言失败');
+    }
+}
+
+// 导出数据
+function exportData() {
+    // 创建包含所有数据的对象
+    const dataToExport = {
+        files: filesList,
+        comments: commentsList,
+        exportDate: new Date().toISOString()
+    };
+    
+    // 转换为JSON字符串
+    const dataStr = JSON.stringify(dataToExport, null, 2);
+    
+    // 创建Blob对象
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    
+    // 创建下载链接
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `website_data_${new Date().toISOString().slice(0, 10)}.json`;
+    
+    // 触发下载
+    document.body.appendChild(a);
+    a.click();
+    
+    // 清理
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// 导入数据
+async function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    if (!confirm('导入数据将覆盖现有数据，确定继续吗？')) {
+        event.target.value = ''; // 清空文件输入
+        return;
+    }
+    
+    try {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                
+                // 验证数据格式
+                if (!importedData.files || !importedData.comments) {
+                    alert('无效的数据格式');
+                    return;
+                }
+                
+                // 确认导入
+                if (!confirm(`确定要导入数据吗？\n文件数量: ${importedData.files.length}\n留言数量: ${importedData.comments.length}`)) {
+                    return;
+                }
+                
+                // 导入文件数据
+                try {
+                    const filesResponse = await fetch('/api/files', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify(importedData.files)
+                    });
+                    
+                    if (!filesResponse.ok) {
+                        throw new Error('导入文件数据失败');
+                    }
+                } catch (error) {
+                    console.error('Error importing files:', error);
+                    alert('导入文件数据失败: ' + error.message);
+                    return;
+                }
+                
+                // 导入留言数据
+                try {
+                    const commentsResponse = await fetch('/api/comments', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify(importedData.comments)
+                    });
+                    
+                    if (!commentsResponse.ok) {
+                        throw new Error('导入留言数据失败');
+                    }
+                } catch (error) {
+                    console.error('Error importing comments:', error);
+                    alert('导入留言数据失败: ' + error.message);
+                    return;
+                }
+                
+                // 刷新数据
+                loadFiles();
+                loadComments();
+                
+                alert('数据导入成功！');
+                event.target.value = ''; // 清空文件输入
+            } catch (error) {
+                console.error('Error parsing import file:', error);
+                alert('导入文件解析失败，请检查文件格式');
+            }
+        };
+        
+        reader.readAsText(file);
+    } catch (error) {
+        console.error('Error reading import file:', error);
+        alert('读取导入文件失败');
     }
 }
 
