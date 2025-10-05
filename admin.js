@@ -862,9 +862,12 @@ async function saveReply(id, replyContent) {
         }
         
         if (response.ok) {
+            const result = await response.json();
+            console.log('Reply saved successfully:', result);
             loadComments();
         } else {
             const error = await response.json();
+            console.error('Error saving reply:', error);
             alert(error.error || '回复保存失败');
         }
     } catch (error) {
@@ -929,13 +932,16 @@ async function deleteComment(id) {
         
         if (response.ok) {
             loadComments();
+        } else if (response.status === 404) {
+            alert('留言不存在，可能已被删除');
+            loadComments(); // 刷新列表
         } else {
             const error = await response.json();
             alert(error.error || '删除失败');
         }
     } catch (error) {
         console.error('Error deleting comment:', error);
-        alert('删除留言失败');
+        alert('删除留言失败: ' + error.message);
     }
 }
 

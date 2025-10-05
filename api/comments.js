@@ -330,6 +330,25 @@ module.exports = async function handler(req, res) {
       if (!name || !content) {
         return res.status(400).json({ error: 'Name and content are required' });
       }
+      
+      // 验证联系方式长度（至少5个字符）
+      // name 格式为 "联系方式类型:联系方式"，例如 "QQ:123456"
+      if (name && name.includes(':')) {
+        const [contactType, contactInfo] = name.split(':', 2);
+        if (!contactInfo || contactInfo.trim().length <= 5) {
+          return res.status(400).json({ error: '联系方式至少需要5个字符' });
+        }
+        
+        // 如果是QQ，验证是否为纯数字
+        if (contactType === 'QQ' && !/^\d+$/.test(contactInfo.trim())) {
+          return res.status(400).json({ error: 'QQ号码必须为纯数字' });
+        }
+      }
+      
+      // 验证留言内容长度（至少3个字）
+      if (!content || content.trim().length <= 3) {
+        return res.status(400).json({ error: '留言内容至少需要3个字' });
+      }
 
       const newComment = {
         id: Date.now().toString(),
@@ -423,16 +442,25 @@ module.exports = async function handler(req, res) {
       if (reply !== undefined) {
         // 获取当前时间作为回复时间
         const replyDate = new Date().toISOString();
+        
+        // 首先获取原始评论数据，确保保留IP地址
+        const originalComment = await sql`SELECT ip FROM comments WHERE id = ${id}`;
+        const originalIP = originalComment[0].ip;
+        
+        // 确保IP地址不为空
+        const ipToSave = originalIP || '未知';
+        
+        // 更新评论，确保保留原始IP地址，但不修改IP字段
         await sql`
           UPDATE comments 
           SET reply = ${reply}, reply_date = ${replyDate}
           WHERE id = ${id}
         `;
-        console.log('✅ Comment reply updated with timestamp');
+        
+        // 验证更新后的评论
+        const updatedComment = await sql`SELECT ip FROM comments WHERE id = ${id}`;
+        console.log('✅ Comment reply updated with timestamp. Original IP:', originalIP, 'Current IP after update:', updatedComment[0].ip);
       }
-      
-      // 确保IP地址不被修改
-      console.log('✅ IP address preserved during update');
       
       // 获取更新后的评论
       const updatedResult = await sql`SELECT * FROM comments WHERE id = ${id}`;
@@ -442,9 +470,9 @@ module.exports = async function handler(req, res) {
         content: updatedResult[0].content,
         date: updatedResult[0].date,
         approved: updatedResult[0].approved,
-        ip: updatedResult[0].ip || '未知',
+        ip: updatedResult[0].ip, // 直接使用IP地址，不使用 || '未知'，因为IP地址应该已经存在
         reply: updatedResult[0].reply,
-        reply_date: updatedResult[0].reply_date
+        reply_date: updatedResult[0].reply_date || null // 如果reply_date为null，则显示为null
       };
       
       console.log('✅ Comment updated successfully');

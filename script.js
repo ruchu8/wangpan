@@ -170,9 +170,29 @@ function renderFileList() {
             const displayName = item._highlightedName || item.name;
             displayContent = `<i class="bi ${iconClass}"></i> ${displayName}`;
         } else {
-            // 文件使用tu.png图标
+            // 文件使用特定图标
             const displayName = item._highlightedName || item.name;
-            displayContent = `<img src="img/tu.png" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${displayName}`;
+            
+            // 检查URL是否以特定参数结尾
+            let iconSrc = "img/tu.png"; // 默认图标
+            
+            // 从URL中提取文件名部分
+            let fileName = item.url;
+            if (item.url && item.url.includes('/')) {
+                // 如果是URL，获取最后一部分
+                fileName = item.url.split('/').pop() || item.url;
+            }
+            
+            // 检查URL是否以特定参数结尾
+            if (fileName && fileName.includes('.jpg?lx=xz')) {
+                iconSrc = "img/jpg.png";
+            } else if (fileName && fileName.includes('.gif?lx=xz')) {
+                iconSrc = "img/GIF.png";
+            } else if (fileName && fileName.includes('.txt?lx=xz')) {
+                iconSrc = "img/txt.png";
+            }
+            
+            displayContent = `<img src="${iconSrc}" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${displayName}`;
         }
         
         // 如果有备注，添加备注
@@ -226,7 +246,7 @@ function renderFileList() {
             const childrenArray = Array.isArray(item.children) ? item.children : [];
             if (childrenArray.length > 0) {
                 const ul = document.createElement('ul');
-                ul.className = 'ms-3 mt-1';
+                ul.className = 'ms-2 mt-1';
                 childrenArray.forEach((child, childIndex) => {
                     const childLi = renderItem(child, childIndex, true);
                     ul.appendChild(childLi);
@@ -690,8 +710,27 @@ async function submitComment(event) {
     
     console.log('Submitting comment:', { contactType, contactInfo, content });
     
-    if (!contactType || !contactInfo || !content) {
-        showCommentStatus('请填写完整信息', 'error');
+    // 验证联系方式类型
+    if (!contactType) {
+        showCommentStatus('请选择联系方式类型', 'error');
+        return;
+    }
+    
+    // 验证联系方式长度（至少5个字符）
+    if (!contactInfo || contactInfo.trim().length <= 5) {
+        showCommentStatus('联系方式至少需要5个字符', 'error');
+        return;
+    }
+    
+    // 如果选择QQ，验证是否为纯数字
+    if (contactType === 'QQ' && !/^\d+$/.test(contactInfo.trim())) {
+        showCommentStatus('QQ号码必须为纯数字', 'error');
+        return;
+    }
+    
+    // 验证留言内容长度（至少3个字）
+    if (!content || content.trim().length <= 3) {
+        showCommentStatus('留言内容至少需要3个字', 'error');
         return;
     }
     

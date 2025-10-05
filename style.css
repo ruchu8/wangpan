@@ -160,7 +160,9 @@ body {
     border-right: none;
     border-radius: 0;
     transition: all 0.3s ease;
-    padding: 1.25rem 1.5rem;
+    padding: 0.75rem 1rem;
+    min-height: 2.5rem;
+    line-height: 1.4;
 }
 
 .list-group-item:first-child {
