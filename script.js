@@ -412,15 +412,11 @@ function renderComments() {
         // 留言内容区域
         let contentHtml = '';
         
-        // 添加IP地址到留言内容的右下角
-        // 始终显示原始用户的IP地址
-        contentHtml += `<div class="comment-ip">IP: ${ipDisplay}</div>`;
-        
         // 如果留言未公开，显示提示信息
         if (!comment.approved) {
-            contentHtml = `<em>此留言不公开，管理员回复后才能公开留言</em>` + contentHtml;
+            contentHtml = `<em>此留言不公开，管理员回复后才能公开留言</em>`;
         } else {
-            contentHtml = comment.content + contentHtml;
+            contentHtml = comment.content;
         }
         
         // 如果有管理员回复，则显示
