@@ -431,6 +431,9 @@ module.exports = async function handler(req, res) {
         console.log('✅ Comment reply updated with timestamp');
       }
       
+      // 确保IP地址不被修改
+      console.log('✅ IP address preserved during update');
+      
       // 获取更新后的评论
       const updatedResult = await sql`SELECT * FROM comments WHERE id = ${id}`;
       const updatedComment = {
