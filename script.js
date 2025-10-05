@@ -187,7 +187,7 @@ function renderFileList() {
             if (fileName && fileName.includes('.jpg?lx=xz')) {
                 iconSrc = "img/jpg.png";
             } else if (fileName && fileName.includes('.gif?lx=xz')) {
-                iconSrc = "img/GIF.png";
+                iconSrc = "img/gif.png";
             } else if (fileName && fileName.includes('.txt?lx=xz')) {
                 iconSrc = "img/txt.png";
             }
