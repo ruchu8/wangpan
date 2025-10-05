@@ -18,12 +18,100 @@ body {
     /* line-height: 1.6; */
 }
 
+/* 移动端适配 */
+@media (max-width: 768px) {
+    /* 英雄区域调整 */
+    .hero-section {
+        padding: 0.5rem 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.75rem;
+    }
+    
+    .hero-section .lead {
+        font-size: 1rem;
+    }
+    
+    .hero-image i {
+        font-size: 8rem;
+    }
+    
+    /* 文件列表调整 */
+    .file-name {
+        font-size: 1.1rem;
+    }
+    
+    .list-group-item {
+        padding: 1rem 1.25rem;
+    }
+    
+    /* 留言板调整 */
+    .comment-item {
+        padding: 1rem;
+    }
+    
+    .comment-content {
+        font-size: 0.9rem;
+    }
+    
+    .comment-form {
+        padding: 1rem;
+    }
+    
+    /* 页脚调整 */
+    footer .description {
+        font-size: 0.8rem;
+        margin-top: 1rem;
+    }
+    
+    /* 导航栏调整 */
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .navbar-nav .nav-link {
+        font-size: 0.9rem;
+        margin: 0 0.25rem;
+    }
+    
+    /* 广告位调整 */
+    .ad-placeholder {
+        min-height: 120px;
+    }
+    
+    /* 按钮调整 */
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    /* 卡片调整 */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    /* 表单调整 */
+    .form-control, .form-select {
+        font-size: 0.9rem;
+    }
+    
+    /* 标题调整 */
+    h2, .h2 {
+        font-size: 1.5rem;
+    }
+    
+    h3, .h3 {
+        font-size: 1.25rem;
+    }
+}
+
 /* 英雄区域样式 */
 .hero-section {
     background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
     position: relative;
     overflow: hidden;
-    padding: 1.5rem 0;
+    padding: 0.25rem 0;
 }
 
 .hero-section::before {
@@ -72,7 +160,7 @@ body {
     border-right: none;
     border-radius: 0;
     transition: all 0.3s ease;
-    padding: 1rem 1.25rem;
+    padding: 1.25rem 1.5rem;
 }
 
 .list-group-item:first-child {
@@ -99,6 +187,7 @@ body {
     color: var(--dark-color);
     font-weight: 500;
     width: 100%;
+    font-size: 1.5rem;
 }
 
 .file-name i {
@@ -119,6 +208,7 @@ body {
     border-radius: 0.25rem;
     white-space: nowrap;
 }
+
 
 .file-date {
     margin-left: 0.5rem;
@@ -147,7 +237,7 @@ body {
 .comment-item {
     background-color: #f8f9fa;
     border-radius: 0.5rem;
-    margin-bottom: 1.25rem;
+    /* margin-bottom: 1.25rem; */
     padding: 1.25rem;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     transition: all 0.3s ease;
@@ -413,8 +503,11 @@ body {
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: #ffffff;
+    border-color: #dee2e6;
+    color: var(--primary-color);
+    font-weight: 500;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
 }
 
 .pagination .page-item.disabled .page-link {
@@ -482,37 +575,6 @@ footer .description {
     }
 }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .hero-section {
-        padding: 2rem 0;
-    }
-    
-    .hero-section h1 {
-        font-size: 2rem;
-    }
-    
-    .hero-section .lead {
-        font-size: 1rem;
-    }
-    
-    .hero-image i {
-        font-size: 10rem;
-    }
-    
-    .file-name {
-        font-size: 0.9rem;
-    }
-    
-    .file-note, .file-date {
-        font-size: 0.75rem;
-    }
-    
-    footer .description {
-        margin-top: 1rem;
-        text-align: left;
-    }
-}
 
 /* 搜索框样式 */
 #searchInput {

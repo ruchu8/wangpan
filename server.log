@@ -2971,3 +2971,1251 @@
 [2025-10-04T11:49:52.007Z] Returning 11 files
 [2025-10-04T11:49:52.009Z] GET /api/files called
 [2025-10-04T11:49:52.484Z] Returning 11 files
+[2025-10-04T11:50:07.101Z] GET /api/files called
+[2025-10-04T11:50:07.102Z] GET /api/comments called
+[2025-10-04T11:50:07.524Z] Returning 2 comments to user
+[2025-10-04T11:50:07.536Z] Returning 11 files
+[2025-10-04T11:50:07.537Z] GET /api/files called
+[2025-10-04T11:50:07.957Z] Returning 11 files
+[2025-10-04T11:50:11.421Z] GET /api/files called
+[2025-10-04T11:50:11.837Z] Returning 11 files
+[2025-10-04T23:16:40.762Z] Server is running on http://localhost:3001
+[2025-10-04T23:16:40.763Z] Open http://localhost:3001 in your browser to view the application
+[2025-10-04T23:16:43.329Z] GET /api/files called
+[2025-10-04T23:16:43.330Z] GET /api/comments called
+[2025-10-04T23:16:43.754Z] Returning 2 comments to user
+[2025-10-04T23:16:43.783Z] Returning 11 files
+[2025-10-04T23:16:43.785Z] GET /api/files called
+[2025-10-04T23:16:44.270Z] Returning 11 files
+[2025-10-04T23:17:13.415Z] GET /api/files called
+[2025-10-04T23:17:14.013Z] Returning 11 files
+[2025-10-04T23:17:14.015Z] GET /api/files called
+[2025-10-04T23:17:14.486Z] Returning 11 files
+[2025-10-04T23:17:43.418Z] GET /api/files called
+[2025-10-04T23:17:43.910Z] Returning 11 files
+[2025-10-04T23:17:43.912Z] GET /api/files called
+[2025-10-04T23:17:44.403Z] Returning 11 files
+[2025-10-04T23:18:13.427Z] GET /api/files called
+[2025-10-04T23:18:13.914Z] Returning 11 files
+[2025-10-04T23:18:13.916Z] GET /api/files called
+[2025-10-04T23:18:14.390Z] Returning 11 files
+[2025-10-04T23:18:17.564Z] GET /api/files called
+[2025-10-04T23:18:17.566Z] GET /api/comments called
+[2025-10-04T23:18:17.947Z] Returning 2 comments to user
+[2025-10-04T23:18:18.095Z] Returning 11 files
+[2025-10-04T23:18:18.098Z] GET /api/files called
+[2025-10-04T23:18:18.685Z] Returning 11 files
+[2025-10-04T23:18:20.898Z] GET /api/files called
+[2025-10-04T23:18:20.900Z] GET /api/comments called
+[2025-10-04T23:18:21.238Z] Returning 2 comments to user
+[2025-10-04T23:18:21.393Z] Returning 11 files
+[2025-10-04T23:18:21.395Z] GET /api/files called
+[2025-10-04T23:18:21.885Z] Returning 11 files
+[2025-10-04T23:18:50.893Z] GET /api/files called
+[2025-10-04T23:18:51.397Z] Returning 11 files
+[2025-10-04T23:18:51.401Z] GET /api/files called
+[2025-10-04T23:18:51.888Z] Returning 11 files
+[2025-10-04T23:19:20.879Z] GET /api/files called
+[2025-10-04T23:19:21.412Z] Returning 11 files
+[2025-10-04T23:19:21.413Z] GET /api/files called
+[2025-10-04T23:19:21.868Z] Returning 11 files
+[2025-10-04T23:19:48.287Z] GET /api/files called
+[2025-10-04T23:19:48.289Z] GET /api/comments called
+[2025-10-04T23:19:48.671Z] Returning 2 comments to user
+[2025-10-04T23:19:48.770Z] Returning 11 files
+[2025-10-04T23:19:48.771Z] GET /api/files called
+[2025-10-04T23:19:49.182Z] Returning 11 files
+[2025-10-04T23:19:53.055Z] GET /api/files called
+[2025-10-04T23:19:53.061Z] GET /api/comments called
+[2025-10-04T23:19:53.472Z] Returning 11 files
+[2025-10-04T23:19:53.473Z] GET /api/files called
+[2025-10-04T23:19:53.475Z] Returning 2 comments to user
+[2025-10-04T23:19:53.899Z] Returning 11 files
+[2025-10-04T23:19:56.209Z] GET /api/files called
+[2025-10-04T23:19:56.211Z] GET /api/comments called
+[2025-10-04T23:19:56.582Z] Returning 2 comments to user
+[2025-10-04T23:19:56.679Z] Returning 11 files
+[2025-10-04T23:19:56.680Z] GET /api/files called
+[2025-10-04T23:19:57.135Z] Returning 11 files
+[2025-10-04T23:19:57.680Z] GET /api/files called
+[2025-10-04T23:19:57.681Z] GET /api/comments called
+[2025-10-04T23:19:58.080Z] Returning 2 comments to user
+[2025-10-04T23:19:58.197Z] Returning 11 files
+[2025-10-04T23:19:58.198Z] GET /api/files called
+[2025-10-04T23:19:58.657Z] Returning 11 files
+[2025-10-04T23:20:00.222Z] GET /api/files called
+[2025-10-04T23:20:00.224Z] GET /api/comments called
+[2025-10-04T23:20:00.661Z] Returning 2 comments to user
+[2025-10-04T23:20:00.679Z] Returning 11 files
+[2025-10-04T23:20:00.681Z] GET /api/files called
+[2025-10-04T23:20:01.145Z] Returning 11 files
+[2025-10-04T23:20:01.268Z] GET /api/files called
+[2025-10-04T23:20:01.269Z] GET /api/files called
+[2025-10-04T23:20:01.270Z] GET /api/comments called
+[2025-10-04T23:20:01.676Z] Returning 2 comments to user
+[2025-10-04T23:20:01.756Z] Returning 11 files
+[2025-10-04T23:20:01.787Z] Returning 11 files
+[2025-10-04T23:20:31.279Z] GET /api/files called
+[2025-10-04T23:20:31.747Z] Returning 11 files
+[2025-10-04T23:20:31.753Z] GET /api/files called
+[2025-10-04T23:20:32.248Z] Returning 11 files
+[2025-10-04T23:20:49.207Z] GET /api/files called
+[2025-10-04T23:20:49.209Z] GET /api/comments called
+[2025-10-04T23:20:49.649Z] Returning 2 comments to user
+[2025-10-04T23:20:49.734Z] Returning 11 files
+[2025-10-04T23:20:49.738Z] GET /api/files called
+[2025-10-04T23:20:50.215Z] Returning 11 files
+[2025-10-04T23:20:52.104Z] GET /api/files called
+[2025-10-04T23:20:52.105Z] GET /api/comments called
+[2025-10-04T23:20:52.517Z] Returning 2 comments to user
+[2025-10-04T23:20:52.570Z] Returning 11 files
+[2025-10-04T23:20:52.573Z] GET /api/files called
+[2025-10-04T23:20:53.037Z] Returning 11 files
+[2025-10-04T23:20:53.055Z] GET /api/files called
+[2025-10-04T23:20:53.056Z] GET /api/comments called
+[2025-10-04T23:20:53.448Z] Returning 2 comments to user
+[2025-10-04T23:20:53.519Z] Returning 11 files
+[2025-10-04T23:20:53.522Z] GET /api/files called
+[2025-10-04T23:20:53.707Z] GET /api/files called
+[2025-10-04T23:20:53.708Z] GET /api/comments called
+[2025-10-04T23:20:54.112Z] Returning 2 comments to user
+[2025-10-04T23:20:54.187Z] Returning 11 files
+[2025-10-04T23:20:54.189Z] GET /api/files called
+[2025-10-04T23:20:54.237Z] Returning 11 files
+[2025-10-04T23:20:54.668Z] Returning 11 files
+[2025-10-04T23:21:04.825Z] GET /api/files called
+[2025-10-04T23:21:04.832Z] GET /api/comments called
+[2025-10-04T23:21:05.252Z] Returning 2 comments to user
+[2025-10-04T23:21:05.317Z] Returning 11 files
+[2025-10-04T23:21:05.320Z] GET /api/files called
+[2025-10-04T23:21:05.811Z] Returning 11 files
+[2025-10-04T23:21:34.823Z] GET /api/files called
+[2025-10-04T23:21:35.324Z] Returning 11 files
+[2025-10-04T23:21:35.326Z] GET /api/files called
+[2025-10-04T23:21:35.834Z] Returning 11 files
+[2025-10-04T23:21:40.250Z] GET /api/files called
+[2025-10-04T23:21:40.252Z] GET /api/comments called
+[2025-10-04T23:21:40.651Z] Returning 2 comments to user
+[2025-10-04T23:21:40.724Z] Returning 11 files
+[2025-10-04T23:21:40.726Z] GET /api/files called
+[2025-10-04T23:21:41.212Z] Returning 11 files
+[2025-10-04T23:22:10.251Z] GET /api/files called
+[2025-10-04T23:22:10.753Z] Returning 11 files
+[2025-10-04T23:22:10.755Z] GET /api/files called
+[2025-10-04T23:22:11.292Z] Returning 11 files
+[2025-10-04T23:22:17.973Z] GET /api/files called
+[2025-10-04T23:22:17.975Z] GET /api/files called
+[2025-10-04T23:22:17.976Z] GET /api/comments called
+[2025-10-04T23:22:18.363Z] Returning 2 comments to user
+[2025-10-04T23:22:18.459Z] Returning 11 files
+[2025-10-04T23:22:18.477Z] Returning 11 files
+[2025-10-04T23:22:26.341Z] GET /api/files called
+[2025-10-04T23:22:26.354Z] GET /api/comments called
+[2025-10-04T23:22:26.785Z] Returning 2 comments to user
+[2025-10-04T23:22:26.795Z] Returning 11 files
+[2025-10-04T23:22:26.797Z] GET /api/files called
+[2025-10-04T23:22:27.243Z] Returning 11 files
+[2025-10-04T23:22:27.790Z] GET /api/files called
+[2025-10-04T23:22:27.791Z] GET /api/comments called
+[2025-10-04T23:22:28.202Z] Returning 11 files
+[2025-10-04T23:22:28.203Z] GET /api/files called
+[2025-10-04T23:22:28.234Z] Returning 2 comments to user
+[2025-10-04T23:22:28.698Z] Returning 11 files
+[2025-10-04T23:22:35.140Z] GET /api/files called
+[2025-10-04T23:22:35.141Z] GET /api/comments called
+[2025-10-04T23:22:35.557Z] Returning 2 comments to user
+[2025-10-04T23:22:35.612Z] Returning 11 files
+[2025-10-04T23:22:35.613Z] GET /api/files called
+[2025-10-04T23:22:36.064Z] Returning 11 files
+[2025-10-04T23:22:36.562Z] GET /api/files called
+[2025-10-04T23:22:36.563Z] GET /api/comments called
+[2025-10-04T23:22:36.987Z] Returning 2 comments to user
+[2025-10-04T23:22:37.034Z] Returning 11 files
+[2025-10-04T23:22:37.035Z] GET /api/files called
+[2025-10-04T23:22:37.512Z] Returning 11 files
+[2025-10-04T23:22:40.043Z] GET /api/files called
+[2025-10-04T23:22:40.045Z] GET /api/comments called
+[2025-10-04T23:22:40.471Z] Returning 2 comments to user
+[2025-10-04T23:22:40.495Z] Returning 11 files
+[2025-10-04T23:22:40.498Z] GET /api/files called
+[2025-10-04T23:22:40.942Z] Returning 11 files
+[2025-10-04T23:22:43.894Z] GET /api/files called
+[2025-10-04T23:22:43.896Z] GET /api/comments called
+[2025-10-04T23:22:44.319Z] Returning 2 comments to user
+[2025-10-04T23:22:44.349Z] Returning 11 files
+[2025-10-04T23:22:44.350Z] GET /api/files called
+[2025-10-04T23:22:44.798Z] Returning 11 files
+[2025-10-04T23:23:13.907Z] GET /api/files called
+[2025-10-04T23:23:14.418Z] Returning 11 files
+[2025-10-04T23:23:14.421Z] GET /api/files called
+[2025-10-04T23:23:14.877Z] Returning 11 files
+[2025-10-04T23:23:38.989Z] GET /api/files called
+[2025-10-04T23:23:38.996Z] GET /api/comments called
+[2025-10-04T23:23:39.408Z] Returning 2 comments to user
+[2025-10-04T23:23:39.744Z] Returning 11 files
+[2025-10-04T23:23:39.745Z] GET /api/files called
+[2025-10-04T23:23:40.224Z] Returning 11 files
+[2025-10-04T23:23:40.616Z] GET /api/files called
+[2025-10-04T23:23:40.618Z] GET /api/comments called
+[2025-10-04T23:23:41.002Z] Returning 2 comments to user
+[2025-10-04T23:23:41.029Z] Returning 11 files
+[2025-10-04T23:23:41.031Z] GET /api/files called
+[2025-10-04T23:23:41.481Z] Returning 11 files
+[2025-10-04T23:23:43.662Z] GET /api/files called
+[2025-10-04T23:23:43.665Z] GET /api/comments called
+[2025-10-04T23:23:44.053Z] Returning 2 comments to user
+[2025-10-04T23:23:44.099Z] Returning 11 files
+[2025-10-04T23:23:44.100Z] GET /api/files called
+[2025-10-04T23:23:44.559Z] Returning 11 files
+[2025-10-04T23:23:44.799Z] GET /api/files called
+[2025-10-04T23:23:44.802Z] GET /api/comments called
+[2025-10-04T23:23:45.178Z] Returning 2 comments to user
+[2025-10-04T23:23:45.241Z] Returning 11 files
+[2025-10-04T23:23:45.243Z] GET /api/files called
+[2025-10-04T23:23:45.741Z] Returning 11 files
+[2025-10-04T23:24:14.798Z] GET /api/files called
+[2025-10-04T23:24:15.295Z] Returning 11 files
+[2025-10-04T23:24:15.296Z] GET /api/files called
+[2025-10-04T23:24:15.790Z] Returning 11 files
+[2025-10-04T23:24:34.803Z] GET /api/files called
+[2025-10-04T23:24:34.810Z] GET /api/comments called
+[2025-10-04T23:24:35.248Z] Returning 2 comments to user
+[2025-10-04T23:24:35.333Z] Returning 11 files
+[2025-10-04T23:24:35.335Z] GET /api/files called
+[2025-10-04T23:24:35.810Z] Returning 11 files
+[2025-10-04T23:25:03.883Z] GET /api/files called
+[2025-10-04T23:25:03.884Z] GET /api/comments called
+[2025-10-04T23:25:04.241Z] Returning 2 comments to user
+[2025-10-04T23:25:04.309Z] Returning 11 files
+[2025-10-04T23:25:04.311Z] GET /api/files called
+[2025-10-04T23:25:04.789Z] Returning 11 files
+[2025-10-04T23:25:11.559Z] GET /api/files called
+[2025-10-04T23:25:11.564Z] GET /api/comments called
+[2025-10-04T23:25:11.979Z] Returning 2 comments to user
+[2025-10-04T23:25:12.039Z] Returning 11 files
+[2025-10-04T23:25:12.041Z] GET /api/files called
+[2025-10-04T23:25:12.501Z] Returning 11 files
+[2025-10-04T23:25:15.560Z] GET /api/files called
+[2025-10-04T23:25:15.561Z] GET /api/comments called
+[2025-10-04T23:25:15.926Z] Returning 2 comments to user
+[2025-10-04T23:25:15.968Z] Returning 11 files
+[2025-10-04T23:25:15.969Z] GET /api/files called
+[2025-10-04T23:25:16.436Z] Returning 11 files
+[2025-10-04T23:25:18.712Z] GET /api/files called
+[2025-10-04T23:25:18.729Z] GET /api/files called
+[2025-10-04T23:25:19.150Z] Returning 11 files
+[2025-10-04T23:25:19.201Z] Returning 11 files
+[2025-10-04T23:25:19.625Z] GET /api/files called
+[2025-10-04T23:25:19.629Z] GET /api/files called
+[2025-10-04T23:25:19.632Z] GET /api/comments called
+[2025-10-04T23:25:20.059Z] Returning 2 comments to user
+[2025-10-04T23:25:20.133Z] Returning 11 files
+[2025-10-04T23:25:20.136Z] Returning 11 files
+[2025-10-04T23:25:23.328Z] GET /api/files called
+[2025-10-04T23:25:23.332Z] GET /api/files called
+[2025-10-04T23:25:23.334Z] GET /api/comments called
+[2025-10-04T23:25:23.735Z] Returning 2 comments to user
+[2025-10-04T23:25:23.823Z] Returning 11 files
+[2025-10-04T23:25:23.838Z] Returning 11 files
+[2025-10-04T23:25:45.559Z] GET /api/files called
+[2025-10-04T23:25:46.038Z] Returning 11 files
+[2025-10-04T23:25:46.040Z] GET /api/files called
+[2025-10-04T23:25:46.521Z] Returning 11 files
+[2025-10-04T23:25:58.773Z] GET /api/files called
+[2025-10-04T23:25:58.776Z] GET /api/comments called
+[2025-10-04T23:25:59.201Z] Returning 2 comments to user
+[2025-10-04T23:25:59.276Z] Returning 11 files
+[2025-10-04T23:25:59.277Z] GET /api/files called
+[2025-10-04T23:25:59.756Z] Returning 11 files
+[2025-10-04T23:26:28.769Z] GET /api/files called
+[2025-10-04T23:26:29.256Z] Returning 11 files
+[2025-10-04T23:26:29.258Z] GET /api/files called
+[2025-10-04T23:26:29.747Z] Returning 11 files
+[2025-10-04T23:26:39.836Z] GET /api/files called
+[2025-10-04T23:26:39.838Z] GET /api/files called
+[2025-10-04T23:26:39.839Z] GET /api/comments called
+[2025-10-04T23:26:40.228Z] Returning 2 comments to user
+[2025-10-04T23:26:40.288Z] Returning 11 files
+[2025-10-04T23:26:40.331Z] Returning 11 files
+[2025-10-04T23:26:48.062Z] GET /api/files called
+[2025-10-04T23:26:48.063Z] GET /api/files called
+[2025-10-04T23:26:48.064Z] GET /api/comments called
+[2025-10-04T23:26:48.488Z] Returning 2 comments to user
+[2025-10-04T23:26:48.575Z] Returning 11 files
+[2025-10-04T23:26:48.582Z] Returning 11 files
+[2025-10-04T23:26:55.368Z] GET /api/files called
+[2025-10-04T23:26:55.370Z] GET /api/files called
+[2025-10-04T23:26:55.371Z] GET /api/comments called
+[2025-10-04T23:26:55.790Z] Returning 2 comments to user
+[2025-10-04T23:26:55.863Z] Returning 11 files
+[2025-10-04T23:26:55.897Z] Returning 11 files
+[2025-10-04T23:26:58.765Z] GET /api/files called
+[2025-10-04T23:26:59.288Z] Returning 11 files
+[2025-10-04T23:26:59.290Z] GET /api/files called
+[2025-10-04T23:26:59.735Z] Returning 11 files
+[2025-10-04T23:27:21.154Z] GET /api/files called
+[2025-10-04T23:27:21.156Z] GET /api/comments called
+[2025-10-04T23:27:21.545Z] Returning 2 comments to user
+[2025-10-04T23:27:21.668Z] Returning 11 files
+[2025-10-04T23:27:21.670Z] GET /api/files called
+[2025-10-04T23:27:22.169Z] Returning 11 files
+[2025-10-04T23:27:23.733Z] GET /api/files called
+[2025-10-04T23:27:23.735Z] GET /api/comments called
+[2025-10-04T23:27:23.736Z] GET /api/files called
+[2025-10-04T23:27:24.149Z] Returning 2 comments to user
+[2025-10-04T23:27:24.228Z] Returning 11 files
+[2025-10-04T23:27:24.489Z] Returning 11 files
+[2025-10-04T23:27:32.792Z] GET /api/files called
+[2025-10-04T23:27:32.798Z] GET /api/files called
+[2025-10-04T23:27:32.800Z] GET /api/comments called
+[2025-10-04T23:27:33.198Z] Returning 2 comments to user
+[2025-10-04T23:27:33.274Z] Returning 11 files
+[2025-10-04T23:27:33.304Z] Returning 11 files
+[2025-10-04T23:27:35.590Z] GET /api/files called
+[2025-10-04T23:27:35.593Z] GET /api/files called
+[2025-10-04T23:27:35.594Z] GET /api/comments called
+[2025-10-04T23:27:35.992Z] Returning 2 comments to user
+[2025-10-04T23:27:36.063Z] Returning 11 files
+[2025-10-04T23:27:36.090Z] Returning 11 files
+[2025-10-04T23:27:53.742Z] GET /api/files called
+[2025-10-04T23:27:54.236Z] Returning 11 files
+[2025-10-04T23:27:54.242Z] GET /api/files called
+[2025-10-04T23:27:54.752Z] Returning 11 files
+[2025-10-04T23:28:23.738Z] GET /api/files called
+[2025-10-04T23:28:24.219Z] Returning 11 files
+[2025-10-04T23:28:24.220Z] GET /api/files called
+[2025-10-04T23:28:24.664Z] Returning 11 files
+[2025-10-04T23:28:54.422Z] GET /api/files called
+[2025-10-04T23:28:54.911Z] Returning 11 files
+[2025-10-04T23:28:54.915Z] GET /api/files called
+[2025-10-04T23:28:55.402Z] Returning 11 files
+[2025-10-04T23:28:57.415Z] GET /api/files called
+[2025-10-04T23:28:57.416Z] GET /api/comments called
+[2025-10-04T23:28:57.804Z] Returning 2 comments to user
+[2025-10-04T23:28:57.892Z] Returning 11 files
+[2025-10-04T23:28:57.894Z] GET /api/files called
+[2025-10-04T23:28:58.354Z] Returning 11 files
+[2025-10-04T23:29:02.960Z] GET /api/files called
+[2025-10-04T23:29:02.963Z] GET /api/comments called
+[2025-10-04T23:29:03.347Z] Returning 2 comments to user
+[2025-10-04T23:29:03.372Z] Returning 11 files
+[2025-10-04T23:29:03.374Z] GET /api/files called
+[2025-10-04T23:29:03.809Z] Returning 11 files
+[2025-10-04T23:29:08.126Z] GET /api/files called
+[2025-10-04T23:29:08.128Z] GET /api/files called
+[2025-10-04T23:29:08.130Z] GET /api/comments called
+[2025-10-04T23:29:08.489Z] Returning 2 comments to user
+[2025-10-04T23:29:08.592Z] Returning 11 files
+[2025-10-04T23:29:08.602Z] Returning 11 files
+[2025-10-04T23:29:10.677Z] GET /api/files called
+[2025-10-04T23:29:10.681Z] GET /api/files called
+[2025-10-04T23:29:10.683Z] GET /api/comments called
+[2025-10-04T23:29:11.073Z] Returning 2 comments to user
+[2025-10-04T23:29:11.172Z] Returning 11 files
+[2025-10-04T23:29:11.196Z] Returning 11 files
+[2025-10-04T23:29:15.530Z] GET /api/files called
+[2025-10-04T23:29:15.531Z] GET /api/files called
+[2025-10-04T23:29:15.532Z] GET /api/comments called
+[2025-10-04T23:29:15.935Z] Returning 2 comments to user
+[2025-10-04T23:29:15.965Z] Returning 11 files
+[2025-10-04T23:29:16.031Z] Returning 11 files
+[2025-10-04T23:29:32.059Z] GET /api/files called
+[2025-10-04T23:29:32.060Z] GET /api/comments called
+[2025-10-04T23:29:32.203Z] GET /api/files called
+[2025-10-04T23:29:32.204Z] GET /api/comments called
+[2025-10-04T23:29:32.498Z] Returning 2 comments to user
+[2025-10-04T23:29:32.563Z] Returning 11 files
+[2025-10-04T23:29:32.583Z] Returning 2 comments to user
+[2025-10-04T23:29:32.627Z] Returning 11 files
+[2025-10-04T23:29:32.630Z] GET /api/files called
+[2025-10-04T23:29:33.137Z] Returning 11 files
+[2025-10-04T23:29:47.530Z] GET /api/files called
+[2025-10-04T23:29:47.531Z] GET /api/comments called
+[2025-10-04T23:29:47.918Z] Returning 2 comments to user
+[2025-10-04T23:29:47.982Z] Returning 11 files
+[2025-10-04T23:29:47.984Z] GET /api/files called
+[2025-10-04T23:29:48.434Z] Returning 11 files
+[2025-10-04T23:29:52.562Z] GET /api/files called
+[2025-10-04T23:29:52.568Z] GET /api/files called
+[2025-10-04T23:29:52.571Z] GET /api/comments called
+[2025-10-04T23:29:52.981Z] Returning 2 comments to user
+[2025-10-04T23:29:53.002Z] Returning 11 files
+[2025-10-04T23:29:53.057Z] Returning 11 files
+[2025-10-04T23:29:53.681Z] GET /api/files called
+[2025-10-04T23:29:53.687Z] GET /api/files called
+[2025-10-04T23:29:53.690Z] GET /api/comments called
+[2025-10-04T23:29:54.079Z] Returning 2 comments to user
+[2025-10-04T23:29:54.190Z] Returning 11 files
+[2025-10-04T23:29:54.193Z] Returning 11 files
+[2025-10-04T23:30:00.681Z] GET /api/files called
+[2025-10-04T23:30:00.683Z] GET /api/comments called
+[2025-10-04T23:30:01.090Z] Returning 2 comments to user
+[2025-10-04T23:30:01.252Z] Returning 11 files
+[2025-10-04T23:30:01.255Z] GET /api/files called
+[2025-10-04T23:30:01.811Z] Returning 11 files
+[2025-10-04T23:30:30.689Z] GET /api/files called
+[2025-10-04T23:30:31.214Z] Returning 11 files
+[2025-10-04T23:30:31.215Z] GET /api/files called
+[2025-10-04T23:30:31.725Z] Returning 11 files
+[2025-10-04T23:31:01.413Z] GET /api/files called
+[2025-10-04T23:31:01.901Z] Returning 11 files
+[2025-10-04T23:31:01.907Z] GET /api/files called
+[2025-10-04T23:31:02.449Z] Returning 11 files
+[2025-10-04T23:31:11.870Z] GET /api/files called
+[2025-10-04T23:31:11.872Z] GET /api/comments called
+[2025-10-04T23:31:12.287Z] Returning 2 comments to user
+[2025-10-04T23:31:12.361Z] Returning 11 files
+[2025-10-04T23:31:12.364Z] GET /api/files called
+[2025-10-04T23:31:12.791Z] Returning 11 files
+[2025-10-04T23:31:21.630Z] GET /api/files called
+[2025-10-04T23:31:21.632Z] GET /api/comments called
+[2025-10-04T23:31:22.043Z] Returning 2 comments to user
+[2025-10-04T23:31:22.133Z] Returning 11 files
+[2025-10-04T23:31:22.135Z] GET /api/files called
+[2025-10-04T23:31:22.571Z] Returning 11 files
+[2025-10-04T23:31:28.571Z] GET /api/files called
+[2025-10-04T23:31:28.574Z] GET /api/comments called
+[2025-10-04T23:31:28.954Z] Returning 2 comments to user
+[2025-10-04T23:31:29.111Z] Returning 11 files
+[2025-10-04T23:31:29.112Z] GET /api/files called
+[2025-10-04T23:31:29.628Z] Returning 11 files
+[2025-10-04T23:31:39.436Z] GET /api/files called
+[2025-10-04T23:31:39.438Z] GET /api/comments called
+[2025-10-04T23:31:39.850Z] Returning 2 comments to user
+[2025-10-04T23:31:39.929Z] Returning 11 files
+[2025-10-04T23:31:39.934Z] GET /api/files called
+[2025-10-04T23:31:40.429Z] Returning 11 files
+[2025-10-04T23:32:10.410Z] GET /api/files called
+[2025-10-04T23:32:10.923Z] Returning 11 files
+[2025-10-04T23:32:10.925Z] GET /api/files called
+[2025-10-04T23:32:11.395Z] Returning 11 files
+[2025-10-04T23:32:14.499Z] GET /api/files called
+[2025-10-04T23:32:14.500Z] GET /api/comments called
+[2025-10-04T23:32:14.865Z] Returning 2 comments to user
+[2025-10-04T23:32:14.992Z] Returning 11 files
+[2025-10-04T23:32:14.995Z] GET /api/files called
+[2025-10-04T23:32:15.487Z] Returning 11 files
+[2025-10-04T23:32:32.054Z] GET /api/files called
+[2025-10-04T23:32:32.055Z] GET /api/comments called
+[2025-10-04T23:32:32.455Z] Returning 2 comments to user
+[2025-10-04T23:32:32.528Z] Returning 11 files
+[2025-10-04T23:32:32.529Z] GET /api/files called
+[2025-10-04T23:32:32.985Z] Returning 11 files
+[2025-10-04T23:33:02.058Z] GET /api/files called
+[2025-10-04T23:33:02.634Z] Returning 11 files
+[2025-10-04T23:33:02.636Z] GET /api/files called
+[2025-10-04T23:33:03.134Z] Returning 11 files
+[2025-10-04T23:33:05.159Z] GET /api/files called
+[2025-10-04T23:33:05.162Z] GET /api/comments called
+[2025-10-04T23:33:05.558Z] Returning 2 comments to user
+[2025-10-04T23:33:05.621Z] Returning 11 files
+[2025-10-04T23:33:05.623Z] GET /api/files called
+[2025-10-04T23:33:06.046Z] Returning 11 files
+[2025-10-04T23:33:26.566Z] GET /api/files called
+[2025-10-04T23:33:26.571Z] GET /api/files called
+[2025-10-04T23:33:26.573Z] GET /api/comments called
+[2025-10-04T23:33:26.936Z] Returning 2 comments to user
+[2025-10-04T23:33:27.027Z] Returning 11 files
+[2025-10-04T23:33:27.033Z] Returning 11 files
+[2025-10-04T23:33:35.164Z] GET /api/files called
+[2025-10-04T23:33:35.634Z] Returning 11 files
+[2025-10-04T23:33:35.638Z] GET /api/files called
+[2025-10-04T23:33:36.089Z] Returning 11 files
+[2025-10-04T23:33:51.603Z] GET /api/files called
+[2025-10-04T23:33:51.606Z] GET /api/files called
+[2025-10-04T23:33:51.608Z] GET /api/comments called
+[2025-10-04T23:33:52.016Z] Returning 2 comments to user
+[2025-10-04T23:33:52.090Z] Returning 11 files
+[2025-10-04T23:33:52.112Z] Returning 11 files
+[2025-10-04T23:34:05.162Z] GET /api/files called
+[2025-10-04T23:34:05.657Z] Returning 11 files
+[2025-10-04T23:34:05.659Z] GET /api/files called
+[2025-10-04T23:34:06.116Z] Returning 11 files
+[2025-10-04T23:34:21.607Z] GET /api/files called
+[2025-10-04T23:34:21.612Z] GET /api/files called
+[2025-10-04T23:34:22.092Z] Returning 11 files
+[2025-10-04T23:34:22.096Z] Returning 11 files
+[2025-10-04T23:34:35.164Z] GET /api/files called
+[2025-10-04T23:34:35.649Z] Returning 11 files
+[2025-10-04T23:34:35.651Z] GET /api/files called
+[2025-10-04T23:34:36.112Z] Returning 11 files
+[2025-10-04T23:35:05.163Z] GET /api/files called
+[2025-10-04T23:35:05.680Z] Returning 11 files
+[2025-10-04T23:35:05.683Z] GET /api/files called
+[2025-10-04T23:35:06.150Z] Returning 11 files
+[2025-10-04T23:35:11.220Z] GET /api/files called
+[2025-10-04T23:35:11.222Z] GET /api/comments called
+[2025-10-04T23:35:11.700Z] Returning 11 files
+[2025-10-04T23:35:12.062Z] Returning 2 comments to admin
+[2025-10-04T23:35:13.117Z] GET /api/comments called
+[2025-10-04T23:35:13.839Z] Returning 2 comments to admin
+[2025-10-04T23:35:14.339Z] GET /api/files called
+[2025-10-04T23:35:14.821Z] Returning 11 files
+[2025-10-04T23:35:24.003Z] PUT /api/files called
+[2025-10-04T23:35:25.477Z] File at index 6 updated successfully
+[2025-10-04T23:35:25.483Z] GET /api/files called
+[2025-10-04T23:35:25.969Z] Returning 11 files
+[2025-10-04T23:35:27.080Z] GET /api/files called
+[2025-10-04T23:35:27.082Z] GET /api/comments called
+[2025-10-04T23:35:27.514Z] Returning 2 comments to user
+[2025-10-04T23:35:27.621Z] Returning 11 files
+[2025-10-04T23:35:27.623Z] GET /api/files called
+[2025-10-04T23:35:28.116Z] Returning 11 files
+[2025-10-04T23:35:34.186Z] PUT /api/files called
+[2025-10-04T23:35:35.697Z] File at index 6 updated successfully
+[2025-10-04T23:35:35.704Z] GET /api/files called
+[2025-10-04T23:35:36.157Z] Returning 11 files
+[2025-10-04T23:35:37.459Z] GET /api/files called
+[2025-10-04T23:35:37.462Z] GET /api/comments called
+[2025-10-04T23:35:37.866Z] Returning 2 comments to user
+[2025-10-04T23:35:37.923Z] Returning 11 files
+[2025-10-04T23:35:37.925Z] GET /api/files called
+[2025-10-04T23:35:38.389Z] Returning 11 files
+[2025-10-04T23:35:41.418Z] GET /api/files called
+[2025-10-04T23:35:41.890Z] Returning 11 files
+[2025-10-04T23:35:53.851Z] PUT /api/files called
+[2025-10-04T23:35:55.285Z] File at index 6 updated successfully
+[2025-10-04T23:35:55.293Z] GET /api/files called
+[2025-10-04T23:35:55.757Z] Returning 11 files
+[2025-10-04T23:35:56.873Z] GET /api/files called
+[2025-10-04T23:35:56.875Z] GET /api/comments called
+[2025-10-04T23:35:57.248Z] Returning 2 comments to user
+[2025-10-04T23:35:57.514Z] Returning 11 files
+[2025-10-04T23:35:57.515Z] GET /api/files called
+[2025-10-04T23:35:58.025Z] Returning 11 files
+[2025-10-04T23:36:11.420Z] GET /api/files called
+[2025-10-04T23:36:11.896Z] Returning 11 files
+[2025-10-04T23:36:19.471Z] GET /api/files called
+[2025-10-04T23:36:19.473Z] GET /api/comments called
+[2025-10-04T23:36:19.885Z] Returning 2 comments to user
+[2025-10-04T23:36:19.986Z] Returning 11 files
+[2025-10-04T23:36:19.988Z] GET /api/files called
+[2025-10-04T23:36:20.477Z] Returning 11 files
+[2025-10-04T23:36:41.408Z] GET /api/files called
+[2025-10-04T23:36:41.864Z] Returning 11 files
+[2025-10-04T23:36:49.489Z] GET /api/files called
+[2025-10-04T23:36:49.924Z] Returning 11 files
+[2025-10-04T23:36:49.926Z] GET /api/files called
+[2025-10-04T23:36:50.405Z] Returning 11 files
+[2025-10-04T23:37:11.420Z] GET /api/files called
+[2025-10-04T23:37:11.906Z] Returning 11 files
+[2025-10-04T23:37:19.485Z] GET /api/files called
+[2025-10-04T23:37:19.978Z] Returning 11 files
+[2025-10-04T23:37:19.980Z] GET /api/files called
+[2025-10-04T23:37:20.461Z] Returning 11 files
+[2025-10-04T23:37:36.317Z] POST /api/comments called
+[2025-10-04T23:37:37.346Z] Comment created with ID: 1759621056317
+[2025-10-04T23:37:37.350Z] GET /api/comments called
+[2025-10-04T23:37:37.707Z] Returning 3 comments to user
+[2025-10-04T23:37:41.417Z] GET /api/files called
+[2025-10-04T23:37:41.917Z] Returning 11 files
+[2025-10-04T23:37:49.488Z] GET /api/files called
+[2025-10-04T23:37:49.975Z] Returning 11 files
+[2025-10-04T23:37:49.976Z] GET /api/files called
+[2025-10-04T23:37:50.494Z] Returning 11 files
+[2025-10-04T23:38:11.420Z] GET /api/files called
+[2025-10-04T23:38:11.935Z] Returning 11 files
+[2025-10-04T23:38:14.300Z] GET /api/files called
+[2025-10-04T23:38:14.302Z] GET /api/comments called
+[2025-10-04T23:38:14.672Z] Returning 4 comments to user
+[2025-10-04T23:38:14.760Z] Returning 11 files
+[2025-10-04T23:38:14.761Z] GET /api/files called
+[2025-10-04T23:38:15.276Z] Returning 11 files
+[2025-10-04T23:38:41.421Z] GET /api/files called
+[2025-10-04T23:38:41.914Z] Returning 11 files
+[2025-10-04T23:38:44.311Z] GET /api/files called
+[2025-10-04T23:38:44.804Z] Returning 11 files
+[2025-10-04T23:38:44.806Z] GET /api/files called
+[2025-10-04T23:38:45.239Z] Returning 11 files
+[2025-10-04T23:39:11.419Z] GET /api/files called
+[2025-10-04T23:39:11.919Z] Returning 11 files
+[2025-10-04T23:39:14.314Z] GET /api/files called
+[2025-10-04T23:39:14.909Z] Returning 11 files
+[2025-10-04T23:39:14.911Z] GET /api/files called
+[2025-10-04T23:39:15.337Z] Returning 11 files
+[2025-10-04T23:39:44.314Z] GET /api/files called
+[2025-10-04T23:39:44.798Z] Returning 11 files
+[2025-10-04T23:39:44.800Z] GET /api/files called
+[2025-10-04T23:39:45.352Z] Returning 11 files
+[2025-10-04T23:40:09.411Z] GET /api/files called
+[2025-10-04T23:40:09.915Z] Returning 11 files
+[2025-10-04T23:40:14.300Z] GET /api/files called
+[2025-10-04T23:40:14.798Z] Returning 11 files
+[2025-10-04T23:40:14.803Z] GET /api/files called
+[2025-10-04T23:40:15.537Z] Returning 11 files
+[2025-10-04T23:40:27.194Z] GET /api/files called
+[2025-10-04T23:40:27.634Z] Returning 11 files
+[2025-10-04T23:40:41.416Z] GET /api/files called
+[2025-10-04T23:40:41.906Z] Returning 11 files
+[2025-10-04T23:40:44.311Z] GET /api/files called
+[2025-10-04T23:40:44.794Z] Returning 11 files
+[2025-10-04T23:40:44.797Z] GET /api/files called
+[2025-10-04T23:40:45.265Z] Returning 11 files
+[2025-10-04T23:40:57.371Z] GET /api/files called
+[2025-10-04T23:40:57.373Z] GET /api/comments called
+[2025-10-04T23:40:57.803Z] Returning 4 comments to user
+[2025-10-04T23:40:57.825Z] Returning 11 files
+[2025-10-04T23:40:57.826Z] GET /api/files called
+[2025-10-04T23:40:58.293Z] Returning 11 files
+[2025-10-04T23:41:11.421Z] GET /api/files called
+[2025-10-04T23:41:11.932Z] Returning 11 files
+[2025-10-04T23:41:27.372Z] GET /api/files called
+[2025-10-04T23:41:27.895Z] Returning 11 files
+[2025-10-04T23:41:27.900Z] GET /api/files called
+[2025-10-04T23:41:28.432Z] Returning 11 files
+[2025-10-04T23:41:57.385Z] GET /api/files called
+[2025-10-04T23:41:57.914Z] Returning 11 files
+[2025-10-04T23:41:57.920Z] GET /api/files called
+[2025-10-04T23:41:58.423Z] Returning 11 files
+[2025-10-04T23:42:06.550Z] GET /api/files called
+[2025-10-04T23:42:07.245Z] Returning 11 files
+[2025-10-04T23:42:07.668Z] GET /api/files called
+[2025-10-04T23:42:07.670Z] GET /api/comments called
+[2025-10-04T23:42:08.048Z] Returning 4 comments to user
+[2025-10-04T23:42:08.211Z] Returning 11 files
+[2025-10-04T23:42:08.213Z] GET /api/files called
+[2025-10-04T23:42:08.709Z] Returning 11 files
+[2025-10-04T23:42:11.411Z] GET /api/files called
+[2025-10-04T23:42:11.865Z] Returning 11 files
+[2025-10-04T23:42:33.253Z] GET /api/files called
+[2025-10-04T23:42:33.255Z] GET /api/comments called
+[2025-10-04T23:42:33.659Z] Returning 5 comments to user
+[2025-10-04T23:42:33.731Z] Returning 11 files
+[2025-10-04T23:42:33.732Z] GET /api/files called
+[2025-10-04T23:42:34.211Z] Returning 11 files
+[2025-10-04T23:42:41.229Z] GET /api/files called
+[2025-10-04T23:42:41.419Z] GET /api/comments called
+[2025-10-04T23:42:41.693Z] Returning 11 files
+[2025-10-04T23:42:42.291Z] Returning 5 comments to admin
+[2025-10-04T23:42:48.074Z] PUT /api/comments called
+[2025-10-04T23:42:48.515Z] Comment 1759621346994 reply updated
+[2025-10-04T23:42:49.345Z] Comment 1759621346994 updated successfully
+[2025-10-04T23:42:49.349Z] GET /api/comments called
+[2025-10-04T23:42:49.409Z] PUT /api/comments called
+[2025-10-04T23:42:49.836Z] Comment 1759621346994 approved status updated to: true
+[2025-10-04T23:42:50.177Z] Returning 5 comments to admin
+[2025-10-04T23:42:50.625Z] Comment 1759621346994 updated successfully
+[2025-10-04T23:42:50.632Z] GET /api/comments called
+[2025-10-04T23:42:51.421Z] Returning 5 comments to admin
+[2025-10-04T23:42:52.233Z] GET /api/files called
+[2025-10-04T23:42:52.234Z] GET /api/comments called
+[2025-10-04T23:42:52.611Z] Returning 5 comments to user
+[2025-10-04T23:42:52.721Z] Returning 11 files
+[2025-10-04T23:42:52.723Z] GET /api/files called
+[2025-10-04T23:42:53.208Z] Returning 11 files
+[2025-10-04T23:43:11.420Z] GET /api/files called
+[2025-10-04T23:43:11.937Z] Returning 11 files
+[2025-10-04T23:43:22.252Z] GET /api/files called
+[2025-10-04T23:43:22.774Z] Returning 11 files
+[2025-10-04T23:43:22.776Z] GET /api/files called
+[2025-10-04T23:43:23.292Z] Returning 11 files
+[2025-10-04T23:43:41.419Z] GET /api/files called
+[2025-10-04T23:43:41.874Z] Returning 11 files
+[2025-10-04T23:43:52.247Z] GET /api/files called
+[2025-10-04T23:43:52.719Z] Returning 11 files
+[2025-10-04T23:43:52.720Z] GET /api/files called
+[2025-10-04T23:43:53.170Z] Returning 11 files
+[2025-10-04T23:44:22.238Z] GET /api/files called
+[2025-10-04T23:44:22.733Z] Returning 11 files
+[2025-10-04T23:44:22.735Z] GET /api/files called
+[2025-10-04T23:44:23.188Z] Returning 11 files
+[2025-10-04T23:44:42.418Z] GET /api/files called
+[2025-10-04T23:44:42.931Z] Returning 11 files
+[2025-10-04T23:44:52.238Z] GET /api/files called
+[2025-10-04T23:44:52.997Z] Returning 11 files
+[2025-10-04T23:44:52.999Z] GET /api/files called
+[2025-10-04T23:44:53.462Z] Returning 11 files
+[2025-10-04T23:45:22.234Z] GET /api/files called
+[2025-10-04T23:45:22.758Z] Returning 11 files
+[2025-10-04T23:45:22.761Z] GET /api/files called
+[2025-10-04T23:45:23.250Z] Returning 11 files
+[2025-10-04T23:45:43.424Z] GET /api/files called
+[2025-10-04T23:45:43.922Z] Returning 11 files
+[2025-10-04T23:45:52.240Z] GET /api/files called
+[2025-10-04T23:45:52.720Z] Returning 11 files
+[2025-10-04T23:45:52.722Z] GET /api/files called
+[2025-10-04T23:45:53.176Z] Returning 11 files
+[2025-10-04T23:46:22.236Z] GET /api/files called
+[2025-10-04T23:46:22.726Z] Returning 11 files
+[2025-10-04T23:46:22.730Z] GET /api/files called
+[2025-10-04T23:46:23.241Z] Returning 11 files
+[2025-10-04T23:46:44.415Z] GET /api/files called
+[2025-10-04T23:46:44.895Z] Returning 11 files
+[2025-10-04T23:46:52.248Z] GET /api/files called
+[2025-10-04T23:46:52.733Z] Returning 11 files
+[2025-10-04T23:46:52.738Z] GET /api/files called
+[2025-10-04T23:46:53.212Z] Returning 11 files
+[2025-10-04T23:47:22.254Z] GET /api/files called
+[2025-10-04T23:47:22.852Z] Returning 11 files
+[2025-10-04T23:47:22.854Z] GET /api/files called
+[2025-10-04T23:47:23.349Z] Returning 11 files
+[2025-10-04T23:47:45.424Z] GET /api/files called
+[2025-10-04T23:47:45.898Z] Returning 11 files
+[2025-10-04T23:47:52.247Z] GET /api/files called
+[2025-10-04T23:47:52.741Z] Returning 11 files
+[2025-10-04T23:47:52.745Z] GET /api/files called
+[2025-10-04T23:47:53.221Z] Returning 11 files
+[2025-10-04T23:48:22.241Z] GET /api/files called
+[2025-10-04T23:48:22.744Z] Returning 11 files
+[2025-10-04T23:48:22.750Z] GET /api/files called
+[2025-10-04T23:48:23.303Z] Returning 11 files
+[2025-10-04T23:48:46.435Z] GET /api/files called
+[2025-10-04T23:48:46.876Z] Returning 11 files
+[2025-10-04T23:48:52.240Z] GET /api/files called
+[2025-10-04T23:48:52.734Z] Returning 11 files
+[2025-10-04T23:48:52.736Z] GET /api/files called
+[2025-10-04T23:48:53.207Z] Returning 11 files
+[2025-10-04T23:48:53.319Z] GET /api/files called
+[2025-10-04T23:48:53.320Z] GET /api/comments called
+[2025-10-04T23:48:53.691Z] Returning 5 comments to user
+[2025-10-04T23:48:53.791Z] Returning 11 files
+[2025-10-04T23:48:53.793Z] GET /api/files called
+[2025-10-04T23:48:54.252Z] Returning 11 files
+[2025-10-04T23:49:11.421Z] GET /api/files called
+[2025-10-04T23:49:11.875Z] Returning 11 files
+[2025-10-04T23:49:22.524Z] GET /api/files called
+[2025-10-04T23:49:22.526Z] GET /api/comments called
+[2025-10-04T23:49:22.944Z] Returning 6 comments to user
+[2025-10-04T23:49:22.967Z] Returning 11 files
+[2025-10-04T23:49:22.969Z] GET /api/files called
+[2025-10-04T23:49:23.504Z] Returning 11 files
+[2025-10-04T23:49:27.601Z] GET /api/comments called
+[2025-10-04T23:49:28.034Z] GET /api/files called
+[2025-10-04T23:49:28.439Z] Returning 6 comments to admin
+[2025-10-04T23:49:28.488Z] Returning 11 files
+[2025-10-04T23:49:28.490Z] GET /api/comments called
+[2025-10-04T23:49:29.271Z] Returning 6 comments to admin
+[2025-10-04T23:49:32.633Z] PUT /api/comments called
+[2025-10-04T23:49:33.015Z] Comment 1759621752493 reply updated
+[2025-10-04T23:49:33.891Z] Comment 1759621752493 updated successfully
+[2025-10-04T23:49:33.895Z] GET /api/comments called
+[2025-10-04T23:49:34.720Z] Returning 6 comments to admin
+[2025-10-04T23:49:36.001Z] GET /api/files called
+[2025-10-04T23:49:36.003Z] GET /api/comments called
+[2025-10-04T23:49:36.432Z] Returning 11 files
+[2025-10-04T23:49:36.827Z] Returning 6 comments to admin
+[2025-10-04T23:49:37.691Z] GET /api/comments called
+[2025-10-04T23:49:38.526Z] Returning 6 comments to admin
+[2025-10-04T23:49:43.413Z] DELETE /api/comments called
+[2025-10-04T23:49:44.645Z] Comment 1759621752493 deleted successfully
+[2025-10-04T23:49:44.648Z] GET /api/comments called
+[2025-10-04T23:49:45.487Z] Returning 5 comments to admin
+[2025-10-04T23:49:53.427Z] GET /api/files called
+[2025-10-04T23:49:53.946Z] Returning 11 files
+[2025-10-04T23:49:53.950Z] GET /api/files called
+[2025-10-04T23:49:54.402Z] Returning 11 files
+[2025-10-04T23:49:55.658Z] GET /api/files called
+[2025-10-04T23:49:55.659Z] GET /api/comments called
+[2025-10-04T23:49:56.121Z] Returning 11 files
+[2025-10-04T23:49:56.497Z] Returning 6 comments to admin
+[2025-10-04T23:49:57.045Z] GET /api/comments called
+[2025-10-04T23:49:57.882Z] Returning 6 comments to admin
+[2025-10-04T23:50:04.197Z] PUT /api/comments called
+[2025-10-04T23:50:04.605Z] Comment 1759621789597 reply updated
+[2025-10-04T23:50:05.423Z] Comment 1759621789597 updated successfully
+[2025-10-04T23:50:05.429Z] GET /api/comments called
+[2025-10-04T23:50:06.273Z] Returning 6 comments to admin
+[2025-10-04T23:50:09.316Z] GET /api/files called
+[2025-10-04T23:50:09.318Z] GET /api/comments called
+[2025-10-04T23:50:09.774Z] Returning 11 files
+[2025-10-04T23:50:10.094Z] Returning 6 comments to admin
+[2025-10-04T23:50:10.716Z] GET /api/comments called
+[2025-10-04T23:50:11.481Z] Returning 6 comments to admin
+[2025-10-04T23:50:13.548Z] PUT /api/comments called
+[2025-10-04T23:50:14.000Z] Comment 1759621789597 approved status updated to: true
+[2025-10-04T23:50:14.876Z] Comment 1759621789597 updated successfully
+[2025-10-04T23:50:14.879Z] GET /api/comments called
+[2025-10-04T23:50:15.663Z] Returning 6 comments to admin
+[2025-10-04T23:50:16.523Z] GET /api/files called
+[2025-10-04T23:50:16.524Z] GET /api/comments called
+[2025-10-04T23:50:16.900Z] Returning 6 comments to user
+[2025-10-04T23:50:17.034Z] Returning 11 files
+[2025-10-04T23:50:17.038Z] GET /api/files called
+[2025-10-04T23:50:17.475Z] Returning 11 files
+[2025-10-04T23:50:27.767Z] GET /api/files called
+[2025-10-04T23:50:27.769Z] GET /api/comments called
+[2025-10-04T23:50:28.162Z] Returning 6 comments to user
+[2025-10-04T23:50:28.276Z] Returning 11 files
+[2025-10-04T23:50:28.278Z] GET /api/files called
+[2025-10-04T23:50:28.801Z] Returning 11 files
+[2025-10-04T23:50:39.418Z] GET /api/files called
+[2025-10-04T23:50:39.932Z] Returning 11 files
+[2025-10-04T23:50:57.769Z] GET /api/files called
+[2025-10-04T23:50:58.268Z] Returning 11 files
+[2025-10-04T23:50:58.269Z] GET /api/files called
+[2025-10-04T23:50:58.745Z] Returning 11 files
+[2025-10-04T23:51:09.420Z] GET /api/files called
+[2025-10-04T23:51:09.879Z] Returning 11 files
+[2025-10-04T23:51:27.778Z] GET /api/files called
+[2025-10-04T23:51:28.272Z] Returning 11 files
+[2025-10-04T23:51:28.274Z] GET /api/files called
+[2025-10-04T23:51:28.758Z] Returning 11 files
+[2025-10-04T23:51:39.412Z] GET /api/files called
+[2025-10-04T23:51:39.874Z] Returning 11 files
+[2025-10-04T23:51:57.771Z] GET /api/files called
+[2025-10-04T23:51:57.827Z] GET /api/files called
+[2025-10-04T23:51:57.828Z] GET /api/comments called
+[2025-10-04T23:51:58.290Z] Returning 11 files
+[2025-10-04T23:51:58.292Z] GET /api/files called
+[2025-10-04T23:51:58.565Z] Returning 11 files
+[2025-10-04T23:51:58.607Z] Returning 6 comments to admin
+[2025-10-04T23:51:58.813Z] Returning 11 files
+[2025-10-04T23:52:03.831Z] POST /api/auth called
+[2025-10-04T23:52:04.639Z] Admin login successful
+[2025-10-04T23:52:04.647Z] GET /api/files called
+[2025-10-04T23:52:04.650Z] GET /api/comments called
+[2025-10-04T23:52:05.144Z] Returning 11 files
+[2025-10-04T23:52:05.470Z] Returning 6 comments to admin
+[2025-10-04T23:52:05.715Z] GET /api/comments called
+[2025-10-04T23:52:06.579Z] Returning 6 comments to admin
+[2025-10-04T23:52:27.781Z] GET /api/files called
+[2025-10-04T23:52:28.292Z] Returning 11 files
+[2025-10-04T23:52:28.296Z] GET /api/files called
+[2025-10-04T23:52:28.741Z] Returning 11 files
+[2025-10-04T23:52:28.747Z] GET /api/files called
+[2025-10-04T23:52:29.212Z] Returning 11 files
+[2025-10-04T23:52:32.113Z] GET /api/files called
+[2025-10-04T23:52:32.697Z] Returning 11 files
+[2025-10-04T23:52:49.756Z] GET /api/files called
+[2025-10-04T23:52:49.758Z] GET /api/comments called
+[2025-10-04T23:52:50.226Z] Returning 11 files
+[2025-10-04T23:52:50.561Z] Returning 7 comments to admin
+[2025-10-04T23:52:50.890Z] GET /api/comments called
+[2025-10-04T23:52:51.760Z] Returning 7 comments to admin
+[2025-10-04T23:52:54.434Z] PUT /api/comments called
+[2025-10-04T23:52:54.859Z] Comment 1759621956942 reply updated
+[2025-10-04T23:52:55.975Z] Comment 1759621956942 updated successfully
+[2025-10-04T23:52:55.982Z] GET /api/comments called
+[2025-10-04T23:52:56.816Z] Returning 7 comments to admin
+[2025-10-04T23:52:57.780Z] GET /api/files called
+[2025-10-04T23:52:58.266Z] Returning 11 files
+[2025-10-04T23:52:58.270Z] GET /api/files called
+[2025-10-04T23:52:58.804Z] Returning 11 files
+[2025-10-04T23:52:58.806Z] GET /api/files called
+[2025-10-04T23:52:59.039Z] PUT /api/comments called
+[2025-10-04T23:52:59.270Z] Returning 11 files
+[2025-10-04T23:52:59.441Z] Comment 1759621956942 approved status updated to: true
+[2025-10-04T23:53:00.370Z] Comment 1759621956942 updated successfully
+[2025-10-04T23:53:00.376Z] GET /api/comments called
+[2025-10-04T23:53:01.179Z] Returning 7 comments to admin
+[2025-10-04T23:53:03.542Z] GET /api/files called
+[2025-10-04T23:53:03.543Z] GET /api/comments called
+[2025-10-04T23:53:04.051Z] Returning 11 files
+[2025-10-04T23:53:04.302Z] Returning 7 comments to admin
+[2025-10-04T23:53:07.920Z] GET /api/files called
+[2025-10-04T23:53:07.921Z] GET /api/comments called
+[2025-10-04T23:53:08.345Z] Returning 7 comments to user
+[2025-10-04T23:53:08.387Z] Returning 11 files
+[2025-10-04T23:53:08.389Z] GET /api/files called
+[2025-10-04T23:53:08.905Z] Returning 11 files
+[2025-10-04T23:53:20.421Z] GET /api/files called
+[2025-10-04T23:53:20.990Z] Returning 11 files
+[2025-10-04T23:53:34.412Z] GET /api/files called
+[2025-10-04T23:53:34.897Z] Returning 11 files
+[2025-10-04T23:53:37.925Z] GET /api/files called
+[2025-10-04T23:53:38.413Z] Returning 11 files
+[2025-10-04T23:53:38.416Z] GET /api/files called
+[2025-10-04T23:53:38.965Z] Returning 11 files
+[2025-10-04T23:53:50.412Z] GET /api/files called
+[2025-10-04T23:53:50.889Z] Returning 11 files
+[2025-10-04T23:54:04.423Z] GET /api/files called
+[2025-10-04T23:54:04.938Z] Returning 11 files
+[2025-10-04T23:54:07.920Z] GET /api/files called
+[2025-10-04T23:54:08.427Z] Returning 11 files
+[2025-10-04T23:54:08.431Z] GET /api/files called
+[2025-10-04T23:54:08.869Z] Returning 11 files
+[2025-10-04T23:54:20.424Z] GET /api/files called
+[2025-10-04T23:54:20.929Z] Returning 11 files
+[2025-10-04T23:54:23.931Z] GET /api/files called
+[2025-10-04T23:54:23.933Z] GET /api/comments called
+[2025-10-04T23:54:24.371Z] Returning 8 comments to user
+[2025-10-04T23:54:24.394Z] Returning 11 files
+[2025-10-04T23:54:24.395Z] GET /api/files called
+[2025-10-04T23:54:24.913Z] Returning 11 files
+[2025-10-04T23:54:34.419Z] GET /api/files called
+[2025-10-04T23:54:34.875Z] Returning 11 files
+[2025-10-04T23:54:50.416Z] GET /api/files called
+[2025-10-04T23:54:50.906Z] Returning 11 files
+[2025-10-04T23:54:53.934Z] GET /api/files called
+[2025-10-04T23:54:54.366Z] Returning 11 files
+[2025-10-04T23:54:54.369Z] GET /api/files called
+[2025-10-04T23:54:54.846Z] Returning 11 files
+[2025-10-04T23:55:04.415Z] GET /api/files called
+[2025-10-04T23:55:04.878Z] Returning 11 files
+[2025-10-04T23:55:20.413Z] GET /api/files called
+[2025-10-04T23:55:20.853Z] Returning 11 files
+[2025-10-04T23:55:23.933Z] GET /api/files called
+[2025-10-04T23:55:24.441Z] Returning 11 files
+[2025-10-04T23:55:24.442Z] GET /api/files called
+[2025-10-04T23:55:24.904Z] Returning 11 files
+[2025-10-04T23:55:24.953Z] GET /api/files called
+[2025-10-04T23:55:24.955Z] GET /api/comments called
+[2025-10-04T23:55:25.367Z] Returning 8 comments to user
+[2025-10-04T23:55:25.421Z] Returning 11 files
+[2025-10-04T23:55:25.424Z] GET /api/files called
+[2025-10-04T23:55:25.871Z] Returning 11 files
+[2025-10-04T23:55:33.550Z] GET /api/files called
+[2025-10-04T23:55:34.010Z] Returning 11 files
+[2025-10-04T23:55:50.421Z] GET /api/files called
+[2025-10-04T23:55:50.908Z] Returning 11 files
+[2025-10-04T23:55:54.965Z] GET /api/files called
+[2025-10-04T23:55:55.434Z] Returning 11 files
+[2025-10-04T23:55:55.435Z] GET /api/files called
+[2025-10-04T23:55:55.909Z] Returning 11 files
+[2025-10-04T23:55:59.439Z] GET /api/files called
+[2025-10-04T23:55:59.441Z] GET /api/comments called
+[2025-10-04T23:55:59.934Z] Returning 11 files
+[2025-10-04T23:56:00.296Z] Returning 8 comments to admin
+[2025-10-04T23:56:00.529Z] GET /api/files called
+[2025-10-04T23:56:00.531Z] GET /api/comments called
+[2025-10-04T23:56:00.949Z] Returning 8 comments to user
+[2025-10-04T23:56:01.018Z] Returning 11 files
+[2025-10-04T23:56:01.020Z] GET /api/files called
+[2025-10-04T23:56:01.457Z] Returning 11 files
+[2025-10-04T23:56:20.420Z] GET /api/files called
+[2025-10-04T23:56:20.893Z] Returning 11 files
+[2025-10-04T23:56:30.422Z] GET /api/files called
+[2025-10-04T23:56:30.903Z] Returning 11 files
+[2025-10-04T23:56:30.906Z] GET /api/files called
+[2025-10-04T23:56:31.384Z] Returning 11 files
+[2025-10-04T23:56:31.386Z] GET /api/files called
+[2025-10-04T23:56:31.851Z] Returning 11 files
+[2025-10-04T23:56:58.352Z] GET /api/files called
+[2025-10-04T23:56:58.353Z] GET /api/comments called
+[2025-10-04T23:56:58.717Z] Returning 8 comments to user
+[2025-10-04T23:56:58.875Z] Returning 11 files
+[2025-10-04T23:56:58.876Z] GET /api/files called
+[2025-10-04T23:56:59.368Z] Returning 11 files
+[2025-10-04T23:57:00.421Z] GET /api/files called
+[2025-10-04T23:57:00.902Z] Returning 11 files
+[2025-10-04T23:57:09.423Z] GET /api/files called
+[2025-10-04T23:57:09.913Z] Returning 11 files
+[2025-10-04T23:57:14.387Z] GET /api/comments called
+[2025-10-04T23:57:15.162Z] Returning 9 comments to admin
+[2025-10-04T23:57:15.402Z] GET /api/files called
+[2025-10-04T23:57:15.403Z] GET /api/comments called
+[2025-10-04T23:57:15.859Z] Returning 11 files
+[2025-10-04T23:57:16.172Z] Returning 9 comments to admin
+[2025-10-04T23:57:16.174Z] GET /api/comments called
+[2025-10-04T23:57:16.997Z] Returning 9 comments to admin
+[2025-10-04T23:57:22.202Z] PUT /api/comments called
+[2025-10-04T23:57:22.595Z] Comment 1759622228762 reply updated
+[2025-10-04T23:57:23.720Z] Comment 1759622228762 updated successfully
+[2025-10-04T23:57:23.727Z] GET /api/comments called
+[2025-10-04T23:57:24.512Z] Returning 9 comments to admin
+[2025-10-04T23:57:27.970Z] PUT /api/comments called
+[2025-10-04T23:57:28.352Z] Comment 1759622228762 approved status updated to: true
+[2025-10-04T23:57:28.411Z] GET /api/files called
+[2025-10-04T23:57:28.865Z] Returning 11 files
+[2025-10-04T23:57:28.870Z] GET /api/files called
+[2025-10-04T23:57:29.288Z] Returning 11 files
+[2025-10-04T23:57:29.455Z] Comment 1759622228762 updated successfully
+[2025-10-04T23:57:29.462Z] GET /api/comments called
+[2025-10-04T23:57:30.280Z] Returning 9 comments to admin
+[2025-10-04T23:57:45.415Z] GET /api/files called
+[2025-10-04T23:57:45.907Z] Returning 11 files
+[2025-10-04T23:57:56.288Z] GET /api/files called
+[2025-10-04T23:57:56.289Z] GET /api/comments called
+[2025-10-04T23:57:56.723Z] Returning 9 comments to user
+[2025-10-04T23:57:56.954Z] Returning 11 files
+[2025-10-04T23:57:56.956Z] GET /api/files called
+[2025-10-04T23:57:57.478Z] Returning 11 files
+[2025-10-04T23:58:04.018Z] GET /api/files called
+[2025-10-04T23:58:04.539Z] Returning 11 files
+[2025-10-04T23:58:15.407Z] GET /api/files called
+[2025-10-04T23:58:15.861Z] Returning 11 files
+[2025-10-04T23:58:19.771Z] GET /api/files called
+[2025-10-04T23:58:20.235Z] Returning 11 files
+[2025-10-04T23:58:26.298Z] GET /api/files called
+[2025-10-04T23:58:26.755Z] Returning 11 files
+[2025-10-04T23:58:26.760Z] GET /api/files called
+[2025-10-04T23:58:27.235Z] Returning 11 files
+[2025-10-04T23:58:45.415Z] GET /api/files called
+[2025-10-04T23:58:45.867Z] Returning 11 files
+[2025-10-04T23:58:48.731Z] GET /api/files called
+[2025-10-04T23:58:48.733Z] GET /api/comments called
+[2025-10-04T23:58:49.108Z] Returning 10 comments to user
+[2025-10-04T23:58:49.463Z] Returning 11 files
+[2025-10-04T23:58:49.464Z] GET /api/files called
+[2025-10-04T23:58:49.763Z] GET /api/files called
+[2025-10-04T23:58:49.966Z] Returning 11 files
+[2025-10-04T23:58:50.178Z] Returning 11 files
+[2025-10-04T23:59:15.423Z] GET /api/files called
+[2025-10-04T23:59:15.929Z] Returning 11 files
+[2025-10-04T23:59:18.737Z] GET /api/files called
+[2025-10-04T23:59:19.235Z] Returning 11 files
+[2025-10-04T23:59:19.238Z] GET /api/files called
+[2025-10-04T23:59:19.663Z] Returning 11 files
+[2025-10-04T23:59:19.767Z] GET /api/files called
+[2025-10-04T23:59:20.271Z] Returning 11 files
+[2025-10-04T23:59:45.419Z] GET /api/files called
+[2025-10-04T23:59:45.821Z] Returning 11 files
+[2025-10-04T23:59:48.695Z] GET /api/files called
+[2025-10-04T23:59:48.697Z] GET /api/comments called
+[2025-10-04T23:59:49.086Z] Returning 10 comments to user
+[2025-10-04T23:59:49.163Z] Returning 11 files
+[2025-10-04T23:59:49.164Z] GET /api/files called
+[2025-10-04T23:59:49.608Z] Returning 11 files
+[2025-10-04T23:59:49.610Z] GET /api/files called
+[2025-10-04T23:59:49.760Z] GET /api/files called
+[2025-10-04T23:59:50.071Z] Returning 11 files
+[2025-10-04T23:59:50.072Z] GET /api/files called
+[2025-10-04T23:59:50.258Z] Returning 11 files
+[2025-10-04T23:59:50.564Z] Returning 11 files
+[2025-10-04T23:59:57.471Z] GET /api/files called
+[2025-10-04T23:59:57.473Z] GET /api/comments called
+[2025-10-04T23:59:57.832Z] Returning 10 comments to user
+[2025-10-04T23:59:57.903Z] Returning 11 files
+[2025-10-04T23:59:57.904Z] GET /api/files called
+[2025-10-04T23:59:58.344Z] Returning 11 files
+[2025-10-05T00:00:15.420Z] GET /api/files called
+[2025-10-05T00:00:15.985Z] Returning 11 files
+[2025-10-05T00:00:18.745Z] GET /api/files called
+[2025-10-05T00:00:19.186Z] Returning 11 files
+[2025-10-05T00:00:19.187Z] GET /api/files called
+[2025-10-05T00:00:19.688Z] Returning 11 files
+[2025-10-05T00:00:19.768Z] GET /api/files called
+[2025-10-05T00:00:20.229Z] Returning 11 files
+[2025-10-05T00:00:27.473Z] GET /api/files called
+[2025-10-05T00:00:27.974Z] Returning 11 files
+[2025-10-05T00:00:27.976Z] GET /api/files called
+[2025-10-05T00:00:28.459Z] Returning 11 files
+[2025-10-05T00:00:31.684Z] GET /api/comments called
+[2025-10-05T00:00:31.686Z] GET /api/files called
+[2025-10-05T00:00:32.107Z] Returning 6 comments to user
+[2025-10-05T00:00:32.165Z] Returning 11 files
+[2025-10-05T00:00:32.167Z] GET /api/files called
+[2025-10-05T00:00:32.611Z] Returning 11 files
+[2025-10-05T00:00:45.408Z] GET /api/files called
+[2025-10-05T00:00:45.870Z] Returning 11 files
+[2025-10-05T00:00:48.743Z] GET /api/files called
+[2025-10-05T00:00:49.217Z] Returning 11 files
+[2025-10-05T00:00:49.219Z] GET /api/files called
+[2025-10-05T00:00:49.647Z] Returning 11 files
+[2025-10-05T00:00:49.740Z] GET /api/files called
+[2025-10-05T00:00:49.741Z] GET /api/comments called
+[2025-10-05T00:00:49.765Z] GET /api/files called
+[2025-10-05T00:00:50.135Z] Returning 6 comments to user
+[2025-10-05T00:00:50.184Z] Returning 11 files
+[2025-10-05T00:00:50.186Z] Returning 11 files
+[2025-10-05T00:00:50.187Z] GET /api/files called
+[2025-10-05T00:00:50.638Z] Returning 11 files
+[2025-10-05T00:00:54.650Z] GET /api/comments called
+[2025-10-05T00:00:55.055Z] Returning 4 comments to user
+[2025-10-05T00:01:18.737Z] GET /api/files called
+[2025-10-05T00:01:19.193Z] Returning 11 files
+[2025-10-05T00:01:19.197Z] GET /api/files called
+[2025-10-05T00:01:19.640Z] Returning 11 files
+[2025-10-05T00:01:19.750Z] GET /api/files called
+[2025-10-05T00:01:19.766Z] GET /api/files called
+[2025-10-05T00:01:20.205Z] Returning 11 files
+[2025-10-05T00:01:20.210Z] GET /api/files called
+[2025-10-05T00:01:20.216Z] Returning 11 files
+[2025-10-05T00:01:20.945Z] Returning 11 files
+[2025-10-05T00:01:46.410Z] GET /api/files called
+[2025-10-05T00:01:46.862Z] Returning 11 files
+[2025-10-05T00:01:48.740Z] GET /api/files called
+[2025-10-05T00:01:49.214Z] Returning 11 files
+[2025-10-05T00:01:49.217Z] GET /api/files called
+[2025-10-05T00:01:49.705Z] Returning 11 files
+[2025-10-05T00:01:49.748Z] GET /api/files called
+[2025-10-05T00:01:49.758Z] GET /api/files called
+[2025-10-05T00:01:50.218Z] Returning 11 files
+[2025-10-05T00:01:50.221Z] Returning 11 files
+[2025-10-05T00:01:50.223Z] GET /api/files called
+[2025-10-05T00:01:50.666Z] Returning 11 files
+[2025-10-05T00:02:15.307Z] POST /api/comments called
+[2025-10-05T00:02:16.208Z] GET /api/files called
+[2025-10-05T00:02:16.713Z] Returning 11 files
+[2025-10-05T00:02:16.898Z] Comment created with ID: 1759622535307
+[2025-10-05T00:02:16.904Z] GET /api/comments called
+[2025-10-05T00:02:17.351Z] Returning 6 comments to user
+[2025-10-05T00:02:17.399Z] GET /api/files called
+[2025-10-05T00:02:17.870Z] Returning 11 files
+[2025-10-05T00:02:17.879Z] GET /api/comments called
+[2025-10-05T00:02:18.646Z] Returning 10 comments to admin
+[2025-10-05T00:02:18.743Z] GET /api/files called
+[2025-10-05T00:02:19.179Z] Returning 11 files
+[2025-10-05T00:02:19.181Z] GET /api/files called
+[2025-10-05T00:02:19.614Z] Returning 11 files
+[2025-10-05T00:02:19.771Z] GET /api/files called
+[2025-10-05T00:02:20.268Z] Returning 11 files
+[2025-10-05T00:02:20.424Z] GET /api/files called
+[2025-10-05T00:02:20.935Z] Returning 11 files
+[2025-10-05T00:02:20.939Z] GET /api/files called
+[2025-10-05T00:02:21.364Z] GET /api/comments called
+[2025-10-05T00:02:21.396Z] Returning 11 files
+[2025-10-05T00:02:22.121Z] Returning 1 comments to admin
+[2025-10-05T00:02:22.125Z] GET /api/comments called
+[2025-10-05T00:02:22.964Z] Returning 1 comments to admin
+[2025-10-05T00:02:28.750Z] GET /api/comments called
+[2025-10-05T00:02:29.536Z] Returning 10 comments to admin
+[2025-10-05T00:02:35.296Z] PUT /api/comments called
+[2025-10-05T00:02:35.715Z] Comment 1759622535307 reply updated
+[2025-10-05T00:02:37.043Z] Comment 1759622535307 updated successfully
+[2025-10-05T00:02:37.050Z] GET /api/comments called
+[2025-10-05T00:02:37.271Z] PUT /api/comments called
+[2025-10-05T00:02:37.641Z] Comment 1759622535307 approved status updated to: true
+[2025-10-05T00:02:37.865Z] Returning 10 comments to admin
+[2025-10-05T00:02:38.840Z] Comment 1759622535307 updated successfully
+[2025-10-05T00:02:38.844Z] GET /api/comments called
+[2025-10-05T00:02:39.561Z] Returning 10 comments to admin
+[2025-10-05T00:02:40.383Z] GET /api/files called
+[2025-10-05T00:02:40.385Z] GET /api/comments called
+[2025-10-05T00:02:40.791Z] Returning 6 comments to user
+[2025-10-05T00:02:41.678Z] Returning 11 files
+[2025-10-05T00:02:41.682Z] GET /api/files called
+[2025-10-05T00:02:42.136Z] Returning 11 files
+[2025-10-05T00:02:45.413Z] GET /api/files called
+[2025-10-05T00:02:45.870Z] Returning 11 files
+[2025-10-05T00:02:48.747Z] GET /api/files called
+[2025-10-05T00:02:49.201Z] Returning 11 files
+[2025-10-05T00:02:49.203Z] GET /api/files called
+[2025-10-05T00:02:49.661Z] Returning 11 files
+[2025-10-05T00:02:49.760Z] GET /api/files called
+[2025-10-05T00:02:50.277Z] Returning 11 files
+[2025-10-05T00:03:10.394Z] GET /api/files called
+[2025-10-05T00:03:10.850Z] Returning 11 files
+[2025-10-05T00:03:10.855Z] GET /api/files called
+[2025-10-05T00:03:11.316Z] Returning 11 files
+[2025-10-05T00:03:15.421Z] GET /api/files called
+[2025-10-05T00:03:15.928Z] Returning 11 files
+[2025-10-05T00:03:18.739Z] GET /api/files called
+[2025-10-05T00:03:19.211Z] Returning 11 files
+[2025-10-05T00:03:19.212Z] GET /api/files called
+[2025-10-05T00:03:19.758Z] Returning 11 files
+[2025-10-05T00:03:19.764Z] GET /api/files called
+[2025-10-05T00:03:20.206Z] Returning 11 files
+[2025-10-05T00:03:40.399Z] GET /api/files called
+[2025-10-05T00:03:40.954Z] Returning 11 files
+[2025-10-05T00:03:40.956Z] GET /api/files called
+[2025-10-05T00:03:41.414Z] Returning 11 files
+[2025-10-05T00:03:45.416Z] GET /api/files called
+[2025-10-05T00:03:45.964Z] Returning 11 files
+[2025-10-05T00:03:48.735Z] GET /api/files called
+[2025-10-05T00:03:49.150Z] Returning 11 files
+[2025-10-05T00:03:49.154Z] GET /api/files called
+[2025-10-05T00:03:49.763Z] GET /api/files called
+[2025-10-05T00:03:49.838Z] Returning 11 files
+[2025-10-05T00:03:50.218Z] Returning 11 files
+[2025-10-05T00:04:10.389Z] GET /api/files called
+[2025-10-05T00:04:10.810Z] Returning 11 files
+[2025-10-05T00:04:10.812Z] GET /api/files called
+[2025-10-05T00:04:11.266Z] Returning 11 files
+[2025-10-05T00:04:15.847Z] GET /api/files called
+[2025-10-05T00:04:15.848Z] GET /api/comments called
+[2025-10-05T00:04:16.250Z] Returning 6 comments to user
+[2025-10-05T00:04:16.355Z] Returning 11 files
+[2025-10-05T00:04:16.356Z] GET /api/files called
+[2025-10-05T00:04:16.805Z] Returning 11 files
+[2025-10-05T00:04:18.739Z] GET /api/files called
+[2025-10-05T00:04:19.214Z] Returning 11 files
+[2025-10-05T00:04:19.216Z] GET /api/files called
+[2025-10-05T00:04:19.729Z] Returning 11 files
+[2025-10-05T00:04:19.762Z] GET /api/files called
+[2025-10-05T00:04:20.273Z] Returning 11 files
+[2025-10-05T00:04:45.858Z] GET /api/files called
+[2025-10-05T00:04:46.346Z] Returning 11 files
+[2025-10-05T00:04:46.347Z] GET /api/files called
+[2025-10-05T00:04:46.894Z] Returning 11 files
+[2025-10-05T00:04:46.895Z] GET /api/files called
+[2025-10-05T00:04:47.366Z] Returning 11 files
+[2025-10-05T00:04:48.743Z] GET /api/files called
+[2025-10-05T00:04:49.572Z] Returning 11 files
+[2025-10-05T00:04:49.575Z] GET /api/files called
+[2025-10-05T00:04:49.769Z] GET /api/files called
+[2025-10-05T00:04:50.063Z] Returning 11 files
+[2025-10-05T00:04:50.215Z] Returning 11 files
+[2025-10-05T00:05:05.624Z] GET /api/files called
+[2025-10-05T00:05:05.626Z] GET /api/comments called
+[2025-10-05T00:05:06.015Z] Returning 8 comments to user
+[2025-10-05T00:05:06.074Z] Returning 11 files
+[2025-10-05T00:05:06.075Z] GET /api/files called
+[2025-10-05T00:05:06.602Z] Returning 11 files
+[2025-10-05T00:05:08.611Z] GET /api/files called
+[2025-10-05T00:05:08.613Z] GET /api/files called
+[2025-10-05T00:05:08.614Z] GET /api/comments called
+[2025-10-05T00:05:09.030Z] Returning 8 comments to user
+[2025-10-05T00:05:09.064Z] Returning 11 files
+[2025-10-05T00:05:09.120Z] Returning 11 files
+[2025-10-05T00:05:15.163Z] GET /api/comments called
+[2025-10-05T00:05:15.581Z] Returning 3 comments to user
+[2025-10-05T00:05:18.735Z] GET /api/files called
+[2025-10-05T00:05:18.739Z] GET /api/comments called
+[2025-10-05T00:05:19.111Z] Returning 8 comments to user
+[2025-10-05T00:05:19.140Z] Returning 11 files
+[2025-10-05T00:05:19.142Z] GET /api/files called
+[2025-10-05T00:05:19.604Z] Returning 11 files
+[2025-10-05T00:05:19.760Z] GET /api/files called
+[2025-10-05T00:05:20.182Z] Returning 11 files
+[2025-10-05T00:05:38.617Z] GET /api/files called
+[2025-10-05T00:05:39.073Z] Returning 11 files
+[2025-10-05T00:05:40.924Z] GET /api/files called
+[2025-10-05T00:05:40.926Z] GET /api/files called
+[2025-10-05T00:05:40.927Z] GET /api/comments called
+[2025-10-05T00:05:41.337Z] Returning 8 comments to user
+[2025-10-05T00:05:41.354Z] Returning 11 files
+[2025-10-05T00:05:41.388Z] Returning 11 files
+[2025-10-05T00:05:47.410Z] GET /api/files called
+[2025-10-05T00:05:47.833Z] Returning 11 files
+[2025-10-05T00:05:48.742Z] GET /api/files called
+[2025-10-05T00:05:49.205Z] Returning 11 files
+[2025-10-05T00:05:49.207Z] GET /api/files called
+[2025-10-05T00:05:49.661Z] Returning 11 files
+[2025-10-05T00:05:49.772Z] GET /api/files called
+[2025-10-05T00:05:50.281Z] Returning 11 files
+[2025-10-05T00:06:10.929Z] GET /api/files called
+[2025-10-05T00:06:11.383Z] Returning 11 files
+[2025-10-05T00:06:11.385Z] GET /api/files called
+[2025-10-05T00:06:11.829Z] Returning 11 files
+[2025-10-05T00:06:18.747Z] GET /api/files called
+[2025-10-05T00:06:19.180Z] Returning 11 files
+[2025-10-05T00:06:19.181Z] GET /api/files called
+[2025-10-05T00:06:19.670Z] Returning 11 files
+[2025-10-05T00:06:19.758Z] GET /api/files called
+[2025-10-05T00:06:20.242Z] Returning 11 files
+[2025-10-05T00:06:40.928Z] GET /api/files called
+[2025-10-05T00:06:41.376Z] Returning 11 files
+[2025-10-05T00:06:41.378Z] GET /api/files called
+[2025-10-05T00:06:41.834Z] Returning 11 files
+[2025-10-05T00:06:48.408Z] GET /api/files called
+[2025-10-05T00:06:48.882Z] Returning 11 files
+[2025-10-05T00:06:48.885Z] GET /api/files called
+[2025-10-05T00:06:49.427Z] Returning 11 files
+[2025-10-05T00:06:49.428Z] GET /api/files called
+[2025-10-05T00:06:49.767Z] GET /api/files called
+[2025-10-05T00:06:49.930Z] Returning 11 files
+[2025-10-05T00:06:50.234Z] Returning 11 files
+[2025-10-05T00:07:10.942Z] GET /api/files called
+[2025-10-05T00:07:11.663Z] Returning 11 files
+[2025-10-05T00:07:11.665Z] GET /api/files called
+[2025-10-05T00:07:12.147Z] Returning 11 files
+[2025-10-05T00:07:18.736Z] GET /api/files called
+[2025-10-05T00:07:19.190Z] Returning 11 files
+[2025-10-05T00:07:19.193Z] GET /api/files called
+[2025-10-05T00:07:19.680Z] Returning 11 files
+[2025-10-05T00:07:19.763Z] GET /api/files called
+[2025-10-05T00:07:20.197Z] Returning 11 files
+[2025-10-05T00:07:25.231Z] GET /api/files called
+[2025-10-05T00:07:25.233Z] GET /api/comments called
+[2025-10-05T00:07:25.613Z] Returning 8 comments to user
+[2025-10-05T00:07:25.722Z] Returning 11 files
+[2025-10-05T00:07:25.723Z] GET /api/files called
+[2025-10-05T00:07:26.151Z] Returning 11 files
+[2025-10-05T00:07:33.914Z] GET /api/files called
+[2025-10-05T00:07:34.371Z] Returning 11 files
+[2025-10-05T00:07:36.754Z] PUT /api/comments called
+[2025-10-05T00:07:37.113Z] Comment 1759622535307 reply updated
+[2025-10-05T00:07:38.474Z] Comment 1759622535307 updated successfully
+[2025-10-05T00:07:39.721Z] GET /api/files called
+[2025-10-05T00:07:39.723Z] GET /api/comments called
+[2025-10-05T00:07:40.208Z] Returning 11 files
+[2025-10-05T00:07:40.488Z] Returning 10 comments to admin
+[2025-10-05T00:07:40.596Z] GET /api/comments called
+[2025-10-05T00:07:41.387Z] Returning 10 comments to admin
+[2025-10-05T00:07:48.743Z] GET /api/files called
+[2025-10-05T00:07:49.197Z] Returning 11 files
+[2025-10-05T00:07:49.202Z] GET /api/files called
+[2025-10-05T00:07:49.738Z] Returning 11 files
+[2025-10-05T00:07:49.768Z] GET /api/files called
+[2025-10-05T00:07:50.204Z] Returning 11 files

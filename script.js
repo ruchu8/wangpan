@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // 从API获取留言列表
 async function fetchComments(page = 1) {
     try {
-        const response = await fetch(`/api/comments?page=${page}&limit=10`);
+        const response = await fetch(`/api/comments?page=${page}&limit=8`);
         if (response.ok) {
             const data = await response.json();
             comments = data.comments;
@@ -412,24 +412,33 @@ function renderComments() {
         // 留言内容区域
         let contentHtml = '';
         
+        // 添加IP地址到留言内容的右下角
+        // 始终显示原始用户的IP地址
+        contentHtml += `<div class="comment-ip">IP: ${ipDisplay}</div>`;
+        
         // 如果留言未公开，显示提示信息
         if (!comment.approved) {
-            contentHtml = `<em>此留言不公开，管理员回复后才能公开留言</em>`;
+            contentHtml = `<em>此留言不公开，管理员回复后才能公开留言</em>` + contentHtml;
         } else {
-            contentHtml = comment.content;
+            contentHtml = comment.content + contentHtml;
         }
         
         // 如果有管理员回复，则显示
         if (comment.reply) {
+            // 获取管理员回复时间
+            let replyTime = '';
+            if (comment.reply_date) {
+                const replyDate = new Date(comment.reply_date);
+                replyTime = replyDate.toLocaleString();
+            }
+            
             contentHtml += `
                 <div class="admin-reply mt-2 p-2 bg-light rounded">
                     <strong>管理员回复:</strong> ${comment.reply}
+                    ${replyTime ? `<div class="comment-date mt-1">回复时间: ${replyTime}</div>` : ''}
                 </div>
             `;
         }
-        
-        // 添加IP地址到留言内容的右下角
-        contentHtml += `<div class="comment-ip">IP: ${ipDisplay}</div>`;
         
         commentContent += `<div class="comment-content">${contentHtml}</div>`;
         

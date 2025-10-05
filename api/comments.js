@@ -47,7 +47,8 @@ async function initializeDatabase() {
         date TEXT NOT NULL,
         approved BOOLEAN DEFAULT false,
         ip TEXT,
-        reply TEXT
+        reply TEXT,
+        reply_date TEXT
       )
     `;
     
@@ -76,6 +77,14 @@ async function initializeDatabase() {
       } catch (e) {
         // 列可能已经存在，忽略错误
         console.log('ℹ️  approved column already exists or error adding it');
+      }
+      
+      try {
+        await sql`ALTER TABLE comments ADD COLUMN reply_date TEXT`;
+        console.log('✅ Added reply_date column (if it was missing)');
+      } catch (e) {
+        // 列可能已经存在，忽略错误
+        console.log('ℹ️  reply_date column already exists or error adding it');
       }
     } catch (alterError) {
       console.log('ℹ️  Column check/alter completed');
@@ -170,7 +179,7 @@ module.exports = async function handler(req, res) {
       
       // 获取分页参数
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
+      const limit = parseInt(req.query.limit) || 8; // 修改为每页显示8条
       const offset = (page - 1) * limit;
       
       // 检查是否有认证头，如果有且是管理员，则返回所有留言（包括未审核的）
@@ -209,7 +218,8 @@ module.exports = async function handler(req, res) {
           date: row.date,
           approved: row.approved,
           ip: row.ip || '未知',
-          reply: row.reply
+          reply: row.reply,
+          reply_date: row.reply_date
         }));
         
         // 计算总页数
@@ -240,7 +250,8 @@ module.exports = async function handler(req, res) {
             date: row.date,
             approved: row.approved,
             ip: row.ip || '未知',
-            reply: row.reply
+            reply: row.reply,
+            reply_date: row.reply_date
           };
           
           // 对联系方式进行隐私保护处理
@@ -261,7 +272,7 @@ module.exports = async function handler(req, res) {
         
         // 获取分页参数
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 8; // 修改为每页显示8条
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
         
@@ -410,12 +421,14 @@ module.exports = async function handler(req, res) {
       }
       
       if (reply !== undefined) {
+        // 获取当前时间作为回复时间
+        const replyDate = new Date().toISOString();
         await sql`
           UPDATE comments 
-          SET reply = ${reply}
+          SET reply = ${reply}, reply_date = ${replyDate}
           WHERE id = ${id}
         `;
-        console.log('✅ Comment reply updated');
+        console.log('✅ Comment reply updated with timestamp');
       }
       
       // 获取更新后的评论
@@ -427,7 +440,8 @@ module.exports = async function handler(req, res) {
         date: updatedResult[0].date,
         approved: updatedResult[0].approved,
         ip: updatedResult[0].ip || '未知',
-        reply: updatedResult[0].reply
+        reply: updatedResult[0].reply,
+        reply_date: updatedResult[0].reply_date
       };
       
       console.log('✅ Comment updated successfully');
