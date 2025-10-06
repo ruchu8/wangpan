@@ -58,17 +58,27 @@ app.get('/api/comments', async (req, res) => {
       if (contactInfo.includes('@')) {
         const [localPart, domain] = contactInfo.split('@');
         if (localPart.length > 2) {
-          // 隐藏邮箱前缀中间部分
-          const maskedLocalPart = localPart.substring(0, 2) + '**' + localPart.substring(localPart.length - 1);
+          // 邮箱显示前2位+**+后2位@域名，如123456@qq.com显示为12**56@qq.com
+          const start = localPart.substring(0, 2);
+          const end = localPart.substring(localPart.length - 2);
+          const maskedLocalPart = `${start}**${end}`;
           maskedContactInfo = `${maskedLocalPart}@${domain}`;
         }
       } else {
         // 如果是QQ号或微信号
         if (contactInfo.length > 3) {
-          // 隐藏中间部分
-          const start = contactInfo.substring(0, 2);
-          const end = contactInfo.substring(contactInfo.length - 2);
-          maskedContactInfo = `${start}**${end}`;
+          // QQ/微信隐藏规则：显示前3位和后3位，5位数显示前2位和后2位
+          if (contactInfo.length === 5) {
+            // 5位数显示前2位和后2位
+            const start = contactInfo.substring(0, 2);
+            const end = contactInfo.substring(contactInfo.length - 2);
+            maskedContactInfo = `${start}**${end}`;
+          } else {
+            // 其他长度显示前3位和后3位
+            const start = contactInfo.substring(0, 3);
+            const end = contactInfo.substring(contactInfo.length - 3);
+            maskedContactInfo = `${start}**${end}`;
+          }
         }
       }
       
@@ -82,7 +92,7 @@ app.get('/api/comments', async (req, res) => {
     
     return commentCopy;
   });
-  
+
   // 分页处理
   const paginatedComments = processedComments.slice(startIndex, endIndex);
   

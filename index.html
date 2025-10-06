@@ -163,19 +163,11 @@
                     
                     <div class="row">
                         <!-- 留言列表 -->
+
                         <div class="col-lg-8 mb-4 mb-lg-0">
                             <div class="comments-container">
-                                <div id="commentsList" class="mb-4">
-                                    <div class="text-center py-5">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">加载中...</span>
-                                        </div>
-                                        <p class="mt-2 text-muted">加载留言中...</p>
-                                    </div>
-                                </div>
-                                
                                 <!-- 留言统计信息 -->
-                                <div class="bg-white rounded-xl p-3 mb-3 shadow-md">
+                                <div class="bg-white rounded-lg p-4 message-shadow message-hover border border-amber-100">
                                     <div class="flex flex-col md:flex-row justify-between items-center">
      
                                         <div class="flex gap-4 mt-3 md:mt-0">
@@ -194,6 +186,17 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                                <div id="commentsList" class="mb-4">
+                                    <div class="text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">加载中...</span>
+                                        </div>
+                                        <p class="mt-2 text-muted">加载留言中...</p>
+                                    </div>
+                                </div>
+                                
                                 
                                 <!-- 分页控件 -->
                                 <nav id="pagination" aria-label="留言分页" class="mt-6 flex justify-center">

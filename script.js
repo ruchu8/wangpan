@@ -275,7 +275,12 @@ function renderFileList() {
         }
 
         // 只有当前文件夹是展开状态时才显示子文件
-        if (item.type === 'folder' && expandedFolderIndex === index && item.children) {
+        // 在搜索模式下，如果文件夹被标记为expanded，则展开它
+        const shouldExpand = item.type === 'folder' && 
+                            ((expandedFolderIndex === index) || 
+                             (item.expanded === true));
+                             
+        if (shouldExpand && item.children) {
             // 确保 children 是数组
             const childrenArray = Array.isArray(item.children) ? item.children : [];
             if (childrenArray.length > 0) {
@@ -327,36 +332,49 @@ function searchFiles() {
         // 如果搜索框为空，显示所有文件
         filteredFiles = [...files];
     } else {
-        // 过滤文件
+        // 过滤文件，只显示匹配的文件和文件夹
         filteredFiles = [];
         
         function filterItems(items) {
+            const filteredItems = [];
+            
             items.forEach(item => {
                 // 检查当前项是否匹配搜索词
                 if (item.name.toLowerCase().includes(searchTerm)) {
                     // 创建一个带有高亮名称的新对象
-                    filteredFiles.push({
+                    const filteredItem = {
                         ...item,
                         _highlightedName: highlightSearchTerm(item.name, searchTerm)
-                    });
-                }
-                
-                // 如果是文件夹，递归检查其子项
-                if (item.type === 'folder' && item.children && item.children.length > 0) {
-                    const childrenMatch = filterItems(item.children);
-                    if (childrenMatch.length > 0) {
-                        // 如果子项有匹配，则包含该文件夹
-                        filteredFiles.push({
+                    };
+                    
+                    // 如果是文件夹，过滤其子项
+                    if (item.type === 'folder' && item.children && item.children.length > 0) {
+                        const filteredChildren = filterItems(item.children);
+                        filteredItem.children = filteredChildren;
+                        // 如果有匹配的子项，标记文件夹为展开状态
+                        if (filteredChildren.length > 0) {
+                            filteredItem.expanded = true;
+                        }
+                    }
+                    
+                    filteredItems.push(filteredItem);
+                } else if (item.type === 'folder' && item.children && item.children.length > 0) {
+                    // 如果当前文件夹名称不匹配，但其子项可能匹配
+                    const filteredChildren = filterItems(item.children);
+                    if (filteredChildren.length > 0) {
+                        // 只有当有匹配的子项时才包含此文件夹
+                        const filteredItem = {
                             ...item,
                             _highlightedName: highlightSearchTerm(item.name, searchTerm),
-                            children: childrenMatch
-                        });
+                            children: filteredChildren,
+                            expanded: true // 自动展开包含匹配子项的文件夹
+                        };
+                        filteredItems.push(filteredItem);
                     }
                 }
             });
             
-            return filteredFiles.filter(f => f.name.toLowerCase().includes(searchTerm) || 
-                                            (f.children && f.children.length > 0));
+            return filteredItems;
         }
         
         filteredFiles = filterItems(files);
@@ -739,23 +757,32 @@ function maskContactInfo(contactInfo) {
     // 如果是邮箱
     if (contactInfo.includes('@')) {
         const [localPart, domain] = contactInfo.split('@');
-        if (localPart.length <= 2) {
-            return contactInfo; // 太短无法隐藏
+        if (localPart.length <= 5) { // 如果本地部分太短，无法显示前2后3，可以返回原字符串或根据需求处理
+            return contactInfo;
         }
-        // 隐藏邮箱前缀中间部分
-        const maskedLocalPart = localPart.substring(0, 2) + '**' + localPart.substring(localPart.length - 1);
+        // 邮箱显示前2位+**+后3位@域名，如1234567@qq.com显示为12**567@qq.com
+        const start = localPart.substring(0, 4); // 获取前2位
+        const end = localPart.substring(localPart.length - 4); // 获取后3位
+        const maskedLocalPart = `${start}**${end}`;
         return `${maskedLocalPart}@${domain}`;
     }
-    
     // 如果是QQ号或微信号
     if (contactInfo.length <= 3) {
         return contactInfo; // 太短无法隐藏
     }
     
-    // 隐藏中间部分
-    const start = contactInfo.substring(0, 2);
-    const end = contactInfo.substring(contactInfo.length - 2);
-    return `${start}**${end}`;
+    // QQ/微信隐藏规则：显示前3位和后3位，5位数显示前2位和后2位
+    if (contactInfo.length === 5) {
+        // 5位数显示前2位和后2位
+        const start = contactInfo.substring(0, 3);
+        const end = contactInfo.substring(contactInfo.length - 3);
+        return `${start}**${end}`;
+    } else {
+        // 其他长度显示前3位和后3位
+        const start = contactInfo.substring(0, 3);
+        const end = contactInfo.substring(contactInfo.length - 5);
+        return `${start}**${end}`;
+    }
 }
 
 // 获取客户端IP地址
@@ -809,7 +836,7 @@ async function getClientIP() {
             console.warn('Failed to get IP from ipapi.co:', error);
         }
         
-        // 如果前两种方法都失败，尝试第三种方法 - ipinfo.io (对中国国内友好)
+        // 如果前两种方法失败，尝试第三种方法 - ipinfo.io (对中国国内友好)
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
@@ -1107,7 +1134,7 @@ function updateContactInfoPlaceholderAndHelp(contactType) {
     switch(contactType) {
         case 'QQ':
             contactInfoInput.placeholder = '请输入您的QQ号码（5-15位数字）';
-            contactInfoHelp.textContent = '请输入有效的QQ号码，例如：123456789';
+            contactInfoHelp.textContent = '请输入有效的QQ号码，例如：1234567';
             contactInfoHelp.className = 'form-text text-muted';
             break;
         case '微信':
