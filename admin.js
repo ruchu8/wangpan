@@ -643,9 +643,21 @@ function renderCommentsList() {
         // 显示管理员回复
         let replySection = '';
         if (comment.reply) {
+            const replyTime = comment.reply_date ? new Date(comment.reply_date).toLocaleString() : '';
             replySection = `
-                <div class="mt-2 p-2 bg-light rounded">
-                    <strong>管理员回复:</strong> ${comment.reply}
+                <div class="bg-gray-50 rounded p-3 border-l-3 border-accent">
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="font-medium text-accent flex items-center text-xs">
+                            <i class="fa fa-shield mr-1" aria-hidden="true"></i>
+                            管理员回复
+                        </div>
+                        <div class="text-xs text-gray-400">
+                            ${replyTime}
+                        </div>
+                    </div>
+                    <p class="text-gray-600 text-xs leading-tight">
+                        ${comment.reply}
+                    </p>
                 </div>
             `;
         }

@@ -11,73 +11,107 @@ let filteredFiles = []; // 用于存储过滤后的文件列表
 async function fetchFiles() {
     console.log('Fetching files...');
     try {
+        // 首先尝试从API获取文件列表（无需认证）
         const response = await fetch('/api/files');
         console.log('Files API response status:', response.status);
         if (response.ok) {
             const rawData = await response.json();
             console.log('Raw files data from API:', rawData);
             
-            // 直接使用服务器返回的数据，不再重新组织
+            // 直接使用服务器返回的数据
             files = rawData;
             filteredFiles = [...files]; // 初始化过滤后的文件列表
             console.log('Files to render:', files);
+        } else if (response.status === 401) {
+            // 如果是认证问题，尝试使用默认数据
+            console.warn('Authentication required for files API, using default data');
+            useDefaultFiles();
         } else {
-            // 如果API不可用，使用默认数据
+            // 其他错误情况，使用默认数据
             console.warn('Failed to fetch files from API, using default data');
-            files = [
-                {
-                    name: '文件夹1',
-                    type: 'folder',
-                    url: '#',
-                    note: '这是一个示例备注',
-                    children: [
-                        { name: '晚上我打大大撒打算.txt', type: 'file', url: 'https://www.baidu.com' },
-                        { name: '文件2.jpg', type: 'file', url: 'https://www.qq.com' },
-                        { name: '文件3.pdf', type: 'file', url: '#' }
-                    ],
-                    expanded: false
-                },
-                {
-                    name: '文件夹2',
-                    type: 'folder',
-                    url: '#',
-                    children: [
-                        { name: '文件4.doc', type: 'file', url: '#' },
-                        { name: '文件5.png', type: 'file', url: '#' }
-                    ],
-                    expanded: false
-                },
-                {
-                    name: '文件夹3',
-                    type: 'folder',
-                    url: '#',
-                    children: [
-                        { name: '文件6.mp3', type: 'file', url: '#' },
-                        { name: '文件7.zip', type: 'file', url: '#' }
-                    ],
-                    expanded: false
-                }
-            ];
-            filteredFiles = [...files]; // 初始化过滤后的文件列表
+            useDefaultFiles();
         }
         renderFileList();
     } catch (error) {
         console.error('Error fetching files:', error);
         // 使用默认数据
-        files = [
-            {
-                name: '文件夹1 (默认)',
-                type: 'folder',
-                url: '#',
-                children: [
-                    { name: '示例文件.txt', type: 'file', url: '#' }
-                ],
-                expanded: false
-            }
-        ];
-        filteredFiles = [...files]; // 初始化过滤后的文件列表
+        useDefaultFiles();
         renderFileList();
     }
+}
+
+// 使用默认文件数据
+function useDefaultFiles() {
+    files = [
+        {
+            name: 'BOSS计时器下载专区-',
+            type: 'folder',
+            url: '#',
+            note: 'BOSS计时器下载专区【部分杀毒会报毒介意的勿下载】',
+            children: [
+                { name: '晚上我打大大撒打算.txt', type: 'file', url: 'https://www.baidu.com' },
+                { name: '文件2.jpg', type: 'file', url: 'https://www.qq.com' },
+                { name: '文件3.pdf', type: 'file', url: '#' }
+            ],
+            expanded: false
+        },
+        {
+            name: '辅助类相关工具下载（易语言编写部分杀毒会报毒）',
+            type: 'folder',
+            url: '#',
+            note: '部分杀毒会误报毒。介意勿下载',
+            children: [
+                { name: '文件4.doc', type: 'file', url: '#' },
+                { name: '文件5.png', type: 'file', url: '#' }
+            ],
+            expanded: false
+        },
+        {
+            name: '石墓祖玛阁不迷路补丁(带房间补丁版)',
+            type: 'folder',
+            url: '#',
+            note: '祖玛阁石墓阵带房间编号带每个房间GPS导航',
+            children: [
+                { name: '文件6.mp3', type: 'file', url: '#' },
+                { name: '文件7.zip', type: 'file', url: '#' }
+            ],
+            expanded: false
+        },
+        {
+            name: '怪物以及BOSS射线提示补丁',
+            type: 'folder',
+            url: '#',
+            note: '【怪物专区】',
+            children: [
+                { name: '文件8.txt', type: 'file', url: '#' },
+                { name: '文件9.jpg', type: 'file', url: '#' }
+            ],
+            expanded: false
+        },
+        {
+            name: '蓝盾、小火墙、小冰咆哮 等技能类 补丁-',
+            type: 'folder',
+            url: '#',
+            note: '【技能补丁专区】',
+            children: [
+                { name: '文件10.doc', type: 'file', url: '#' },
+                { name: '文件11.png', type: 'file', url: '#' }
+            ],
+            expanded: false
+        },
+        {
+            name: '大小地板砖贴图',
+            type: 'folder',
+            url: '#',
+            note: '【地砖专区】',
+            children: [
+                { name: '文件12.pdf', type: 'file', url: '#' },
+                { name: '文件13.zip', type: 'file', url: '#' }
+            ],
+            expanded: false
+        }
+    ];
+    filteredFiles = [...files]; // 初始化过滤后的文件列表
 }
 
 function renderFileList() {
@@ -396,36 +430,54 @@ function renderComments() {
     
     comments.forEach(comment => {
         const commentItem = document.createElement('div');
-        commentItem.className = 'comment-item';
+        commentItem.className = 'bg-white rounded-lg p-4 message-shadow message-hover';
         
         const date = new Date(comment.date).toLocaleString();
         
         // 解析并处理联系方式隐私保护
-        let contactDisplay = comment.name;
-        if (comment.name.includes(':')) {
-            const [contactType, contactInfo] = comment.name.split(':', 2);
-            // 对联系方式进行部分隐藏处理
-            const maskedContactInfo = maskContactInfo(contactInfo);
-            contactDisplay = `${contactType}: ${maskedContactInfo}`;
-        }
+        let contactDisplay = '访客';
+        let contactInfo = '';
+        let contactType = '';
         
-        // 对IP地址进行隐私保护处理（隐藏最后一个数字段）
-        let ipDisplay = comment.ip || '未知';
-        if (ipDisplay !== '未知' && ipDisplay.includes('.')) {
-            // 将IP地址分割为各个部分
-            const ipParts = ipDisplay.split('.');
-            // 如果IP地址有多个部分，将最后一个部分替换为*
-            if (ipParts.length > 1) {
-                ipParts[ipParts.length - 1] = '*';
-                ipDisplay = ipParts.join('.');
-            }
+        if (comment.name.includes(':')) {
+            const [type, infoRaw] = comment.name.split(':', 2);
+            contactType = type;
+            // 对联系方式进行部分隐藏处理
+            contactInfo = maskContactInfo(infoRaw);
+            contactDisplay = '访客';
         }
         
         // 构建留言内容
-        let commentContent = `
-            <div class="comment-header">
-                <span class="comment-name">${contactDisplay}</span>
-                <span class="comment-date">${date}</span>
+        let commentContent = '';
+        
+        // 留言头部信息
+        let contactIcon = '';
+        if (contactType === 'QQ') {
+            contactIcon = '<i class="fa fa-qq mr-1 text-gray-400" aria-hidden="true"></i>';
+        } else if (contactType === '微信') {
+            contactIcon = '<i class="fa fa-weixin mr-1 text-gray-400" aria-hidden="true"></i>';
+        } else if (contactType === '邮箱') {
+            contactIcon = '<i class="fa fa-envelope mr-1 text-gray-400" aria-hidden="true"></i>';
+        }
+        
+        commentContent += `
+            <div class="comment-item-header">
+                <div class="comment-item-user">
+                    <div class="comment-item-avatar">
+                        <i class="fa fa-user text-xs" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="comment-item-name">${contactDisplay}</div>
+                        <div class="comment-item-contact">
+                            ${contactIcon}
+                            ${contactInfo || '访客'}
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-item-date">
+                    <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>
+                    ${date}
+                </div>
             </div>
         `;
         
@@ -434,10 +486,18 @@ function renderComments() {
         
         // 如果留言未公开，显示提示信息
         if (!comment.approved) {
-            contentHtml = `<em>此留言不公开，管理员回复后才能公开留言</em>`;
+            contentHtml = '此留言不公开，管理员回复后才能公开留言';
         } else {
             contentHtml = comment.content;
         }
+        
+        commentContent += `
+            <div class="comment-item-content">
+                <p class="text-gray-700 text-sm leading-tight">
+                    ${contentHtml}
+                </p>
+            </div>
+        `;
         
         // 如果有管理员回复，则显示
         if (comment.reply) {
@@ -448,28 +508,114 @@ function renderComments() {
                 replyTime = replyDate.toLocaleString();
             }
             
-            contentHtml += `
-                <div class="admin-reply mt-2 p-2 bg-light rounded">
-                    <strong>管理员回复:</strong> ${comment.reply}
-                    ${replyTime ? `<div class="comment-date mt-1">回复时间: ${replyTime}</div>` : ''}
+            commentContent += `
+                <div class="comment-item-reply">
+                    <div class="comment-item-reply-header">
+                        <div class="comment-item-reply-title">
+                            <i class="fa fa-shield mr-1" aria-hidden="true"></i>
+                            管理员回复
+                        </div>
+                        <div class="comment-item-reply-time">
+                            ${replyTime}
+                        </div>
+                    </div>
+                    <div class="comment-item-reply-content">
+                        <p class="text-gray-700 text-sm leading-tight">
+                            ${comment.reply}
+                        </p>
+                    </div>
                 </div>
             `;
         }
         
-        commentContent += `<div class="comment-content">${contentHtml}</div>`;
+        // 如果留言未公开，添加待回复标签
+        if (!comment.approved) {
+            commentItem.classList.add('border', 'border-amber-100');
+            commentContent = `
+                <div class="comment-item-header">
+                    <div class="comment-item-user">
+                        <div class="comment-item-avatar">
+                            <i class="fa fa-user text-xs" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <div class="comment-item-name">${contactDisplay}</div>
+                            <div class="comment-item-contact">
+                                ${contactIcon}
+                                ${contactInfo || '访客'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="comment-item-pending-tag">
+                            待回复
+                        </span>
+                        <div class="comment-item-date">
+                            <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>
+                            ${date}
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-item-content">
+                    <p class="text-gray-700 text-sm leading-tight">
+                        ${contentHtml}
+                    </p>
+                </div>
+            `;
+        }
         
         commentItem.innerHTML = commentContent;
         
         commentsList.appendChild(commentItem);
     });
+    
+    // 添加留言项的动画效果
+    const commentItems = document.querySelectorAll('.bg-white.rounded-lg.p-4');
+    commentItems.forEach((item, index) => {
+        // 添加延迟，创建逐个出现的效果
+        setTimeout(() => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            
+            // 触发动画
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, 50);
+        }, index * 100);
+    });
 }
 
 // 渲染留言统计信息
 function renderCommentsStats() {
-    const statsElement = document.getElementById('totalCommentsCount');
-    if (!statsElement) return;
+    const totalElement = document.getElementById('totalCommentsCount');
+    const repliedElement = document.getElementById('repliedCommentsCount');
+    const pendingElement = document.getElementById('pendingCommentsCount');
     
-    statsElement.textContent = totalComments;
+    if (!totalElement) return;
+    
+    totalElement.textContent = totalComments;
+    
+    // 计算已回复和待回复的数量
+    let repliedCount = 0;
+    let pendingCount = 0;
+    
+    comments.forEach(comment => {
+        if (comment.reply && comment.reply.trim() !== '') {
+            repliedCount++;
+        } else {
+            pendingCount++;
+        }
+    });
+    
+    // 更新统计信息
+    if (repliedElement) {
+        repliedElement.textContent = repliedCount;
+    }
+    
+    if (pendingElement) {
+        pendingElement.textContent = pendingCount;
+    }
 }
 
 // 渲染分页控件
@@ -483,13 +629,21 @@ function renderPagination() {
         return;
     }
     
-    let paginationHTML = '<ul class="pagination">';
+    let paginationHTML = '';
     
     // 上一页按钮
     if (currentPage > 1) {
-        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage - 1}">上一页</a></li>`;
+        paginationHTML += `
+            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" data-page="${currentPage - 1}">
+                <i class="fa fa-chevron-left text-xs" aria-hidden="true"></i>
+            </a>
+        `;
     } else {
-        paginationHTML += `<li class="page-item disabled"><span class="page-link">上一页</span></li>`;
+        paginationHTML += `
+            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500" disabled>
+                <i class="fa fa-chevron-left text-xs" aria-hidden="true"></i>
+            </a>
+        `;
     }
     
     // 页码按钮（最多显示5个页码）
@@ -514,46 +668,64 @@ function renderPagination() {
     
     // 显示第一页和省略号
     if (startPage > 1) {
-        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>`;
+        paginationHTML += `
+            <a href="#" class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-page="1">1</a>
+        `;
         if (startPage > 2) {
-            paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            paginationHTML += `
+                <span class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+            `;
         }
     }
     
     // 显示页码
     for (let i = startPage; i <= endPage; i++) {
         if (i === currentPage) {
-            paginationHTML += `<li class="page-item active"><span class="page-link">${i}</span></li>`;
+            paginationHTML += `
+                <a href="#" class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-primary text-sm font-medium text-white" data-page="${i}">${i}</a>
+            `;
         } else {
-            paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+            paginationHTML += `
+                <a href="#" class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-page="${i}">${i}</a>
+            `;
         }
     }
     
     // 显示最后一页和省略号
     if (endPage < totalPages) {
         if (endPage < totalPages - 1) {
-            paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            paginationHTML += `
+                <span class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+            `;
         }
-        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a></li>`;
+        paginationHTML += `
+            <a href="#" class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50" data-page="${totalPages}">${totalPages}</a>
+        `;
     }
     
     // 下一页按钮
     if (currentPage < totalPages) {
-        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}">下一页</a></li>`;
+        paginationHTML += `
+            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" data-page="${currentPage + 1}">
+                <i class="fa fa-chevron-right text-xs" aria-hidden="true"></i>
+            </a>
+        `;
     } else {
-        paginationHTML += `<li class="page-item disabled"><span class="page-link">下一页</span></li>`;
+        paginationHTML += `
+            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500" disabled>
+                <i class="fa fa-chevron-right text-xs" aria-hidden="true"></i>
+            </a>
+        `;
     }
-    
-    paginationHTML += '</ul>';
     
     pagination.innerHTML = paginationHTML;
     
     // 添加分页点击事件
-    pagination.querySelectorAll('.page-link:not(.disabled)').forEach(link => {
+    pagination.querySelectorAll('a[data-page]').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const page = parseInt(this.getAttribute('data-page'));
-            if (page && page !== currentPage) {
+            if (page && page !== currentPage && !this.hasAttribute('disabled')) {
                 fetchComments(page);
             }
         });
@@ -716,16 +888,32 @@ async function submitComment(event) {
         return;
     }
     
-    // 验证联系方式长度（至少5个字符）
-    if (!contactInfo || contactInfo.trim().length <= 5) {
-        showCommentStatus('联系方式至少需要5个字符', 'error');
+    // 验证联系方式
+    if (!contactInfo || contactInfo.trim().length === 0) {
+        showCommentStatus('请输入联系方式', 'error');
         return;
     }
     
-    // 如果选择QQ，验证是否为纯数字
-    if (contactType === 'QQ' && !/^\d+$/.test(contactInfo.trim())) {
-        showCommentStatus('QQ号码必须为纯数字', 'error');
-        return;
+    // 根据不同的联系方式类型进行验证
+    if (contactType === 'QQ') {
+        // QQ号码验证：5-15位数字
+        if (!/^[1-9][0-9]{4,14}$/.test(contactInfo.trim())) {
+            showCommentStatus('请输入有效的QQ号码（5-15位数字，不能以0开头）', 'error');
+            return;
+        }
+    } else if (contactType === '微信') {
+        // 微信号验证：6-20位，可包含字母、数字、下划线、减号，不能纯数字
+        if (!/^[a-zA-Z0-9_-]{6,20}$/.test(contactInfo.trim()) || /^\d+$/.test(contactInfo.trim())) {
+            showCommentStatus('请输入有效的微信号（6-20位，可包含字母、数字、下划线、减号，不能纯数字）', 'error');
+            return;
+        }
+    } else if (contactType === '邮箱') {
+        // 邮箱验证
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(contactInfo.trim())) {
+            showCommentStatus('请输入有效的邮箱地址', 'error');
+            return;
+        }
     }
     
     // 验证留言内容长度（至少3个字）
@@ -737,7 +925,7 @@ async function submitComment(event) {
     // 禁用提交按钮并显示加载状态，防止重复提交
     if (submitButton) {
         submitButton.disabled = true;
-        submitButton.textContent = '提交中...';
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>提交中...';
     }
     
     // 显示提交状态
@@ -780,7 +968,7 @@ async function submitComment(event) {
         // 恢复提交按钮状态
         if (submitButton) {
             submitButton.disabled = false;
-            submitButton.textContent = '提交留言';
+            submitButton.innerHTML = '<i class="bi bi-send me-2"></i>提交留言';
         }
     }
 }
@@ -870,9 +1058,122 @@ document.addEventListener('DOMContentLoaded', function() {
     // 设置平滑滚动
     setupSmoothScroll();
     
+    // 为留言项添加渐入动画效果
+    setTimeout(() => {
+        const commentItems = document.querySelectorAll('.comment-item');
+        commentItems.forEach((item, index) => {
+            // 添加延迟，创建逐个出现的效果
+            setTimeout(() => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                
+                // 触发动画
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 100);
+        });
+    }, 500);
+    
     // 定期刷新文件列表以确保同步
     setInterval(fetchFiles, 30000); // 每30秒刷新一次
+    
+    // 添加联系方式类型变化事件监听器
+    const contactTypeSelect = document.getElementById('contactType');
+    const contactInfoInput = document.getElementById('contactInfo');
+    const contactInfoHelp = document.getElementById('contactInfoHelp');
+    
+    if (contactTypeSelect && contactInfoInput && contactInfoHelp) {
+        contactTypeSelect.addEventListener('change', function() {
+            updateContactInfoPlaceholderAndHelp(this.value);
+        });
+        
+        // 实时验证联系方式
+        contactInfoInput.addEventListener('input', function() {
+            validateContactInfo();
+        });
+    }
 });
+
+// 更新联系方式输入框的占位符和帮助文本
+function updateContactInfoPlaceholderAndHelp(contactType) {
+    const contactInfoInput = document.getElementById('contactInfo');
+    const contactInfoHelp = document.getElementById('contactInfoHelp');
+    
+    if (!contactInfoInput || !contactInfoHelp) return;
+    
+    switch(contactType) {
+        case 'QQ':
+            contactInfoInput.placeholder = '请输入您的QQ号码（5-15位数字）';
+            contactInfoHelp.textContent = '请输入有效的QQ号码，例如：123456789';
+            contactInfoHelp.className = 'form-text text-muted';
+            break;
+        case '微信':
+            contactInfoInput.placeholder = '请输入您的微信号（6-20位字母或数字）';
+            contactInfoHelp.textContent = '请输入有效的微信号，例如：weixin123';
+            contactInfoHelp.className = 'form-text text-muted';
+            break;
+        case '邮箱':
+            contactInfoInput.placeholder = '请输入您的邮箱地址';
+            contactInfoHelp.textContent = '请输入有效的邮箱地址，例如：example@qq.com';
+            contactInfoHelp.className = 'form-text text-muted';
+            break;
+        default:
+            contactInfoInput.placeholder = '请输入您的QQ号/微信号/邮箱地址';
+            contactInfoHelp.textContent = '';
+            contactInfoHelp.className = 'form-text';
+    }
+}
+
+// 验证联系方式
+function validateContactInfo() {
+    const contactType = document.getElementById('contactType').value;
+    const contactInfo = document.getElementById('contactInfo').value;
+    const contactInfoHelp = document.getElementById('contactInfoHelp');
+    
+    if (!contactType || !contactInfo || contactInfo.trim().length === 0) {
+        return; // 没有选择类型或没有输入内容时不显示错误
+    }
+    
+    let isValid = true;
+    let helpText = '';
+    
+    if (contactType === 'QQ') {
+        // QQ号码验证：5-15位数字，不能以0开头
+        if (!/^[1-9][0-9]{4,14}$/.test(contactInfo.trim())) {
+            isValid = false;
+            helpText = 'QQ号码格式不正确，请输入5-15位数字（不能以0开头）';
+        }
+    } else if (contactType === '微信') {
+        // 微信号验证：6-20位，可包含字母、数字、下划线、减号，不能纯数字
+        if (!/^[a-zA-Z0-9_-]{6,20}$/.test(contactInfo.trim()) || /^\d+$/.test(contactInfo.trim())) {
+            isValid = false;
+            helpText = '微信号格式不正确，请输入6-20位（可包含字母、数字、下划线、减号，不能纯数字）';
+        }
+    } else if (contactType === '邮箱') {
+        // 邮箱验证
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(contactInfo.trim())) {
+            isValid = false;
+            helpText = '邮箱地址格式不正确，请输入有效的邮箱地址';
+        }
+    }
+    
+    if (contactInfoHelp) {
+        contactInfoHelp.textContent = helpText;
+        if (isValid) {
+            if (helpText) {
+                contactInfoHelp.className = 'form-text text-success';
+            } else {
+                contactInfoHelp.className = 'form-text text-muted';
+            }
+        } else {
+            contactInfoHelp.className = 'form-text text-danger';
+        }
+    }
+}
 
 // 添加一个窗口加载事件作为备选方案
 window.addEventListener('load', function() {

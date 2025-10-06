@@ -44,6 +44,8 @@
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
     
@@ -173,12 +175,28 @@
                                 </div>
                                 
                                 <!-- 留言统计信息 -->
-                                <div class="comments-stats mb-4 p-3 bg-light rounded">
-                                    <p class="mb-0">共 <strong id="totalCommentsCount">0</strong> 条留言</p>
+                                <div class="bg-white rounded-xl p-3 mb-3 shadow-md">
+                                    <div class="flex flex-col md:flex-row justify-between items-center">
+     
+                                        <div class="flex gap-4 mt-3 md:mt-0">
+                                            <div class="text-center">
+                                                <div class="text-2xl font-bold text-primary" id="totalCommentsCount">0</div>
+                                                <div class="text-gray-500 text-xs">总留言数</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-2xl font-bold text-accent" id="repliedCommentsCount">0</div>
+                                                <div class="text-gray-500 text-xs">已回复</div>
+                                            </div>
+                                            <div class="text-center">
+                                                <div class="text-2xl font-bold text-amber-500" id="pendingCommentsCount">0</div>
+                                                <div class="text-gray-500 text-xs">待回复</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <!-- 分页控件 -->
-                                <nav id="pagination" aria-label="留言分页">
+                                <nav id="pagination" aria-label="留言分页" class="mt-6 flex justify-center">
                                     <!-- 分页将通过JavaScript动态加载 -->
                                 </nav>
                             </div>
@@ -204,6 +222,7 @@
                                         <label for="contactInfo" class="form-label">联系方式 <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="contactInfo" 
                                                placeholder="请输入您的QQ号/微信号/邮箱地址" required>
+                                        <div class="form-text" id="contactInfoHelp"></div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="commentContent" class="form-label">留言内容 <span class="text-danger">*</span></label>
@@ -220,6 +239,11 @@
                                 <div class="ad-placeholder bg-light rounded mt-4">
                                     <a href="https://bk1.176170.xyz" target="_blank" class="d-block">
                                         <img src="img/gg2.gif" alt="传奇百科" class="ad-image">
+                                    </a>
+                                </div>
+                                <div class="ad-placeholder bg-light rounded mt-4">
+                                    <a href="https://bk1.176170.xyz/jsq.html" target="_blank" class="d-block">
+                                        <img src="img/jsq.gif" alt="传奇计时器" class="ad-image">
                                     </a>
                                 </div>
                                 <div class="ad-placeholder bg-light rounded mt-4">
@@ -245,6 +269,11 @@
                                         <img src="img/gg4.png" alt="永硕E盘" class="ad-image">
                                     </a>
                                 </div>
+<div class="ad-placeholder bg-light p-4 rounded text-center mt-3">
+                                    <i class="bi bi-ad text-primary" style="font-size: 3rem;"></i>
+                                    <p class="mt-2 mb-0 text-muted">广告招商中</p>
+                                </div>
+
                          
                     </div>
                 </div>
