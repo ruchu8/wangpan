@@ -199,6 +199,67 @@ function renderFileList() {
         // 构建显示内容
         let displayContent = '';
         
+        // 检查是否是24小时内新增的文件或文件夹
+        let isNewItem = false;
+        if (item.type === 'file') {
+            // 对于文件，检查 date 或 createdAt 字段
+            const itemDate = item.date || item.createdAt;
+            if (itemDate) {
+                // 解析日期字符串
+                let dateObj;
+                if (itemDate.includes('T')) {
+                    // ISO格式日期
+                    dateObj = new Date(itemDate);
+                } else if (itemDate.includes(' ')) {
+                    // YYYY-MM-DD HH:MM格式
+                    const [datePart, timePart] = itemDate.split(' ');
+                    const [year, month, day] = datePart.split('-');
+                    const [hours, minutes] = timePart.split(':');
+                    dateObj = new Date(year, month - 1, day, hours, minutes);
+                } else {
+                    // 只有日期
+                    dateObj = new Date(itemDate);
+                }
+                
+                // 检查是否在24小时内
+                const now = new Date();
+                const diffHours = (now - dateObj) / (1000 * 60 * 60);
+                isNewItem = diffHours <= 24;
+            }
+        } else {
+            // 对于文件夹，我们可以通过检查子文件来确定是否是新文件夹
+            // 如果文件夹有子文件，且其中有24小时内新增的文件，则认为文件夹是新的
+            if (item.children && item.children.length > 0) {
+                // 检查子文件中是否有24小时内新增的
+                isNewItem = item.children.some(child => {
+                    const childDate = child.date || child.createdAt;
+                    if (childDate) {
+                        // 解析日期字符串
+                        let dateObj;
+                        if (childDate.includes('T')) {
+                            // ISO格式日期
+                            dateObj = new Date(childDate);
+                        } else if (childDate.includes(' ')) {
+                            // YYYY-MM-DD HH:MM格式
+                            const [datePart, timePart] = childDate.split(' ');
+                            const [year, month, day] = datePart.split('-');
+                            const [hours, minutes] = timePart.split(':');
+                            dateObj = new Date(year, month - 1, day, hours, minutes);
+                        } else {
+                            // 只有日期
+                            dateObj = new Date(childDate);
+                        }
+                        
+                        // 检查是否在24小时内
+                        const now = new Date();
+                        const diffHours = (now - dateObj) / (1000 * 60 * 60);
+                        return diffHours <= 24;
+                    }
+                    return false;
+                });
+            }
+        }
+        
         if (item.type === 'folder') {
             // 文件夹保持原来的图标
             const displayName = item._highlightedName || item.name;
@@ -252,6 +313,13 @@ function renderFileList() {
         }
         
         a.innerHTML = displayContent;
+        
+        // 设置新项目样式
+        if (isNewItem) {
+            a.classList.add('new-item');
+        } else {
+            a.classList.remove('new-item');
+        }
         
         if (item.type === 'folder') {
             a.href += '/';

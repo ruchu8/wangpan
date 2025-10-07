@@ -701,6 +701,12 @@ body {
     font-style: italic;
 }
 
+/* 新增项目提醒样式 */
+.new-item {
+    color: #dc3545 !important; /* 红色 */
+    font-weight: bold !important;
+}
+
 /* 留言板样式 */
 .comments-section {
     animation: fadeInUp 0.8s ease 0.2s both;
