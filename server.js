@@ -309,7 +309,8 @@ app.put('/api/files', async (req, res) => {
   const result = await storage.set('files', files);
   
   if (result) {
-    res.json({ message: 'File updated successfully' });
+    // 修复：返回更新后的文件数据
+    res.json({ message: 'File updated successfully', file: files[index] });
   } else {
     res.status(500).json({ error: 'Failed to update file data' });
   }

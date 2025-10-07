@@ -427,7 +427,7 @@ async function saveFile() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${authToken}`
                 },
-                body: JSON.stringify(file)
+                body: JSON.stringify({ file }) // 修复：将file包装在file对象中
             });
         } else {
             // 更新现有文件夹
