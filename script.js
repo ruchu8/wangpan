@@ -132,6 +132,14 @@ function renderFileList() {
         const li = document.createElement('li');
         li.className = 'list-group-item';
         
+        // 处理分割线类型
+        if (item.type === 'divider') {
+            li.className = 'list-group-item py-1';
+            li.innerHTML = '<div class="divider-line">' + (item.name || '=================') + '</div>';
+            fileList.appendChild(li);
+            return li;
+        }
+        
         const a = document.createElement('a');
         a.href = item.url || '#';
         a.className = 'file-name';

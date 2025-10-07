@@ -322,13 +322,16 @@ function addChildField(child = null, childIndex = null) {
     const childDiv = document.createElement('div');
     childDiv.className = 'child-item border p-2 mb-2';
     
+    // 检查是否是分割线类型
+    const isDivider = child && child.type === 'divider';
+    
     // 格式化日期，如果存在的话
     // 检查 createdAt 或 date 字段
     let childDate = '';
     if (child && (child.createdAt || child.date)) {
         childDate = child.createdAt || child.date;
-    } else {
-        // 创建当前日期时间的格式化字符串
+    } else if (!isDivider) {
+        // 创建当前日期时间的格式化字符串（分割线不需要日期）
         const now = new Date();
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -344,12 +347,16 @@ function addChildField(child = null, childIndex = null) {
                 <input type="text" class="form-control form-control-sm child-name" placeholder="名称" value="${child ? child.name : ''}">
             </div>
             <div class="col-3">
-                <input type="text" class="form-control form-control-sm child-url" placeholder="URL" value="${child ? child.url : ''}">
+                <input type="text" class="form-control form-control-sm child-url" placeholder="URL" value="${child && !isDivider ? child.url : ''}">
             </div>
             <div class="col-3">
                 <input type="text" class="form-control form-control-sm child-date" placeholder="YYYY-MM-DD HH:MM" value="${childDate}">
             </div>
             <div class="col-3">
+                <select class="form-control form-control-sm child-type mb-1">
+                    <option value="file" ${!isDivider ? 'selected' : ''}>文件</option>
+                    <option value="divider" ${isDivider ? 'selected' : ''}>分割线</option>
+                </select>
                 <button type="button" class="btn btn-sm btn-danger remove-child">删除</button>
             </div>
         </div>
@@ -361,6 +368,26 @@ function addChildField(child = null, childIndex = null) {
     childDiv.querySelector('.remove-child').addEventListener('click', function() {
         childDiv.remove();
     });
+    
+    // 添加类型切换事件
+    const typeSelect = childDiv.querySelector('.child-type');
+    const urlInput = childDiv.querySelector('.child-url');
+    
+    typeSelect.addEventListener('change', function() {
+        if (this.value === 'divider') {
+            urlInput.disabled = true;
+            urlInput.placeholder = '分割线无URL';
+        } else {
+            urlInput.disabled = false;
+            urlInput.placeholder = 'URL';
+        }
+    });
+    
+    // 初始化状态
+    if (isDivider) {
+        urlInput.disabled = true;
+        urlInput.placeholder = '分割线无URL';
+    }
 }
 
 // 保存文件
@@ -386,8 +413,25 @@ async function saveFile() {
             const childName = childDiv.querySelector('.child-name').value;
             const childUrl = childDiv.querySelector('.child-url').value;
             const childDate = childDiv.querySelector('.child-date').value;
+            const childType = childDiv.querySelector('.child-type').value;
             
-            if (childName && childUrl) {
+            // 处理分割线类型
+            if (childType === 'divider') {
+                children.push({
+                    name: childName || '=================',
+                    type: 'divider',
+                    createdAt: childDate || (() => {
+                        // 创建当前日期时间的格式化字符串
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = String(now.getMonth() + 1).padStart(2, '0');
+                        const day = String(now.getDate()).padStart(2, '0');
+                        const hours = String(now.getHours()).padStart(2, '0');
+                        const minutes = String(now.getMinutes()).padStart(2, '0');
+                        return `${year}-${month}-${day} ${hours}:${minutes}`;
+                    })() // 使用 createdAt 字段以保持一致性
+                });
+            } else if (childName && childUrl) {
                 children.push({
                     name: childName,
                     type: 'file',
