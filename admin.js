@@ -471,7 +471,7 @@ async function saveFile() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${authToken}`
                 },
-                body: JSON.stringify({ file }) // 修复：将file包装在file对象中
+                body: JSON.stringify(file) // 修复：直接发送file对象，而不是包装在{file: file}中
             });
         } else {
             // 更新现有文件夹

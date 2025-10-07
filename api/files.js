@@ -206,7 +206,12 @@ module.exports = async function handler(req, res) {
       // Handle POST, PUT, DELETE methods
       if (req.method === 'POST') {
         try {
-          const newFile = req.body;
+          // 兼容两种格式：直接发送文件对象或包装在 { file: fileObject } 中
+          let newFile = req.body;
+          if (newFile && newFile.file) {
+            // 如果是 { file: fileObject } 格式，提取 file 对象
+            newFile = newFile.file;
+          }
           
           // 验证文件数据
           if (!newFile || !newFile.name || !newFile.type) {
@@ -239,7 +244,13 @@ module.exports = async function handler(req, res) {
         }
       } else if (req.method === 'PUT') {
         try {
-          const { index, file } = req.body;
+          // 兼容两种格式：直接发送 { index, file } 或包装在 { index, file } 中
+          let { index, file } = req.body;
+          if (req.body && req.body.file && req.body.index !== undefined) {
+            // 如果是标准格式 { index, file }，直接使用
+            index = req.body.index;
+            file = req.body.file;
+          }
           
           if (index === undefined || !file) {
             return res.status(400).json({ error: 'Invalid update data' });
@@ -282,7 +293,12 @@ module.exports = async function handler(req, res) {
         }
       } else if (req.method === 'DELETE') {
         try {
-          const { index } = req.body;
+          // 兼容两种格式：直接发送 { index } 或包装在对象中
+          let { index } = req.body;
+          if (req.body && req.body.index !== undefined) {
+            // 如果是标准格式 { index }，直接使用
+            index = req.body.index;
+          }
           
           if (index === undefined) {
             return res.status(400).json({ error: 'Invalid delete request' });

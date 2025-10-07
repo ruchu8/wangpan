@@ -317,7 +317,7 @@ function renderFileList() {
                 const minutes = String(now.getMinutes()).padStart(2, '0');
                 displayDate = `${year}-${month}-${day} ${hours}:${minutes}`;
             }
-            displayContent += ` <span class="file-date">新增日期${displayDate}</span>`;
+            displayContent += ` <span class="file-date">${displayDate}</span>`;
         }
         
         a.innerHTML = displayContent;
