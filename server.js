@@ -185,25 +185,58 @@ app.delete('/api/comments', async (req, res) => {
 });
 
 app.post('/api/auth', async (req, res) => {
-  const { password } = req.body;
+  const { username, password } = req.body;
   
   if (!password) {
     return res.status(400).json({ error: 'Password is required' });
   }
 
-  // 生成或验证管理员令牌
-  let adminToken = await storage.get('admin_token');
+  // 获取管理员凭证
+  const adminCredentials = await storage.get('admin_credentials');
   
-  if (!adminToken) {
-    // 如果没有管理员令牌，则使用提供的密码创建一个
-    adminToken = password;
-    await storage.set('admin_token', adminToken);
+  // 如果没有管理员凭证，创建默认的
+  if (!adminCredentials) {
+    const defaultCredentials = {
+      username: 'admin',
+      password: 'admin123'
+    };
+    await storage.set('admin_credentials', defaultCredentials);
+    
+    // 如果用户名字段为空，使用默认用户名
+    const userToCheck = username || 'admin';
+    
+    // 验证密码
+    if (password === 'admin123' && userToCheck === 'admin') {
+      const adminToken = await storage.get('admin_token') || 'default_admin_token';
+      return res.json({ 
+        success: true, 
+        token: adminToken,
+        message: 'Login successful' 
+      });
+    } else {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid credentials' 
+      });
+    }
   }
-
-  if (password === adminToken) {
-    res.json({ token: adminToken });
+  
+  // 如果用户名字段为空，使用存储的用户名
+  const userToCheck = username || adminCredentials.username;
+  
+  // 验证用户名和密码
+  if (userToCheck === adminCredentials.username && password === adminCredentials.password) {
+    const adminToken = await storage.get('admin_token') || 'default_admin_token';
+    return res.json({ 
+      success: true, 
+      token: adminToken,
+      message: 'Login successful' 
+    });
   } else {
-    res.status(401).json({ error: 'Invalid password' });
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Invalid credentials' 
+    });
   }
 });
 
@@ -242,6 +275,43 @@ app.post('/api/files', async (req, res) => {
     res.status(201).json({ message: 'File added successfully', index: files.length - 1 });
   } else {
     res.status(500).json({ error: 'Failed to save file data' });
+  }
+});
+
+// 添加处理 PUT 请求的路由，用于更新文件
+app.put('/api/files', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+
+  const { index, file } = req.body;
+  
+  if (index === undefined || !file) {
+    return res.status(400).json({ error: 'Index and file data are required' });
+  }
+
+  let files = await storage.get('files') || [];
+  
+  if (index < 0 || index >= files.length) {
+    return res.status(404).json({ error: 'File not found' });
+  }
+  
+  files[index] = file;
+  const result = await storage.set('files', files);
+  
+  if (result) {
+    res.json({ message: 'File updated successfully' });
+  } else {
+    res.status(500).json({ error: 'Failed to update file data' });
   }
 });
 

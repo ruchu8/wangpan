@@ -236,14 +236,17 @@ function renderFileList() {
         
         // 只有文件才显示创建时间
         if (item.type === 'file') {
-            let displayDate = item.date;
+            // 检查 date 或 createdAt 字段
+            let displayDate = item.date || item.createdAt;
             // 如果没有日期或日期格式不正确，使用当前日期
             if (!displayDate) {
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const day = String(now.getDate()).padStart(2, '0');
-                displayDate = `${year}-${month}-${day}`;
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                displayDate = `${year}-${month}-${day} ${hours}:${minutes}`;
             }
             displayContent += ` <span class="file-date">新增日期${displayDate}</span>`;
         }

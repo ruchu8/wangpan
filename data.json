@@ -149,5 +149,5 @@
     "username": "admin",
     "password": "admin123"
   },
-  "admin_token": "test-token"
+  "admin_token": "admin123"
 }

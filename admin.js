@@ -323,7 +323,20 @@ function addChildField(child = null, childIndex = null) {
     childDiv.className = 'child-item border p-2 mb-2';
     
     // 格式化日期，如果存在的话
-    const childDate = child && child.date ? child.date : new Date().toISOString().split('T')[0];
+    // 检查 createdAt 或 date 字段
+    let childDate = '';
+    if (child && (child.createdAt || child.date)) {
+        childDate = child.createdAt || child.date;
+    } else {
+        // 创建当前日期时间的格式化字符串
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        childDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
     
     childDiv.innerHTML = `
         <div class="row">
@@ -334,7 +347,7 @@ function addChildField(child = null, childIndex = null) {
                 <input type="text" class="form-control form-control-sm child-url" placeholder="URL" value="${child ? child.url : ''}">
             </div>
             <div class="col-3">
-                <input type="date" class="form-control form-control-sm child-date" value="${childDate}">
+                <input type="text" class="form-control form-control-sm child-date" placeholder="YYYY-MM-DD HH:MM" value="${childDate}">
             </div>
             <div class="col-3">
                 <button type="button" class="btn btn-sm btn-danger remove-child">删除</button>
@@ -379,7 +392,16 @@ async function saveFile() {
                     name: childName,
                     type: 'file',
                     url: childUrl,
-                    date: childDate || new Date().toISOString().split('T')[0] // 添加日期，格式为 YYYY-MM-DD
+                    createdAt: childDate || (() => {
+                        // 创建当前日期时间的格式化字符串
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = String(now.getMonth() + 1).padStart(2, '0');
+                        const day = String(now.getDate()).padStart(2, '0');
+                        const hours = String(now.getHours()).padStart(2, '0');
+                        const minutes = String(now.getMinutes()).padStart(2, '0');
+                        return `${year}-${month}-${day} ${hours}:${minutes}`;
+                    })() // 使用 createdAt 字段以保持一致性
                 });
             }
         });
@@ -433,15 +455,22 @@ async function saveFile() {
             // 同时刷新前台页面的文件列表
             refreshFrontendFileList();
         } else {
-            // 安全地解析错误响应
+            let errorMessage = '保存失败';
             try {
+                // 先尝试解析JSON
                 const errorData = await response.json();
-                alert(errorData.error || '保存失败');
-            } catch (parseError) {
-                // 如果无法解析JSON，显示状态文本
-                const errorText = await response.text();
-                alert(`保存失败: ${response.status} ${response.statusText}\n${errorText.substring(0, 200)}...`);
+                errorMessage = errorData.error || `保存失败: ${response.status} ${response.statusText}`;
+            } catch (jsonError) {
+                // 如果JSON解析失败，尝试获取文本
+                try {
+                    const errorText = await response.text();
+                    errorMessage = errorText || `保存失败: ${response.status} ${response.statusText}`;
+                } catch (textError) {
+                    // 如果都失败了，使用默认消息
+                    errorMessage = `保存失败: ${response.status} ${response.statusText}`;
+                }
             }
+            alert(errorMessage);
         }
     } catch (error) {
         console.error('Error saving file:', error);
@@ -460,15 +489,22 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
         });
         
         if (!response.ok) {
-            // 安全地解析错误响应
+            let errorMessage = '无法获取文件列表';
             try {
+                // 先尝试解析JSON
                 const errorData = await response.json();
-                alert('无法获取文件列表: ' + (errorData.error || response.statusText));
-            } catch (parseError) {
-                // 如果无法解析JSON，显示状态文本
-                const errorText = await response.text();
-                alert(`无法获取文件列表: ${response.status} ${response.statusText}\n${errorText.substring(0, 200)}...`);
+                errorMessage = errorData.error || `无法获取文件列表: ${response.status} ${response.statusText}`;
+            } catch (jsonError) {
+                // 如果JSON解析失败，尝试获取文本
+                try {
+                    const errorText = await response.text();
+                    errorMessage = errorText || `无法获取文件列表: ${response.status} ${response.statusText}`;
+                } catch (textError) {
+                    // 如果都失败了，使用默认消息
+                    errorMessage = `无法获取文件列表: ${response.status} ${response.statusText}`;
+                }
             }
+            alert(errorMessage);
             return;
         }
         
@@ -484,7 +520,16 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
             name: fileName,
             type: 'file',
             url: fileUrl,
-            date: new Date().toISOString().split('T')[0] // 添加日期，格式为 YYYY-MM-DD
+            createdAt: (() => {
+                // 创建当前日期时间的格式化字符串
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
+            })() // 使用 createdAt 字段以保持与现有数据一致
         };
         
         // 确保children数组存在
@@ -515,15 +560,22 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
             // 同时刷新前台页面的文件列表
             refreshFrontendFileList();
         } else {
-            // 安全地解析错误响应
+            let errorMessage = '添加文件失败';
             try {
+                // 先尝试解析JSON
                 const errorData = await updateResponse.json();
-                alert(errorData.error || '添加文件失败');
-            } catch (parseError) {
-                // 如果无法解析JSON，显示状态文本
-                const errorText = await updateResponse.text();
-                alert(`添加文件失败: ${updateResponse.status} ${updateResponse.statusText}\n${errorText.substring(0, 200)}...`);
+                errorMessage = errorData.error || `添加文件失败: ${updateResponse.status} ${updateResponse.statusText}`;
+            } catch (jsonError) {
+                // 如果JSON解析失败，尝试获取文本
+                try {
+                    const errorText = await updateResponse.text();
+                    errorMessage = errorText || `添加文件失败: ${updateResponse.status} ${updateResponse.statusText}`;
+                } catch (textError) {
+                    // 如果都失败了，使用默认消息
+                    errorMessage = `添加文件失败: ${updateResponse.status} ${updateResponse.statusText}`;
+                }
             }
+            alert(errorMessage);
         }
     } catch (error) {
         console.error('Error adding file to folder:', error);
