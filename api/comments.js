@@ -11,7 +11,6 @@ if (databaseUrl) {
 }
 
 if (!databaseUrl) {
-  console.error('❌ Database URL not found in environment variables');
   // 不立即抛出错误，而是在处理请求时再检查
 }
 
@@ -36,8 +35,6 @@ async function initializeDatabase() {
       sql = neon(databaseUrl);
     }
     
-    console.log('Initializing comments table...');
-    
     // 创建留言表（使用新的语法确保表结构正确）
     await sql`
       CREATE TABLE IF NOT EXISTS comments (
@@ -57,43 +54,32 @@ async function initializeDatabase() {
       // 尝试添加缺失的列
       try {
         await sql`ALTER TABLE comments ADD COLUMN ip TEXT`;
-        console.log('✅ Added ip column (if it was missing)');
       } catch (e) {
         // 列可能已经存在，忽略错误
-        console.log('ℹ️  ip column already exists or error adding it');
       }
       
       try {
         await sql`ALTER TABLE comments ADD COLUMN reply TEXT`;
-        console.log('✅ Added reply column (if it was missing)');
       } catch (e) {
         // 列可能已经存在，忽略错误
-        console.log('ℹ️  reply column already exists or error adding it');
       }
       
       try {
         await sql`ALTER TABLE comments ADD COLUMN approved BOOLEAN DEFAULT false`;
-        console.log('✅ Added approved column (if it was missing)');
       } catch (e) {
         // 列可能已经存在，忽略错误
-        console.log('ℹ️  approved column already exists or error adding it');
       }
       
       try {
         await sql`ALTER TABLE comments ADD COLUMN reply_date TEXT`;
-        console.log('✅ Added reply_date column (if it was missing)');
       } catch (e) {
         // 列可能已经存在，忽略错误
-        console.log('ℹ️  reply_date column already exists or error adding it');
       }
     } catch (alterError) {
-      console.log('ℹ️  Column check/alter completed');
     }
     
-    console.log('✅ Comments database initialization completed');
     return true;
   } catch (error) {
-    console.error('❌ Failed to initialize comments database:', error);
     return false;
   }
 }
@@ -159,8 +145,6 @@ module.exports = async function handler(req, res) {
   // Handle different HTTP methods
   if (req.method === 'GET') {
     try {
-      console.log('Comments GET request received');
-      
       // 确保数据库已初始化
       const isDbReady = await ensureDatabaseInitialized();
       if (!isDbReady) {
@@ -375,10 +359,8 @@ module.exports = async function handler(req, res) {
         VALUES (${newComment.id}, ${newComment.name}, ${newComment.content}, ${newComment.date}, ${newComment.approved}, ${newComment.ip})
       `;
       
-      console.log('✅ Comment added successfully');
       return res.status(201).json(newComment);
     } catch (error) {
-      console.error('❌ Failed to add comment:', error);
       return res.status(500).json({ error: 'Failed to add comment: ' + error.message });
     }
   } else if (req.method === 'PUT') {
@@ -420,14 +402,12 @@ module.exports = async function handler(req, res) {
       const token = authHeader.split(' ')[1];
       // 验证令牌是否有效
       const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
-      console.log('Admin token verification result:', adminTokenResult.length);
       
       if (adminTokenResult.length === 0) {
         return res.status(401).json({ error: 'Invalid token' });
       }
 
       const { id, approved, reply } = req.body;
-      console.log('Updating comment:', { id, approved, reply });
       
       if (!id) {
         return res.status(400).json({ error: 'Comment ID is required' });
@@ -469,7 +449,6 @@ module.exports = async function handler(req, res) {
         
         // 验证更新后的评论
         const updatedComment = await sql`SELECT ip FROM comments WHERE id = ${id}`;
-        console.log('✅ Comment reply updated with timestamp. Original IP:', originalIP, 'Current IP after update:', updatedComment[0].ip);
       }
       
       // 获取更新后的评论
@@ -485,10 +464,8 @@ module.exports = async function handler(req, res) {
         reply_date: updatedResult[0].reply_date || null // 如果reply_date为null，则显示为null
       };
       
-      console.log('✅ Comment updated successfully');
       return res.status(200).json(updatedComment);
     } catch (error) {
-      console.error('❌ Failed to update comment:', error);
       return res.status(500).json({ error: 'Failed to update comment: ' + error.message });
     }
   } else if (req.method === 'DELETE') {
@@ -530,14 +507,12 @@ module.exports = async function handler(req, res) {
       const token = authHeader.split(' ')[1];
       // 验证令牌是否有效
       const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
-      console.log('Admin token verification result:', adminTokenResult.length);
       
       if (adminTokenResult.length === 0) {
         return res.status(401).json({ error: 'Invalid token' });
       }
 
       const { id } = req.body;
-      console.log('Deleting comment:', id);
       
       if (!id) {
         return res.status(400).json({ error: 'Comment ID is required' });
@@ -552,10 +527,8 @@ module.exports = async function handler(req, res) {
       // 删除评论
       await sql`DELETE FROM comments WHERE id = ${id}`;
       
-      console.log('✅ Comment deleted successfully');
       return res.status(200).json({ message: 'Comment deleted successfully' });
     } catch (error) {
-      console.error('❌ Failed to delete comment:', error);
       return res.status(500).json({ error: 'Failed to delete comment: ' + error.message });
     }
   } else {

@@ -10,16 +10,11 @@ if (!DATABASE_URL) {
   throw new Error('Database URL not found in environment variables');
 }
 
-console.log('Using database URL:', DATABASE_URL.substring(0, 50) + '...'); // 只显示前50个字符以保护隐私
-
 // 创建数据库表的函数
 async function initializeDatabase() {
-  console.log('Initializing database...');
   const client = new Client(DATABASE_URL);
   try {
-    console.log('Connecting to database...');
     await client.connect();
-    console.log('Connected to database successfully');
     
     // 创建 comments 表
     await client.query(`
@@ -76,10 +71,8 @@ async function initializeDatabase() {
       );
     }
     
-    console.log('Database initialized successfully');
     return true;
   } catch (error) {
-    console.error('Error initializing database:', error);
     return false;
   } finally {
     await client.end();
@@ -88,7 +81,6 @@ async function initializeDatabase() {
 
 // 获取指定键的值
 async function get(key) {
-  console.log(`Getting key: ${key}`);
   const client = new Client(DATABASE_URL);
   try {
     await client.connect();
@@ -106,14 +98,11 @@ async function get(key) {
           if (typeof data === 'string') {
             try {
               const parsedData = JSON.parse(data);
-              console.log('Files get result (parsed):', parsedData);
               return parsedData;
             } catch (parseError) {
-              console.error('Error parsing files data:', parseError);
               return [];
             }
           } else {
-            console.log('Files get result (direct):', data);
             return data || [];
           }
         }
@@ -134,7 +123,6 @@ async function get(key) {
         return null;
     }
   } catch (error) {
-    console.error(`Error getting ${key}:`, error);
     return null;
   } finally {
     await client.end();
@@ -143,7 +131,6 @@ async function get(key) {
 
 // 设置指定键的值
 async function set(key, value) {
-  console.log(`Setting key: ${key}`);
   const client = new Client(DATABASE_URL);
   try {
     await client.connect();
@@ -164,9 +151,7 @@ async function set(key, value) {
         // 直接更新文件数据（只存储一个记录，包含所有文件）
         await client.query('DELETE FROM files');
         const jsonData = JSON.stringify(value);
-        console.log('Storing files data:', jsonData);
-        const result = await client.query('INSERT INTO files (data) VALUES ($1) RETURNING *', [jsonData]);
-        console.log('Files set result:', result);
+        await client.query('INSERT INTO files (data) VALUES ($1) RETURNING *', [jsonData]);
         return true;
       
       case 'admin_credentials':
@@ -182,7 +167,6 @@ async function set(key, value) {
         return false;
     }
   } catch (error) {
-    console.error(`Error setting ${key}:`, error);
     return false;
   } finally {
     await client.end();
@@ -222,7 +206,6 @@ async function del(key) {
         return false;
     }
   } catch (error) {
-    console.error(`Error deleting ${key}:`, error);
     return false;
   } finally {
     await client.end();

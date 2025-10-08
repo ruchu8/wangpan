@@ -41,12 +41,9 @@ module.exports = async function handler(req, res) {
         }
       }
       
-      console.log('Client IP detected:', ip);
-      
       // 返回IP地址
       return res.status(200).json({ ip });
     } catch (error) {
-      console.error('Error getting client IP:', error);
       return res.status(500).json({ error: 'Failed to get client IP' });
     }
   } else {

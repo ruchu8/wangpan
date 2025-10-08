@@ -125,7 +125,6 @@ async function login() {
         }
     } catch (error) {
         showLoginError('登录请求失败，请稍后再试');
-        console.error('Login error:', error);
     }
 }
 
@@ -970,20 +969,15 @@ async function saveReply(id, replyContent) {
         }
         
         if (response.ok) {
-            const result = await response.json();
-            console.log('Reply saved successfully:', result);
             loadComments();
         } else {
             const error = await response.json();
-            console.error('Error saving reply:', error);
             alert(error.error || '回复保存失败');
         }
     } catch (error) {
-        console.error('Error saving reply:', error);
         alert('回复保存失败');
     }
 }
-
 
 // 审核留言 (修改为公开留言)
 async function approveComment(id) {

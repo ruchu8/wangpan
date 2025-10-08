@@ -11,7 +11,6 @@ if (databaseUrl) {
 }
 
 if (!databaseUrl) {
-  console.error('❌ Database URL not found in environment variables');
   // 不立即抛出错误，而是在处理请求时再检查
 }
 
@@ -36,8 +35,6 @@ async function initializeDatabase() {
       sql = neon(databaseUrl);
     }
     
-    console.log('Initializing files database tables...');
-    
     await sql`
       CREATE TABLE IF NOT EXISTS files (
         id SERIAL PRIMARY KEY,
@@ -60,9 +57,7 @@ async function initializeDatabase() {
     if (parseInt(result[0].count) === 0) {
       // 创建默认管理员令牌
       await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
-      console.log('✅ Default admin token created');
     } else {
-      console.log('✅ Admin token already exists');
     }
     
     // 检查是否有文件数据，如果没有则创建一个空数组
@@ -70,15 +65,11 @@ async function initializeDatabase() {
     if (parseInt(filesResult[0].count) === 0) {
       // 创建默认文件数据
       await sql`INSERT INTO files (data) VALUES (${JSON.stringify([])})`;
-      console.log('✅ Default files data created');
     } else {
-      console.log('✅ Files data already exists');
     }
     
-    console.log('✅ Files database initialization completed');
     return true;
   } catch (error) {
-    console.error('❌ Failed to initialize files database:', error);
     return false;
   }
 }
@@ -97,7 +88,6 @@ function safeParseData(data) {
   try {
     // 如果data已经是对象，直接返回
     if (typeof data === 'object' && data !== null && !Array.isArray(data)) {
-      console.log('Data is already an object, converting to array if needed');
       // 如果是单个对象，包装成数组
       return [data];
     }
@@ -111,7 +101,6 @@ function safeParseData(data) {
     if (typeof data === 'string') {
       // 检查是否是"[object Object]"这样的字符串
       if (data.startsWith('[object') && data.endsWith(']')) {
-        console.log('Data is object string representation, returning empty array');
         return [];
       }
       
@@ -120,7 +109,6 @@ function safeParseData(data) {
         const parsed = JSON.parse(data);
         return Array.isArray(parsed) ? parsed : [parsed];
       } catch (parseError) {
-        console.log('Failed to parse JSON, returning empty array');
         return [];
       }
     }
@@ -128,7 +116,6 @@ function safeParseData(data) {
     // 其他情况返回空数组
     return [];
   } catch (error) {
-    console.error('Error in safeParseData:', error);
     return [];
   }
 }
@@ -186,7 +173,6 @@ module.exports = async function handler(req, res) {
         
         return res.status(200).json(files);
       } catch (error) {
-        console.error('❌ Failed to fetch files:', error);
         return res.status(500).json({ error: 'Failed to fetch files: ' + error.message });
       }
     } else {
@@ -239,7 +225,6 @@ module.exports = async function handler(req, res) {
           
           return res.status(201).json(newFile);
         } catch (error) {
-          console.error('❌ Failed to add file:', error);
           return res.status(500).json({ error: 'Failed to add file: ' + error.message });
         }
       } else if (req.method === 'PUT') {
@@ -288,7 +273,6 @@ module.exports = async function handler(req, res) {
           
           return res.status(200).json(files[index]);
         } catch (error) {
-          console.error('❌ Failed to update file:', error);
           return res.status(500).json({ error: 'Failed to update file: ' + error.message });
         }
       } else if (req.method === 'DELETE') {
@@ -330,7 +314,6 @@ module.exports = async function handler(req, res) {
           
           return res.status(200).json({ message: 'File deleted successfully' });
         } catch (error) {
-          console.error('❌ Failed to delete file:', error);
           return res.status(500).json({ error: 'Failed to delete file: ' + error.message });
         }
       } else {
@@ -338,7 +321,6 @@ module.exports = async function handler(req, res) {
       }
     }
   } catch (error) {
-    console.error('❌ Unexpected error in files API:', error);
     return res.status(500).json({ error: 'Unexpected error: ' + error.message });
   }
 };

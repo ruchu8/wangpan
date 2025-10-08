@@ -11,7 +11,6 @@ if (databaseUrl) {
 }
 
 if (!databaseUrl) {
-  console.error('❌ Database URL not found in environment variables');
   // 不立即抛出错误，而是在处理请求时再检查
 }
 
@@ -36,8 +35,6 @@ async function initializeDatabase() {
       sql = neon(databaseUrl);
     }
     
-    console.log('Initializing database tables...');
-    
     // 创建管理员凭证表
     await sql`
       CREATE TABLE IF NOT EXISTS admin_credentials (
@@ -47,7 +44,6 @@ async function initializeDatabase() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
     `;
-    console.log('✅ admin_credentials table ensured');
     
     // 创建管理员令牌表
     await sql`
@@ -57,16 +53,12 @@ async function initializeDatabase() {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
     `;
-    console.log('✅ admin_tokens table ensured');
     
     // 检查是否有管理员凭证，如果没有则创建默认的
     const result = await sql`SELECT COUNT(*) as count FROM admin_credentials`;
     if (parseInt(result[0].count) === 0) {
       // 创建默认管理员凭证
       await sql`INSERT INTO admin_credentials (username, password) VALUES ('admin', 'admin123')`;
-      console.log('✅ Default admin credentials created');
-    } else {
-      console.log('✅ Admin credentials already exist');
     }
     
     // 检查是否有管理员令牌，如果没有则创建一个默认的
@@ -74,15 +66,10 @@ async function initializeDatabase() {
     if (parseInt(tokenResult[0].count) === 0) {
       // 创建默认管理员令牌
       await sql`INSERT INTO admin_tokens (token) VALUES ('default_admin_token')`;
-      console.log('✅ Default admin token created');
-    } else {
-      console.log('✅ Admin token already exists');
     }
     
-    console.log('✅ Database initialization completed');
     return true;
   } catch (error) {
-    console.error('❌ Failed to initialize database:', error);
     return false;
   }
 }
@@ -111,8 +98,6 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      console.log('Authentication request received');
-      
       // 确保数据库已初始化
       const isDbReady = await ensureDatabaseInitialized();
       if (!isDbReady) {
@@ -140,7 +125,6 @@ module.exports = async function handler(req, res) {
       }
       
       const { username, password } = req.body;
-      console.log('Login attempt for user:', username);
       
       if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required' });
@@ -148,10 +132,8 @@ module.exports = async function handler(req, res) {
 
       // 获取管理员凭证
       const adminCredentialsResult = await sql`SELECT * FROM admin_credentials WHERE username = ${username} LIMIT 1`;
-      console.log('Admin credentials query result:', adminCredentialsResult.length);
       
       if (adminCredentialsResult.length === 0) {
-        console.log('❌ Invalid username');
         return res.status(401).json({ 
           success: false, 
           message: 'Invalid credentials' 
@@ -159,20 +141,16 @@ module.exports = async function handler(req, res) {
       }
       
       const adminCredentials = adminCredentialsResult[0];
-      console.log('Stored password:', adminCredentials.password, 'Provided password:', password);
       
       if (password === adminCredentials.password) {
         // 获取管理员令牌
         const adminTokenResult = await sql`SELECT * FROM admin_tokens LIMIT 1`;
-        console.log('Admin token query result:', adminTokenResult.length);
         
         if (adminTokenResult.length === 0) {
-          console.log('❌ Admin token not initialized');
           return res.status(500).json({ error: 'Admin token not initialized' });
         }
         
         const adminToken = adminTokenResult[0].token;
-        console.log('✅ Login successful for user:', username);
         
         return res.status(200).json({ 
           success: true, 
@@ -180,14 +158,12 @@ module.exports = async function handler(req, res) {
           message: 'Login successful' 
         });
       } else {
-        console.log('❌ Invalid password for user:', username);
         return res.status(401).json({ 
           success: false, 
           message: 'Invalid credentials' 
         });
       }
     } catch (error) {
-      console.error('❌ Authentication error:', error);
       return res.status(500).json({ error: 'Authentication failed: ' + error.message });
     }
   } else {

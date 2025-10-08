@@ -9,31 +9,24 @@ let filteredFiles = []; // 用于存储过滤后的文件列表
 
 // 从API获取文件列表
 async function fetchFiles() {
-    console.log('Fetching files...');
     try {
         // 首先尝试从API获取文件列表（无需认证）
         const response = await fetch('/api/files');
-        console.log('Files API response status:', response.status);
         if (response.ok) {
             const rawData = await response.json();
-            console.log('Raw files data from API:', rawData);
             
             // 直接使用服务器返回的数据
             files = rawData;
             filteredFiles = [...files]; // 初始化过滤后的文件列表
-            console.log('Files to render:', files);
         } else if (response.status === 401) {
             // 如果是认证问题，尝试使用默认数据
-            console.warn('Authentication required for files API, using default data');
             useDefaultFiles();
         } else {
             // 其他错误情况，使用默认数据
-            console.warn('Failed to fetch files from API, using default data');
             useDefaultFiles();
         }
         renderFileList();
     } catch (error) {
-        console.error('Error fetching files:', error);
         // 使用默认数据
         useDefaultFiles();
         renderFileList();
@@ -115,19 +108,15 @@ function useDefaultFiles() {
 }
 
 function renderFileList() {
-    console.log('Rendering file list...');
     const fileList = document.getElementById('fileList');
     const noFiles = document.getElementById('noFiles');
     
     if (!fileList) {
-        console.error('File list element not found!');
         return;
     }
     
     fileList.innerHTML = '';
     
-    console.log('Files to render:', filteredFiles); // 使用过滤后的文件列表
-
     function renderItem(item, index, isChild = false) {
         const li = document.createElement('li');
         li.className = 'list-group-item';
@@ -378,7 +367,6 @@ function renderFileList() {
     // 确保 filteredFiles 是数组
     if (Array.isArray(filteredFiles)) {
         if (filteredFiles.length === 0) {
-            console.log('No files to display');
             fileList.classList.add('d-none');
             noFiles.classList.remove('d-none');
         } else {
@@ -387,7 +375,6 @@ function renderFileList() {
             filteredFiles.forEach((item, index) => renderItem(item, index));
         }
     } else {
-        console.error('filteredFiles is not an array:', filteredFiles);
         // 如果不是数组，设置为空数组
         filteredFiles = [];
         fileList.classList.add('d-none');
@@ -505,11 +492,9 @@ async function fetchComments(page = 1) {
             renderCommentsStats();
             renderPagination();
         } else {
-            console.warn('Failed to fetch comments from API');
             document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">暂无留言</p>';
         }
     } catch (error) {
-        console.error('Error fetching comments:', error);
         document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">加载留言失败</p>';
     }
 }
@@ -1283,5 +1268,4 @@ function validateContactInfo() {
 
 // 添加一个窗口加载事件作为备选方案
 window.addEventListener('load', function() {
-    console.log('Window loaded');
 });
