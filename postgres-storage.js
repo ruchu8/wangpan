@@ -1,5 +1,6 @@
 require('dotenv').config(); // 加载环境变量
 const { Client } = require('@neondatabase/serverless');
+const { Pool } = require('pg'); // 添加连接池支持
 
 // 数据库配置
 // 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
@@ -10,11 +11,19 @@ if (!DATABASE_URL) {
   throw new Error('Database URL not found in environment variables');
 }
 
+// 创建连接池以提高性能
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+  max: 10, // 最大连接数
+  idleTimeoutMillis: 30000, // 空闲连接超时时间
+  connectionTimeoutMillis: 5000, // 连接超时时间
+});
+
 // 创建数据库表的函数
 async function initializeDatabase() {
-  const client = new Client(DATABASE_URL);
+  let client;
   try {
-    await client.connect();
+    client = await pool.connect();
     
     // 创建 comments 表
     await client.query(`
@@ -24,7 +33,9 @@ async function initializeDatabase() {
         content TEXT NOT NULL,
         date TEXT NOT NULL,
         approved BOOLEAN DEFAULT false,
-        reply TEXT
+        reply TEXT,
+        ip TEXT,
+        reply_date TEXT
       )
     `);
     
@@ -73,17 +84,20 @@ async function initializeDatabase() {
     
     return true;
   } catch (error) {
+    console.error('Database initialization error:', error);
     return false;
   } finally {
-    await client.end();
+    if (client) {
+      client.release();
+    }
   }
 }
 
 // 获取指定键的值
 async function get(key) {
-  const client = new Client(DATABASE_URL);
+  let client;
   try {
-    await client.connect();
+    client = await pool.connect();
     
     switch (key) {
       case 'comments':
@@ -123,17 +137,20 @@ async function get(key) {
         return null;
     }
   } catch (error) {
+    console.error(`Error getting ${key}:`, error);
     return null;
   } finally {
-    await client.end();
+    if (client) {
+      client.release();
+    }
   }
 }
 
 // 设置指定键的值
 async function set(key, value) {
-  const client = new Client(DATABASE_URL);
+  let client;
   try {
-    await client.connect();
+    client = await pool.connect();
     
     switch (key) {
       case 'comments':
@@ -141,8 +158,8 @@ async function set(key, value) {
         await client.query('DELETE FROM comments');
         for (const comment of value) {
           await client.query(
-            'INSERT INTO comments (id, name, content, date, approved, reply) VALUES ($1, $2, $3, $4, $5, $6)',
-            [comment.id, comment.name, comment.content, comment.date, comment.approved || false, comment.reply || null]
+            'INSERT INTO comments (id, name, content, date, approved, reply, ip, reply_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [comment.id, comment.name, comment.content, comment.date, comment.approved || false, comment.reply || null, comment.ip || null, comment.reply_date || null]
           );
         }
         return true;
@@ -167,9 +184,12 @@ async function set(key, value) {
         return false;
     }
   } catch (error) {
+    console.error(`Error setting ${key}:`, error);
     return false;
   } finally {
-    await client.end();
+    if (client) {
+      client.release();
+    }
   }
 }
 
@@ -181,9 +201,9 @@ async function exists(key) {
 
 // 删除指定键
 async function del(key) {
-  const client = new Client(DATABASE_URL);
+  let client;
   try {
-    await client.connect();
+    client = await pool.connect();
     
     switch (key) {
       case 'comments':
@@ -206,9 +226,12 @@ async function del(key) {
         return false;
     }
   } catch (error) {
+    console.error(`Error deleting ${key}:`, error);
     return false;
   } finally {
-    await client.end();
+    if (client) {
+      client.release();
+    }
   }
 }
 
@@ -219,5 +242,6 @@ module.exports = {
   get,
   set,
   exists,
-  del
+  del,
+  pool // 导出连接池供其他模块使用
 };

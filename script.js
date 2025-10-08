@@ -6,6 +6,9 @@ let currentPage = 1; // 当前页码
 let totalPages = 1; // 总页数
 let totalComments = 0; // 总留言数
 let filteredFiles = []; // 用于存储过滤后的文件列表
+let commentsCache = new Map(); // 留言缓存
+let isCommentsLoading = false; // 留言是否正在加载
+let commentsLoadStartTime = 0; // 留言加载开始时间
 
 // 从API获取文件列表
 async function fetchFiles() {
@@ -480,22 +483,97 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 从API获取留言列表
 async function fetchComments(page = 1) {
+    // 检查缓存
+    const cacheKey = `page_${page}`;
+    if (commentsCache.has(cacheKey)) {
+        console.log('Using cached comments for page', page);
+        const cachedData = commentsCache.get(cacheKey);
+        comments = cachedData.comments;
+        currentPage = cachedData.currentPage;
+        totalPages = cachedData.totalPages;
+        totalComments = cachedData.totalComments;
+        renderComments();
+        renderCommentsStats();
+        renderPagination();
+        return;
+    }
+    
+    // 避免重复请求
+    if (isCommentsLoading) {
+        console.log('Comments are already loading, skipping duplicate request');
+        return;
+    }
+    
+    isCommentsLoading = true;
+    commentsLoadStartTime = Date.now(); // 记录开始时间
+    
+    const commentsList = document.getElementById('commentsList');
+    
+    // 显示加载状态
+    if (commentsList) {
+        commentsList.innerHTML = `
+            <div class="text-center py-5" id="commentsLoading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">加载中...</span>
+                </div>
+                <p class="mt-2 text-muted">正在加载留言... <span id="loadingTime">0.0</span>s</p>
+            </div>
+        `;
+        
+        // 实时更新加载时间
+        const loadingTimeElement = document.getElementById('loadingTime');
+        const loadingInterval = setInterval(() => {
+            if (loadingTimeElement && isCommentsLoading) {
+                const elapsed = ((Date.now() - commentsLoadStartTime) / 1000).toFixed(1);
+                loadingTimeElement.textContent = elapsed;
+            } else {
+                clearInterval(loadingInterval);
+            }
+        }, 100);
+    }
+    
     try {
-        const response = await fetch(`/api/comments?page=${page}&limit=8`);
+        // 设置8秒超时
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            controller.abort();
+        }, 8000);
+        
+        const response = await fetch(`/api/comments?page=${page}&limit=8`, {
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
         if (response.ok) {
             const data = await response.json();
             comments = data.comments;
             currentPage = data.currentPage;
             totalPages = data.totalPages;
             totalComments = data.totalComments;
+            
+            // 缓存数据
+            commentsCache.set(cacheKey, data);
+            
             renderComments();
             renderCommentsStats();
             renderPagination();
+            
+            // 记录加载时间
+            const loadTime = ((Date.now() - commentsLoadStartTime) / 1000).toFixed(2);
+            console.log(`Comments loaded in ${loadTime} seconds`);
         } else {
             document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">暂无留言</p>';
         }
     } catch (error) {
-        document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">加载留言失败</p>';
+        console.error('Error fetching comments:', error);
+        if (error.name === 'AbortError') {
+            document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">加载超时，请检查网络连接或刷新页面重试</p>';
+        } else {
+            document.getElementById('commentsList').innerHTML = '<p class="text-center py-4 text-muted">加载留言失败，请稍后重试</p>';
+        }
+    } finally {
+        isCommentsLoading = false;
     }
 }
 
@@ -812,6 +890,33 @@ function renderPagination() {
             }
         });
     });
+    
+    // 预加载下一页（如果存在）
+    if (currentPage < totalPages) {
+        preloadNextPage(currentPage + 1);
+    }
+}
+
+// 预加载下一页留言
+async function preloadNextPage(page) {
+    const cacheKey = `page_${page}`;
+    // 如果已经缓存了下一页，不需要预加载
+    if (commentsCache.has(cacheKey)) {
+        return;
+    }
+    
+    try {
+        console.log('Preloading comments for page', page);
+        const response = await fetch(`/api/comments?page=${page}&limit=8`);
+        if (response.ok) {
+            const data = await response.json();
+            // 缓存数据
+            commentsCache.set(cacheKey, data);
+            console.log('Preloaded comments for page', page);
+        }
+    } catch (error) {
+        console.error('Error preloading comments for page', page, error);
+    }
 }
 
 // 联系方式隐私保护函数
@@ -1129,11 +1234,16 @@ function setupSmoothScroll() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM content loaded');
     
-    // 获取文件列表
-    fetchFiles();
-    
-    // 获取留言列表
-    fetchComments();
+    // 首先获取文件列表
+    fetchFiles().then(() => {
+        console.log('Files loaded');
+        // 文件列表加载完成后再获取留言列表
+        return fetchComments();
+    }).then(() => {
+        console.log('Comments loaded');
+    }).catch((error) => {
+        console.error('Error loading content:', error);
+    });
     
     // 添加留言表单提交事件
     const commentForm = document.getElementById('commentForm');
@@ -1168,8 +1278,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 500);
     
-    // 定期刷新文件列表以确保同步
-    setInterval(fetchFiles, 30000); // 每30秒刷新一次
+    // 定期刷新文件列表以确保同步（仅在页面可见时刷新）
+    let filesRefreshInterval;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            // 页面隐藏时清除定时器
+            if (filesRefreshInterval) {
+                clearInterval(filesRefreshInterval);
+                filesRefreshInterval = null;
+            }
+        } else {
+            // 页面显示时重新启动定时器
+            if (!filesRefreshInterval) {
+                filesRefreshInterval = setInterval(fetchFiles, 60000); // 每60秒刷新一次
+            }
+        }
+    });
+    
+    // 初始设置定时器
+    filesRefreshInterval = setInterval(fetchFiles, 60000); // 每60秒刷新一次
     
     // 添加联系方式类型变化事件监听器
     const contactTypeSelect = document.getElementById('contactType');

@@ -1,37 +1,47 @@
-// Vercel Serverless Function for comment management
-const { neon } = require('@neondatabase/serverless');
+// 全局变量，用于缓存数据库连接状态
+let dbInitialized = false;
+let sql = null;
+let databaseUrl = null;
 
 // 初始化 Neon PostgreSQL 客户端
 // 优先使用 VERCEL 环境变量，然后是 POSTGRES_URL，最后是 DATABASE_URL
-let databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+function initializeDatabaseConnection() {
+  if (databaseUrl !== null) {
+    return true; // 已经初始化过了
+  }
+  
+  databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
-// 清理数据库URL，移除可能的空格和其他无效字符
-if (databaseUrl) {
-  databaseUrl = databaseUrl.trim();
+  // 清理数据库URL，移除可能的空格和其他无效字符
+  if (databaseUrl) {
+    databaseUrl = databaseUrl.trim();
+  }
+
+  if (!databaseUrl) {
+    return false;
+  }
+  
+  // 验证URL格式
+  try {
+    new URL(databaseUrl);
+  } catch (urlError) {
+    console.error('Database URL format is invalid:', databaseUrl);
+    return false;
+  }
+  
+  return true;
 }
-
-if (!databaseUrl) {
-  // 不立即抛出错误，而是在处理请求时再检查
-}
-
-let sql;
 
 // 创建数据库表（如果不存在）
 async function initializeDatabase() {
   try {
     // 确保数据库连接已初始化
-    if (!databaseUrl) {
+    if (!initializeDatabaseConnection() || !databaseUrl) {
       throw new Error('Database URL not found in environment variables');
     }
     
-    // 验证URL格式
-    try {
-      new URL(databaseUrl);
-    } catch (urlError) {
-      throw new Error('Database URL format is invalid: ' + databaseUrl);
-    }
-    
     if (!sql) {
+      const { neon } = require('@neondatabase/serverless');
       sql = neon(databaseUrl);
     }
     
@@ -76,16 +86,18 @@ async function initializeDatabase() {
         // 列可能已经存在，忽略错误
       }
     } catch (alterError) {
+      console.warn('Table alteration warning:', alterError);
     }
     
+    dbInitialized = true;
     return true;
   } catch (error) {
+    console.error('Database initialization error:', error);
     return false;
   }
 }
 
 // 确保数据库已初始化
-let dbInitialized = false;
 async function ensureDatabaseInitialized() {
   if (!dbInitialized) {
     dbInitialized = await initializeDatabase();
@@ -145,29 +157,15 @@ module.exports = async function handler(req, res) {
   // Handle different HTTP methods
   if (req.method === 'GET') {
     try {
-      // 确保数据库已初始化
+      // 确保数据库已初始化（只在第一次请求时初始化）
       const isDbReady = await ensureDatabaseInitialized();
       if (!isDbReady) {
         return res.status(500).json({ error: 'Database initialization failed' });
       }
       
       // 确保数据库连接已初始化
-      if (!databaseUrl) {
-        return res.status(500).json({ error: 'Database URL not found in environment variables' });
-      }
-      
-      // 验证URL格式
-      try {
-        new URL(databaseUrl);
-      } catch (urlError) {
-        return res.status(500).json({ 
-          error: 'Database URL format is invalid',
-          url: databaseUrl,
-          message: urlError.message
-        });
-      }
-      
       if (!sql) {
+        const { neon } = require('@neondatabase/serverless');
         sql = neon(databaseUrl);
       }
       
@@ -228,10 +226,18 @@ module.exports = async function handler(req, res) {
         });
       } else {
         console.log('Public access to comments');
-        // 普通用户访问（前台），返回所有留言（包括未审核的），但对联系方式和未审核留言的内容进行隐私保护处理
+        // 普通用户访问（前台），返回分页留言，对联系方式和未审核留言的内容进行隐私保护处理
+        // 优化：直接在数据库查询时进行分页，而不是获取所有数据再分页
+        
+        // 先获取总留言数
+        const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
+        const totalComments = parseInt(countResult[0].count);
+        
+        // 直接查询分页数据
         const commentsResult = await sql`
           SELECT * FROM comments 
-          ORDER BY date DESC
+          ORDER BY date DESC 
+          LIMIT ${limit} OFFSET ${offset}
         `;
         
         // 转换评论格式并进行隐私保护处理
@@ -264,24 +270,15 @@ module.exports = async function handler(req, res) {
           return commentCopy;
         });
         
-        // 获取分页参数
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 8; // 修改为每页显示8条
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
-        
-        // 分页处理
-        const paginatedComments = processedComments.slice(startIndex, endIndex);
-        
         // 计算总页数
-        const totalPages = Math.ceil(processedComments.length / limit);
+        const totalPages = Math.ceil(totalComments / limit);
         
         // 返回分页结果
         return res.status(200).json({
-          comments: paginatedComments,
+          comments: processedComments,
           currentPage: page,
           totalPages,
-          totalComments: processedComments.length
+          totalComments
         });
       }
     } catch (error) {

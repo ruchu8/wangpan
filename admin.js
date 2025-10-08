@@ -74,12 +74,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 定期刷新文件列表
-    setInterval(() => {
-        if (document.getElementById('adminContent').style.display !== 'none') {
-            loadFiles();
+    // 定期刷新文件列表（仅在页面可见且在文件管理标签页时刷新）
+    let filesRefreshInterval;
+    document.addEventListener('visibilitychange', function() {
+        const filesTab = document.getElementById('filesTab');
+        const isActive = filesTab && filesTab.classList.contains('active');
+        
+        if (document.hidden || !isActive) {
+            // 页面隐藏或不在文件管理标签页时清除定时器
+            if (filesRefreshInterval) {
+                clearInterval(filesRefreshInterval);
+                filesRefreshInterval = null;
+            }
+        } else {
+            // 页面显示且在文件管理标签页时重新启动定时器
+            if (!filesRefreshInterval) {
+                filesRefreshInterval = setInterval(() => {
+                    if (document.getElementById('adminContent').style.display !== 'none') {
+                        loadFiles();
+                    }
+                }, 60000); // 每60秒刷新一次
+            }
         }
-    }, 30000); // 每30秒刷新一次
+    });
+    
+    // 初始设置定时器（仅在文件管理标签页激活时）
+    const initialFilesTab = document.querySelector('#adminTabs a[href="#filesTab"]');
+    if (initialFilesTab && initialFilesTab.classList.contains('active')) {
+        filesRefreshInterval = setInterval(() => {
+            if (document.getElementById('adminContent').style.display !== 'none') {
+                loadFiles();
+            }
+        }, 60000); // 每60秒刷新一次
+    }
 });
 
 // 检查认证状态
