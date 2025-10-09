@@ -279,6 +279,7 @@ body {
     background-color: #f8f9fa;
     color: var(--dark-color);
     /* line-height: 1.6; */
+    cursor: url('img/link.cur'), auto;
 }
 
 /* 移动端适配 */
