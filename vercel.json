@@ -30,7 +30,7 @@
       "use": "@vercel/static"
     },
     {
-      "src": "img/ink.cur",
+      "src": "img/link.cur",
       "use": "@vercel/static"
     },
     {
