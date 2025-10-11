@@ -404,7 +404,7 @@ module.exports = async function handler(req, res) {
         return res.status(401).json({ error: 'Invalid token' });
       }
 
-      const { id, approved, reply } = req.body;
+      const { id, approved, reply, content } = req.body;
       
       if (!id) {
         return res.status(400).json({ error: 'Comment ID is required' });
@@ -424,6 +424,16 @@ module.exports = async function handler(req, res) {
           WHERE id = ${id}
         `;
         console.log('✅ Comment approval status updated');
+      }
+      
+      // 更新评论内容（如果提供了新的内容）
+      if (content !== undefined) {
+        await sql`
+          UPDATE comments 
+          SET content = ${content}
+          WHERE id = ${id}
+        `;
+        console.log('✅ Comment content updated');
       }
       
       if (reply !== undefined) {

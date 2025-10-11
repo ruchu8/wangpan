@@ -921,33 +921,33 @@ function renderCommentsPagination() {
     });
 }
 
-// 回复留言
+// 回复留言 (修改为支持编辑用户留言)
 function replyComment(id) {
     const comment = commentsList.find(c => c.id === id);
     if (!comment) return;
     
-    // 创建回复模态框
+    // 创建回复模态框 (增加编辑用户留言功能)
     const modalHtml = `
         <div class="modal fade" id="replyModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">回复留言</h5>
+                        <h5 class="modal-title">回复/编辑留言</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label"><strong>用户留言:</strong></label>
-                            <div class="p-2 bg-light rounded">${comment.content}</div>
+                            <textarea class="form-control" id="editCommentContent" rows="3">${comment.content}</textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="replyContent" class="form-label">回复内容:</label>
+                            <label for="replyContent" class="form-label">管理员回复:</label>
                             <textarea class="form-control" id="replyContent" rows="3">${comment.reply || ''}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" id="saveReplyBtn">保存回复</button>
+                        <button type="button" class="btn btn-primary" id="saveReplyBtn">保存</button>
                     </div>
                 </div>
             </div>
@@ -969,25 +969,33 @@ function replyComment(id) {
     
     // 保存回复事件
     document.getElementById('saveReplyBtn').addEventListener('click', function() {
+        const editedContent = document.getElementById('editCommentContent').value;
         const replyContent = document.getElementById('replyContent').value;
-        saveReply(id, replyContent);
+        saveReply(id, replyContent, editedContent);
         replyModal.hide();
     });
 }
 
-// 保存回复
-async function saveReply(id, replyContent) {
+// 保存回复 (修改为支持编辑用户留言内容)
+async function saveReply(id, replyContent, editedContent = null) {
     try {
+        const requestBody = {
+            id,
+            reply: replyContent
+        };
+        
+        // 如果提供了编辑后的内容，则添加到请求体中
+        if (editedContent !== null) {
+            requestBody.content = editedContent;
+        }
+        
         const response = await fetch('/api/comments', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             },
-            body: JSON.stringify({
-                id,
-                reply: replyContent
-            })
+            body: JSON.stringify(requestBody)
         });
         
         if (response.status === 401) {
@@ -999,10 +1007,10 @@ async function saveReply(id, replyContent) {
             loadComments();
         } else {
             const error = await response.json();
-            alert(error.error || '回复保存失败');
+            alert(error.error || '保存失败');
         }
     } catch (error) {
-        alert('回复保存失败');
+        alert('保存失败');
     }
 }
 

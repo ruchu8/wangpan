@@ -154,7 +154,7 @@ app.post('/api/comments', async (req, res) => {
 });
 
 app.put('/api/comments', async (req, res) => {
-  const { id, approved, reply } = req.body;
+  const { id, approved, reply, content } = req.body;
   
   if (!id) {
     return res.status(400).json({ error: 'Comment ID is required' });
@@ -174,6 +174,11 @@ app.put('/api/comments', async (req, res) => {
   
   if (reply !== undefined) {
     comments[commentIndex].reply = reply;
+  }
+  
+  // 更新评论内容（如果提供了新的内容）
+  if (content !== undefined) {
+    comments[commentIndex].content = content;
   }
   
   const result = await storage.set('comments', comments);
