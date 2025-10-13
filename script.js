@@ -957,7 +957,31 @@ function maskContactInfo(contactInfo) {
 // 获取客户端IP地址
 async function getClientIP() {
     try {
-        // 尝试使用第一种方法 - ip.sb (对中国国内友好)
+        // 尝试使用第一种方法 - ys-d.ysepan.com (您提供的方法)
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+            
+            const response = await fetch('http://ys-d.ysepan.com/wap/nkjup.aspx?qqip=1', {
+                method: 'GET',
+                mode: 'cors',
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+                const ip = await response.text();
+                if (ip && ip.trim()) {
+                    console.log('IP obtained from ys-d.ysepan.com:', ip.trim());
+                    return ip.trim();
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to get IP from ys-d.ysepan.com:', error);
+        }
+        
+        // 尝试使用第二种方法 - ip.sb (对中国国内友好)
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
