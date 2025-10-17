@@ -468,7 +468,9 @@ function editFile(index) {
     if (file.type === 'folder') {
         childrenContainer.style.display = 'block';
         
+        // 按原有顺序添加子文件（保持数据库中的顺序）
         if (file.children && file.children.length > 0) {
+            // 按照数组中的顺序添加子文件（第一个在最上面）
             file.children.forEach((child, childIndex) => {
                 addChildField(child, childIndex);
             });
@@ -527,7 +529,12 @@ function addChildField(child = null, childIndex = null) {
         </div>
     `;
     
-    childrenList.appendChild(childDiv);
+    // 将新添加的子文件插入到列表的最上方
+    if (childrenList.firstChild) {
+        childrenList.insertBefore(childDiv, childrenList.firstChild);
+    } else {
+        childrenList.appendChild(childDiv);
+    }
     
     // 添加删除子文件事件
     childDiv.querySelector('.remove-child').addEventListener('click', function() {
@@ -569,11 +576,12 @@ async function saveFile() {
     // 强制设置为文件夹类型
     const type = 'folder';
     
-    // 收集子文件数据
+    // 收集子文件数据（按显示顺序收集）
     const childrenList = document.getElementById('childrenList');
     const children = [];
     
     if (childrenList && childrenList.children.length > 0) {
+        // 按照DOM中的顺序收集子文件（从上到下）
         Array.from(childrenList.children).forEach(childDiv => {
             const childName = childDiv.querySelector('.child-name').value;
             const childUrl = childDiv.querySelector('.child-url').value;
@@ -746,7 +754,8 @@ async function addFileToFolder(folderIndex, fileName, fileUrl) {
             files[folderIndex].children = [];
         }
         
-        files[folderIndex].children.push(newFile);
+        // 将新文件添加到数组的开头，而不是末尾
+        files[folderIndex].children.unshift(newFile);
         
         // 更新文件夹
         const updateResponse = await fetch('/api/files', {
