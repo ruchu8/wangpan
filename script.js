@@ -120,22 +120,59 @@ function renderFileList() {
     
     fileList.innerHTML = '';
     
+    // 创建预览模态框（如果还不存在）
+    if (!document.getElementById('filePreviewModal')) {
+        const modalHTML = `
+            <div class="modal fade" id="filePreviewModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="filePreviewModalLabel">文件预览</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="textPreviewContent" style="max-height: 70vh; overflow-y: auto; white-space: pre-wrap; font-family: monospace;"></div>
+                            <img id="imagePreviewContent" src="" alt="预览图片" class="img-fluid" style="max-height: 70vh; display: none;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                            <a id="downloadFileBtn" href="#" class="btn btn-primary" download>下载文件</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+    
     function renderItem(item, index, isChild = false) {
         const li = document.createElement('li');
-        li.className = 'list-group-item';
         
-        // 处理分割线类型
-        if (item.type === 'divider') {
-            li.className = 'list-group-item py-1';
-            li.innerHTML = '<div class="divider-line">' + (item.name || '=================') + '</div>';
-            fileList.appendChild(li);
-            return li;
+        // 根据文件类型添加不同的CSS类
+        if (item.type === 'folder') {
+            li.className = 'list-group-item folder-item';
+        } else if (item.type === 'file') {
+            li.className = 'list-group-item file-item';
+        } else {
+            // 处理分割线类型
+            if (item.type === 'divider') {
+                li.className = 'list-group-item py-1';
+                li.innerHTML = '<div class="divider-line">' + (item.name || '=================') + '</div>';
+                fileList.appendChild(li);
+                return li;
+            }
+            li.className = 'list-group-item';
         }
         
         const a = document.createElement('a');
         a.href = item.url || '#';
         a.className = 'file-name';
-        a.target = '_blank';  // 确保链接在新窗口打开
+        // 对于图片和文本文件，不使用新窗口打开，而是显示预览
+        const isImage = item.type === 'file' && /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(item.name);
+        const isText = item.type === 'file' && /\.(txt|log|md|csv)$/i.test(item.name);
+        if (!isImage && !isText) {
+            a.target = '_blank';  // 非图片和非文本文件在新窗口打开
+        }
         
         // 根据文件类型设置图标
         let iconClass = '';
@@ -146,6 +183,9 @@ function renderFileList() {
             const extension = item.name.split('.').pop().toLowerCase();
             switch(extension) {
                 case 'txt':
+                case 'log':
+                case 'md':
+                case 'csv':
                     iconClass = 'bi-file-text';
                     break;
                 case 'jpg':
@@ -153,7 +193,7 @@ function renderFileList() {
                 case 'png':
                 case 'gif':
                 case 'bmp':
-                case 'svg':
+                case 'webp':
                     iconClass = 'bi-file-image';
                     break;
                 case 'pdf':
@@ -279,11 +319,11 @@ function renderFileList() {
             }
             
             // 检查URL是否以特定参数结尾
-            if (fileName && fileName.includes('.jpg?lx=xz')) {
+            if (fileName && fileName.includes('.jpg')) {
                 iconSrc = "img/jpg.png";
-            } else if (fileName && fileName.includes('.gif?lx=xz')) {
+            } else if (fileName && fileName.includes('.gif')) {
                 iconSrc = "img/gif.png";
-            } else if (fileName && fileName.includes('.txt?lx=xz')) {
+            } else if (fileName && fileName.includes('.txt')) {
                 iconSrc = "img/txt.png";
             }
             
@@ -321,7 +361,13 @@ function renderFileList() {
             a.classList.remove('new-item');
         }
         
-        if (item.type === 'folder') {
+        // 为图片和文本文件添加预览功能
+        if (isImage || isText) {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                showFilePreview(item.url, item.name, isImage);
+            });
+        } else if (item.type === 'folder') {
             a.href += '/';
             a.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -383,6 +429,51 @@ function renderFileList() {
         fileList.classList.add('d-none');
         noFiles.classList.remove('d-none');
     }
+}
+
+// 显示文件预览
+function showFilePreview(fileUrl, fileName, isImage) {
+    const modal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+    const textPreviewContent = document.getElementById('textPreviewContent');
+    const imagePreviewContent = document.getElementById('imagePreviewContent');
+    const downloadBtn = document.getElementById('downloadFileBtn');
+    const modalTitle = document.getElementById('filePreviewModalLabel');
+    
+    // 设置下载链接
+    downloadBtn.href = fileUrl;
+    downloadBtn.download = fileName;
+    modalTitle.textContent = fileName;
+    
+    if (isImage) {
+        // 显示图片预览
+        textPreviewContent.style.display = 'none';
+        imagePreviewContent.style.display = 'block';
+        imagePreviewContent.src = fileUrl;
+        imagePreviewContent.alt = fileName;
+    } else {
+        // 显示文本内容
+        textPreviewContent.style.display = 'block';
+        imagePreviewContent.style.display = 'none';
+        textPreviewContent.textContent = '加载中...';
+        
+        // 获取文本文件内容
+        fetch(fileUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络响应错误');
+                }
+                return response.text();
+            })
+            .then(text => {
+                textPreviewContent.textContent = text;
+            })
+            .catch(error => {
+                textPreviewContent.textContent = '无法加载文件内容: ' + error.message;
+            });
+    }
+    
+    // 显示模态框
+    modal.show();
 }
 
 // 高亮显示搜索关键词
@@ -963,7 +1054,7 @@ function maskContactInfo(contactInfo) {
         return contactInfo; // 太短无法隐藏
     }
     
-    // QQ/微信隐藏规则：显示前3位和后3位，5位数显示前2位和后2位
+    // QQ/微信隐藏规则：显示前3位和后3位，5位数显示前2后2位
     if (contactInfo.length === 5) {
         // 5位数显示前2位和后2位
         const start = contactInfo.substring(0, 3);

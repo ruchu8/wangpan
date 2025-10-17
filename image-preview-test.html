@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件预览功能测试</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">文件预览功能测试</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">测试说明</h5>
+                <p class="card-text">
+                    点击下面的文件链接，应该会弹出一个模态框显示文件预览，而不是直接下载或跳转到新页面。
+                </p>
+            </div>
+        </div>
+        
+        <div class="list-group">
+            <a href="data/祖玛阁升级版 .jpg" class="list-group-item list-group-item-action" id="testImageLink">
+                <i class="bi bi-file-image me-2"></i> 祖玛阁升级版.jpg
+            </a>
+            <a href="data/石墓阵升级版.jpg" class="list-group-item list-group-item-action">
+                <i class="bi bi-file-image me-2"></i> 石墓阵升级版.jpg
+            </a>
+            <a href="data/牛7预览图.png" class="list-group-item list-group-item-action">
+                <i class="bi bi-file-image me-2"></i> 牛7预览图.png
+            </a>
+            <a href="data/取消补丁 恢复原始原文件的方法.txt" class="list-group-item list-group-item-action">
+                <i class="bi bi-file-text me-2"></i> 取消补丁 恢复原始原文件的方法.txt
+            </a>
+            <a href="data/怪物对应所在文件说明.txt" class="list-group-item list-group-item-action">
+                <i class="bi bi-file-text me-2"></i> 怪物对应所在文件说明.txt
+            </a>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 为文件链接添加预览功能
+        document.querySelectorAll('.list-group-item-action').forEach(link => {
+            // 检查是否是图片或文本文件
+            if (/\.(jpg|jpeg|png|gif|bmp|webp|txt|log|md|csv)$/i.test(link.textContent)) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 获取文件URL和文件名
+                    const fileUrl = this.href;
+                    const fileName = this.textContent.trim().replace(/^\s*\S+\s*/, ''); // 去除图标和空格
+                    const isImage = /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(fileName);
+                    
+                    // 显示文件预览
+                    showFilePreview(fileUrl, fileName, isImage);
+                });
+            }
+        });
+        
+        // 显示文件预览函数
+        function showFilePreview(fileUrl, fileName, isImage) {
+            // 创建模态框HTML
+            const modalHTML = `
+                <div class="modal fade" id="filePreviewModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">${fileName}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="textPreviewContent" style="max-height: 70vh; overflow-y: auto; white-space: pre-wrap; font-family: monospace; display: none;"></div>
+                                <img id="imagePreviewContent" src="" alt="${fileName}" class="img-fluid" style="max-height: 70vh; display: none;">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                                <a href="${fileUrl}" class="btn btn-primary" download="${fileName}">下载文件</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 移除已存在的模态框
+            const existingModal = document.getElementById('filePreviewModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // 添加新模态框到页面
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            const textPreviewContent = document.getElementById('textPreviewContent');
+            const imagePreviewContent = document.getElementById('imagePreviewContent');
+            
+            if (isImage) {
+                // 显示图片预览
+                textPreviewContent.style.display = 'none';
+                imagePreviewContent.style.display = 'block';
+                imagePreviewContent.src = fileUrl;
+            } else {
+                // 显示文本内容
+                textPreviewContent.style.display = 'block';
+                imagePreviewContent.style.display = 'none';
+                textPreviewContent.textContent = '加载中...';
+                
+                // 获取文本文件内容
+                fetch(fileUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应错误');
+                        }
+                        return response.text();
+                    })
+                    .then(text => {
+                        textPreviewContent.textContent = text;
+                    })
+                    .catch(error => {
+                        textPreviewContent.textContent = '无法加载文件内容: ' + error.message;
+                    });
+            }
+            
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+            modal.show();
+            
+            // 模态框关闭后移除它
+            document.getElementById('filePreviewModal').addEventListener('hidden.bs.modal', function () {
+                this.remove();
+            });
+        }
+    </script>
+</body>
+</html>

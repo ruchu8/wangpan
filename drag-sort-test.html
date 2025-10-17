@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件夹拖拽排序测试</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.css">
+    <style>
+        .draggable-item {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: move;
+        }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+        
+        .draggable-item.drag-over {
+            background-color: #e9f7fe;
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .drag-handle {
+            color: #6c757d;
+            cursor: move;
+        }
+        
+        .drag-handle:hover {
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">文件夹拖拽排序测试</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">测试说明</h5>
+                <p class="card-text">
+                    拖拽文件夹来重新排列它们的位置。拖拽时会显示视觉反馈效果。
+                </p>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="fileList">
+                    <tr class="draggable-item" draggable="true" data-index="0">
+                        <td><i class="bi bi-grip-vertical drag-handle me-2"></i>文件夹1</td>
+                        <td>文件夹</td>
+                        <td>第一个文件夹</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr class="draggable-item" draggable="true" data-index="1">
+                        <td><i class="bi bi-grip-vertical drag-handle me-2"></i>文件夹2</td>
+                        <td>文件夹</td>
+                        <td>第二个文件夹</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr class="draggable-item" draggable="true" data-index="2">
+                        <td><i class="bi bi-grip-vertical drag-handle me-2"></i>文件夹3</td>
+                        <td>文件夹</td>
+                        <td>第三个文件夹</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr class="draggable-item" draggable="true" data-index="3">
+                        <td><i class="bi bi-grip-vertical drag-handle me-2"></i>文件夹4</td>
+                        <td>文件夹</td>
+                        <td>第四个文件夹</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary">编辑</button>
+                            <button class="btn btn-sm btn-danger">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 添加拖拽和放置监听器
+        function addDragAndDropListeners() {
+            const fileListRows = document.querySelectorAll('.draggable-item');
+            let draggedItem = null;
+            
+            fileListRows.forEach(row => {
+                // 拖拽开始
+                row.addEventListener('dragstart', function() {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.classList.add('dragging');
+                    }, 0);
+                });
+                
+                // 拖拽结束
+                row.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                });
+                
+                // 拖拽经过
+                row.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('drag-over');
+                });
+                
+                // 拖拽离开
+                row.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+                
+                // 拖拽放置
+                row.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedItem !== this) {
+                        const tbody = this.parentNode;
+                        const draggedIndex = parseInt(draggedItem.getAttribute('data-index'));
+                        const targetIndex = parseInt(this.getAttribute('data-index'));
+                        
+                        console.log(`移动项目从索引 ${draggedIndex} 到索引 ${targetIndex}`);
+                        
+                        // 在这里实现实际的重新排序逻辑
+                        if (draggedIndex < targetIndex) {
+                            tbody.insertBefore(draggedItem, this.nextSibling);
+                        } else {
+                            tbody.insertBefore(draggedItem, this);
+                        }
+                        
+                        // 更新所有行的索引
+                        const rows = tbody.querySelectorAll('.draggable-item');
+                        rows.forEach((row, index) => {
+                            row.setAttribute('data-index', index);
+                        });
+                    }
+                });
+            });
+        }
+        
+        // 页面加载完成后初始化拖拽功能
+        document.addEventListener('DOMContentLoaded', function() {
+            addDragAndDropListeners();
+        });
+    </script>
+</body>
+</html>

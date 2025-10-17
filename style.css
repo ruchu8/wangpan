@@ -642,23 +642,51 @@ body {
     padding: 0.75rem 1rem;
     min-height: 2.5rem;
     line-height: 1.4;
+    /* 默认背景色 */
+    background-color: #ffffff;
 }
 
 .list-group-item:first-child {
     border-top: none;
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
 }
 
 .list-group-item:last-child {
     border-bottom: none;
-    border-bottom-left-radius: 0.375rem;
-    border-bottom-right-radius: 0.375rem;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
 }
 
 .list-group-item:hover {
-    background-color: #f1f8ff;
+    background-color: #f8f9fa;
     transform: translateX(5px);
+}
+
+/* 文件夹样式 */
+.list-group-item.folder-item {
+    /* 文件夹不需要特殊背景色，保持默认 */
+    background-color: #ffffff;
+    /* 移除左侧边框 */
+    border-left: none;
+}
+
+.list-group-item.folder-item:hover {
+    /* 文件夹悬停时使用浅灰色背景 */
+    background-color: #f8f9fa;
+}
+
+/* 文件样式 */
+.list-group-item.file-item {
+    /* 文件背景色 */
+    background-color: #f1f9ff;
+    /* #e3f2fd #f1f9ff */
+    /* 移除左侧边框 */
+    border-left: none;
+}
+
+.list-group-item.file-item:hover {
+    background-color: #bbdefb;
 }
 
 .file-name {
@@ -668,7 +696,21 @@ body {
     color: var(--dark-color);
     font-weight: 500;
     width: 100%;
-    font-size: 1.5rem;
+    font-size: 1rem; /* 默认字体大小 */
+}
+
+/* 文件夹名称样式 */
+.folder-item .file-name {
+    font-size: 1.5rem; /* 文件夹字体再大一点点 */
+    font-weight: 500; /* 保持默认字重 */
+    color: var(--dark-color); /* 保持默认字体颜色 */
+}
+
+/* 文件名称样式 */
+.file-item .file-name {
+    font-size: 1.3rem; /* 文件字体大小调整 */
+    font-weight: 400;
+    color: #34353d;
 }
 
 .file-name i {
@@ -689,7 +731,6 @@ body {
     border-radius: 0.25rem;
     white-space: nowrap;
 }
-
 
 .file-date {
     margin-left: 0.5rem;

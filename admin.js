@@ -107,7 +107,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 60000); // 每60秒刷新一次
     }
+    
+    // 添加拖拽样式
+    addDragAndDropStyles();
 });
+
+// 添加拖拽和放置样式
+function addDragAndDropStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .draggable-file {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .draggable-file.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+        
+        .draggable-file.drag-over {
+            background-color: #e9f7fe;
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .drag-handle {
+            color: #6c757d;
+            cursor: move;
+        }
+        
+        .drag-handle:hover {
+            color: #0d6efd;
+        }
+    `;
+    document.head.appendChild(style);
+}
 
 // 检查认证状态
 function checkAuth() {
@@ -206,6 +240,10 @@ function renderFilesList() {
     
     filesList.forEach((file, index) => {
         const tr = document.createElement('tr');
+        // 添加拖拽属性
+        tr.setAttribute('draggable', 'true');
+        tr.setAttribute('data-index', index);
+        tr.classList.add('draggable-file');
         
         // 为文件夹添加"添加文件"按钮
         let addFileButton = '';
@@ -214,7 +252,7 @@ function renderFilesList() {
         }
         
         tr.innerHTML = `
-            <td>${file.name}</td>
+            <td><i class="bi bi-grip-vertical drag-handle me-2" style="cursor: move;"></i>${file.name}</td>
             <td>${file.type === 'folder' ? '文件夹' : '文件'}</td>
             <td>${file.url || '-'}</td>
             <td>${file.note || '-'}</td>
@@ -227,6 +265,9 @@ function renderFilesList() {
         
         tbody.appendChild(tr);
     });
+    
+    // 添加拖拽事件
+    addDragAndDropListeners();
     
     // 添加编辑、添加文件和删除事件
     document.querySelectorAll('.edit-file').forEach(btn => {
@@ -247,6 +288,104 @@ function renderFilesList() {
             deleteFile(parseInt(this.getAttribute('data-index')));
         });
     });
+}
+
+// 添加拖拽和放置监听器
+function addDragAndDropListeners() {
+    const fileListRows = document.querySelectorAll('.draggable-file');
+    let draggedItem = null;
+    
+    fileListRows.forEach(row => {
+        // 拖拽开始
+        row.addEventListener('dragstart', function() {
+            draggedItem = this;
+            setTimeout(() => {
+                this.classList.add('dragging');
+            }, 0);
+        });
+        
+        // 拖拽结束
+        row.addEventListener('dragend', function() {
+            this.classList.remove('dragging');
+            draggedItem = null;
+        });
+        
+        // 拖拽经过
+        row.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        });
+        
+        // 拖拽离开
+        row.addEventListener('dragleave', function() {
+            this.classList.remove('drag-over');
+        });
+        
+        // 拖拽放置
+        row.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            
+            if (draggedItem !== this) {
+                const draggedIndex = parseInt(draggedItem.getAttribute('data-index'));
+                const targetIndex = parseInt(this.getAttribute('data-index'));
+                
+                // 重新排列文件列表
+                moveFile(draggedIndex, targetIndex);
+            }
+        });
+    });
+}
+
+// 移动文件位置
+async function moveFile(fromIndex, toIndex) {
+    if (fromIndex === toIndex) return;
+    
+    try {
+        // 获取当前文件列表
+        const response = await fetch('/api/files', {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('无法获取文件列表');
+        }
+        
+        const files = await response.json();
+        
+        // 重新排列文件
+        const movedFile = files.splice(fromIndex, 1)[0];
+        files.splice(toIndex, 0, movedFile);
+        
+        // 逐个更新文件索引
+        for (let i = 0; i < files.length; i++) {
+            const updateResponse = await fetch('/api/files', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    index: i,
+                    file: files[i]
+                })
+            });
+            
+            if (!updateResponse.ok) {
+                throw new Error(`更新文件索引 ${i} 失败`);
+            }
+        }
+        
+        // 重新加载文件列表
+        loadFiles();
+        // 同时刷新前台页面的文件列表
+        refreshFrontendFileList();
+    } catch (error) {
+        console.error('Error moving file:', error);
+        alert('移动文件失败: ' + error.message);
+    }
 }
 
 // 显示添加文件到文件夹的模态框
@@ -497,7 +636,7 @@ async function saveFile() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${authToken}`
                 },
-                body: JSON.stringify(file) // 修复：直接发送file对象，而不是包装在{file: file}中
+                body: JSON.stringify({file: file}) // 修复：正确包装file对象
             });
         } else {
             // 更新现有文件夹
