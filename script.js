@@ -855,18 +855,6 @@ function renderCommentsStats() {
     
     totalElement.textContent = totalComments;
     
-    // 计算已回复和待回复的数量（基于当前页面数据）
-    let repliedCount = 0;
-    let pendingCount = 0;
-    
-    comments.forEach(comment => {
-        if (comment.reply && comment.reply.trim() !== '') {
-            repliedCount++;
-        } else {
-            pendingCount++;
-        }
-    });
-    
     // 更新统计信息
     if (repliedElement) {
         // 显示所有留言中已回复的总数，而不是当前页面的回复数量
@@ -875,12 +863,32 @@ function renderCommentsStats() {
             repliedElement.textContent = count;
         }).catch(error => {
             console.error('Error fetching replied comments count:', error);
-            repliedElement.textContent = repliedCount; // 回退到当前页面的计算
+            // 如果API调用失败，回退到当前页面的计算
+            let repliedCount = 0;
+            comments.forEach(comment => {
+                if (comment.reply && comment.reply.trim() !== '') {
+                    repliedCount++;
+                }
+            });
+            repliedElement.textContent = repliedCount;
         });
     }
     
+    // 获取待回复的全局统计数据
     if (pendingElement) {
-        pendingElement.textContent = pendingCount;
+        fetchPendingCommentsCount().then(count => {
+            pendingElement.textContent = count;
+        }).catch(error => {
+            console.error('Error fetching pending comments count:', error);
+            // 如果API调用失败，回退到当前页面的计算
+            let pendingCount = 0;
+            comments.forEach(comment => {
+                if (!comment.reply || comment.reply.trim() === '') {
+                    pendingCount++;
+                }
+            });
+            pendingElement.textContent = pendingCount;
+        });
     }
 }
 
@@ -896,6 +904,22 @@ async function fetchRepliedCommentsCount() {
         }
     } catch (error) {
         console.error('Error fetching replied comments count:', error);
+        throw error;
+    }
+}
+
+// 获取待回复留言的总数
+async function fetchPendingCommentsCount() {
+    try {
+        const response = await fetch('/api/comments?action=pending-count');
+        if (response.ok) {
+            const data = await response.json();
+            return data.count;
+        } else {
+            throw new Error('Failed to fetch pending comments count');
+        }
+    } catch (error) {
+        console.error('Error fetching pending comments count:', error);
         throw error;
     }
 }

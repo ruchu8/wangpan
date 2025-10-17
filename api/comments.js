@@ -156,8 +156,11 @@ module.exports = async function handler(req, res) {
 
   // Handle different HTTP methods
   if (req.method === 'GET') {
+    console.log('GET request received with query:', req.query);
+    
     // 检查是否是获取已回复留言总数的特殊请求
     if (req.query.action === 'replied-count') {
+      console.log('Handling replied-count request');
       try {
         // 确保数据库已初始化（只在第一次请求时初始化）
         const isDbReady = await ensureDatabaseInitialized();
@@ -182,94 +185,84 @@ module.exports = async function handler(req, res) {
       }
     }
     
-    try {
-      // 确保数据库已初始化（只在第一次请求时初始化）
-      const isDbReady = await ensureDatabaseInitialized();
-      if (!isDbReady) {
-        return res.status(500).json({ error: 'Database initialization failed' });
-      }
-      
-      // 确保数据库连接已初始化
-      if (!sql) {
-        const { neon } = require('@neondatabase/serverless');
-        sql = neon(databaseUrl);
-      }
-      
-      // 获取分页参数
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 8; // 修改为每页显示8条
-      const offset = (page - 1) * limit;
-      
-      // 检查是否有认证头，如果有且是管理员，则返回所有留言（包括未审核的）
-      const authHeader = req.headers.authorization;
-      let isAdmin = false;
-      let adminToken = null;
-      
-      if (authHeader && authHeader.startsWith('Bearer ')) {
-        const token = authHeader.split(' ')[1];
-        // 验证令牌是否有效
-        const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
-        console.log('Admin token verification result:', adminTokenResult.length);
-        if (adminTokenResult.length > 0) {
-          isAdmin = true;
-          adminToken = token;
+    // 检查是否是获取待回复留言总数的特殊请求
+    else if (req.query.action === 'pending-count') {
+      console.log('Handling pending-count request');
+      try {
+        // 确保数据库已初始化（只在第一次请求时初始化）
+        const isDbReady = await ensureDatabaseInitialized();
+        if (!isDbReady) {
+          return res.status(500).json({ error: 'Database initialization failed' });
         }
+        
+        // 确保数据库连接已初始化
+        if (!sql) {
+          const { neon } = require('@neondatabase/serverless');
+          sql = neon(databaseUrl);
+        }
+        
+        // 获取待回复留言的总数（没有回复的留言）
+        const countResult = await sql`SELECT COUNT(*) as count FROM comments WHERE reply IS NULL OR reply = ''`;
+        const pendingCount = parseInt(countResult[0].count);
+        
+        return res.status(200).json({ count: pendingCount });
+      } catch (error) {
+        console.error('❌ Failed to fetch pending comments count:', error);
+        return res.status(500).json({ error: 'Failed to fetch pending comments count: ' + error.message });
       }
-      
-      if (isAdmin && adminToken) {
-        console.log('Admin access to comments');
-        // 管理员访问，返回所有留言，包括未审核的，并显示完整联系方式和内容
-        const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
-        const totalComments = parseInt(countResult[0].count);
+    }
+    
+    // 处理普通留言获取请求
+    else {
+      console.log('Handling regular comments request');
+      try {
+        // 确保数据库已初始化（只在第一次请求时初始化）
+        const isDbReady = await ensureDatabaseInitialized();
+        if (!isDbReady) {
+          return res.status(500).json({ error: 'Database initialization failed' });
+        }
         
-        const commentsResult = await sql`
-          SELECT * FROM comments 
-          ORDER BY date DESC 
-          LIMIT ${limit} OFFSET ${offset}
-        `;
+        // 确保数据库连接已初始化
+        if (!sql) {
+          const { neon } = require('@neondatabase/serverless');
+          sql = neon(databaseUrl);
+        }
         
-        // 转换评论格式
-        const comments = commentsResult.map(row => ({
-          id: row.id,
-          name: row.name,
-          content: row.content,
-          date: row.date,
-          approved: row.approved,
-          ip: row.ip || '未知',
-          reply: row.reply,
-          reply_date: row.reply_date
-        }));
+        // 获取分页参数
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 8; // 修改为每页显示8条
+        const offset = (page - 1) * limit;
         
-        // 计算总页数
-        const totalPages = Math.ceil(totalComments / limit);
+        // 检查是否有认证头，如果有且是管理员，则返回所有留言（包括未审核的）
+        const authHeader = req.headers.authorization;
+        let isAdmin = false;
+        let adminToken = null;
         
-        // 返回分页结果
-        return res.status(200).json({
-          comments,
-          currentPage: page,
-          totalPages,
-          totalComments
-        });
-      } else {
-        console.log('Public access to comments');
-        // 普通用户访问（前台），返回分页留言，对联系方式和未审核留言的内容进行隐私保护处理
-        // 优化：直接在数据库查询时进行分页，而不是获取所有数据再分页
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          const token = authHeader.split(' ')[1];
+          // 验证令牌是否有效
+          const adminTokenResult = await sql`SELECT * FROM admin_tokens WHERE token = ${token}`;
+          console.log('Admin token verification result:', adminTokenResult.length);
+          if (adminTokenResult.length > 0) {
+            isAdmin = true;
+            adminToken = token;
+          }
+        }
         
-        // 先获取总留言数
-        const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
-        const totalComments = parseInt(countResult[0].count);
-        
-        // 直接查询分页数据
-        const commentsResult = await sql`
-          SELECT * FROM comments 
-          ORDER BY date DESC 
-          LIMIT ${limit} OFFSET ${offset}
-        `;
-        
-        // 转换评论格式并进行隐私保护处理
-        const processedComments = commentsResult.map(row => {
-          // 创建评论副本以避免修改原始数据
-          const commentCopy = {
+        if (isAdmin && adminToken) {
+          console.log('Admin access to comments');
+          // 管理员访问，返回所有留言，包括未审核的，并显示完整联系方式和内容
+          const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
+          const totalComments = parseInt(countResult[0].count);
+          
+          const commentsResult = await sql`
+            SELECT * FROM comments 
+            ORDER BY date DESC 
+            LIMIT ${limit} OFFSET ${offset}
+          `;
+          
+          // 转换评论格式
+          const comments = commentsResult.map(row => ({
             id: row.id,
             name: row.name,
             content: row.content,
@@ -278,38 +271,79 @@ module.exports = async function handler(req, res) {
             ip: row.ip || '未知',
             reply: row.reply,
             reply_date: row.reply_date
-          };
+          }));
           
-          // 对联系方式进行隐私保护处理
-          if (commentCopy.name && commentCopy.name.includes(':')) {
-            const [contactType, contactInfo] = commentCopy.name.split(':', 2);
-            // 对联系方式进行部分隐藏处理
-            const maskedContactInfo = maskContactInfo(contactInfo);
-            commentCopy.name = `${contactType}: ${maskedContactInfo}`;
-          }
+          // 计算总页数
+          const totalPages = Math.ceil(totalComments / limit);
           
-          // 对未审核留言的内容进行隐藏处理
-          if (!commentCopy.approved) {
-            commentCopy.content = "此留言不公开，管理员回复后才能公开留言";
-          }
+          // 返回分页结果
+          return res.status(200).json({
+            comments,
+            currentPage: page,
+            totalPages,
+            totalComments
+          });
+        } else {
+          console.log('Public access to comments');
+          // 普通用户访问（前台），返回分页留言，对联系方式和未审核留言的内容进行隐私保护处理
+          // 优化：直接在数据库查询时进行分页，而不是获取所有数据再分页
           
-          return commentCopy;
-        });
-        
-        // 计算总页数
-        const totalPages = Math.ceil(totalComments / limit);
-        
-        // 返回分页结果
-        return res.status(200).json({
-          comments: processedComments,
-          currentPage: page,
-          totalPages,
-          totalComments
-        });
+          // 先获取总留言数
+          const countResult = await sql`SELECT COUNT(*) as count FROM comments`;
+          const totalComments = parseInt(countResult[0].count);
+          
+          // 直接查询分页数据
+          const commentsResult = await sql`
+            SELECT * FROM comments 
+            ORDER BY date DESC 
+            LIMIT ${limit} OFFSET ${offset}
+          `;
+          
+          // 转换评论格式并进行隐私保护处理
+          const processedComments = commentsResult.map(row => {
+            // 创建评论副本以避免修改原始数据
+            const commentCopy = {
+              id: row.id,
+              name: row.name,
+              content: row.content,
+              date: row.date,
+              approved: row.approved,
+              ip: row.ip || '未知',
+              reply: row.reply,
+              reply_date: row.reply_date
+            };
+            
+            // 对联系方式进行隐私保护处理
+            if (commentCopy.name && commentCopy.name.includes(':')) {
+              const [contactType, contactInfo] = commentCopy.name.split(':', 2);
+              // 对联系方式进行部分隐藏处理
+              const maskedContactInfo = maskContactInfo(contactInfo);
+              commentCopy.name = `${contactType}: ${maskedContactInfo}`;
+            }
+            
+            // 对未审核留言的内容进行隐藏处理
+            if (!commentCopy.approved) {
+              commentCopy.content = "此留言不公开，管理员回复后才能公开留言";
+            }
+            
+            return commentCopy;
+          });
+          
+          // 计算总页数
+          const totalPages = Math.ceil(totalComments / limit);
+          
+          // 返回分页结果
+          return res.status(200).json({
+            comments: processedComments,
+            currentPage: page,
+            totalPages,
+            totalComments
+          });
+        }
+      } catch (error) {
+        console.error('❌ Failed to fetch comments:', error);
+        return res.status(500).json({ error: 'Failed to fetch comments: ' + error.message });
       }
-    } catch (error) {
-      console.error('❌ Failed to fetch comments:', error);
-      return res.status(500).json({ error: 'Failed to fetch comments: ' + error.message });
     }
   } else if (req.method === 'POST') {
     try {

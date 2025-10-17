@@ -38,6 +38,27 @@ app.get('/api/comments', async (req, res) => {
     }
   }
   
+  // 检查是否是获取待回复留言总数的特殊请求
+  else if (req.query.action === 'pending-count') {
+    let client;
+    try {
+      client = await storage.pool.connect();
+      
+      // 获取待回复留言的总数（没有回复的留言）
+      const countResult = await client.query('SELECT COUNT(*) as count FROM comments WHERE reply IS NULL OR reply = \'\'');
+      const pendingCount = parseInt(countResult.rows[0].count);
+      
+      return res.json({ count: pendingCount });
+    } catch (error) {
+      console.error('Error fetching pending comments count:', error);
+      res.status(500).json({ error: 'Failed to fetch pending comments count: ' + error.message });
+    } finally {
+      if (client) {
+        client.release();
+      }
+    }
+  }
+  
   let client;
   try {
     client = await storage.pool.connect();
