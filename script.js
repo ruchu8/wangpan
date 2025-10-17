@@ -1,7 +1,7 @@
 // 全局变量
 let files = [];
 let comments = [];
-let expandedFolderIndex = -1; // 记录当前展开的文件夹索引
+let expandedFolderIndices = []; // 改为数组，记录所有展开的文件夹索引
 let currentPage = 1; // 当前页码
 let totalPages = 1; // 总页数
 let totalComments = 0; // 总留言数
@@ -325,6 +325,8 @@ function renderFileList() {
                 iconSrc = "img/gif.png";
             } else if (fileName && fileName.includes('.txt')) {
                 iconSrc = "img/txt.png";
+            }else if (fileName && fileName.includes('.png')) {
+                iconSrc = "img/png.png";
             }
             
             displayContent = `<img src="${iconSrc}" alt="文件图标" style="width: 16px; height: 16px; margin-right: 5px; vertical-align: middle;"> ${displayName}`;
@@ -371,15 +373,21 @@ function renderFileList() {
             a.href += '/';
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                // 实现互斥展开：点击当前展开的文件夹则关闭，点击其他文件夹则展开该文件夹并关闭其他文件夹
-                if (expandedFolderIndex === index) {
-                    // 点击当前展开的文件夹，关闭它
-                    expandedFolderIndex = -1;
+                // 修改为：允许多个文件夹同时展开，只在点击已展开的文件夹时关闭它
+                const indexInArray = expandedFolderIndices.indexOf(index);
+                if (indexInArray !== -1) {
+                    // 点击已展开的文件夹，从数组中移除（关闭它）
+                    expandedFolderIndices.splice(indexInArray, 1);
                 } else {
-                    // 点击其他文件夹，展开它并关闭之前展开的文件夹
-                    expandedFolderIndex = index;
+                    // 点击未展开的文件夹，添加到数组中（展开它）
+                    expandedFolderIndices.push(index);
                 }
                 renderFileList();
+                
+                // 将被点击的文件夹滚动到视图顶部
+                setTimeout(() => {
+                    li.scrollIntoView({block: 'start', behavior: 'smooth'});
+                }, 100);
             });
         }
         li.appendChild(a);
@@ -394,7 +402,7 @@ function renderFileList() {
         // 只有当前文件夹是展开状态时才显示子文件
         // 在搜索模式下，如果文件夹被标记为expanded，则展开它
         const shouldExpand = item.type === 'folder' && 
-                            ((expandedFolderIndex === index) || 
+                            ((expandedFolderIndices.includes(index)) || 
                              (item.expanded === true));
                              
         if (shouldExpand && item.children) {
@@ -541,7 +549,7 @@ function searchFiles() {
     }
     
     // 重置展开状态
-    expandedFolderIndex = -1;
+    expandedFolderIndices = []; // 改为清空数组
     
     // 重新渲染文件列表
     renderFileList();

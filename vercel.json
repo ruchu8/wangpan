@@ -22,15 +22,7 @@
       "use": "@vercel/static"
     },
     {
-      "src": "img/*.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "img/*.gif",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "img/link.cur",
+      "src": "img/**/*",  // 合并所有 img 规则：匹配 img 目录下所有文件（包括子目录、所有格式）
       "use": "@vercel/static"
     },
     {
@@ -38,7 +30,7 @@
       "use": "@vercel/static"
     },
     {
-      "src": "img/(.*)",
+      "src": "data/**/*",  // data 目录规则（保持不变）
       "use": "@vercel/static"
     }
   ],
