@@ -17,6 +17,27 @@ app.use(express.static('.'));
 
 // API 路由
 app.get('/api/comments', async (req, res) => {
+  // 检查是否是获取已回复留言总数的特殊请求
+  if (req.query.action === 'replied-count') {
+    let client;
+    try {
+      client = await storage.pool.connect();
+      
+      // 获取已回复留言的总数
+      const countResult = await client.query('SELECT COUNT(*) as count FROM comments WHERE reply IS NOT NULL AND reply != \'\'');
+      const repliedCount = parseInt(countResult.rows[0].count);
+      
+      return res.json({ count: repliedCount });
+    } catch (error) {
+      console.error('Error fetching replied comments count:', error);
+      res.status(500).json({ error: 'Failed to fetch replied comments count: ' + error.message });
+    } finally {
+      if (client) {
+        client.release();
+      }
+    }
+  }
+  
   let client;
   try {
     client = await storage.pool.connect();
@@ -382,5 +403,5 @@ app.delete('/api/files', async (req, res) => {
 
 // 启动服务器
 app.listen(PORT, () => {
-  // 服务器已启动
+  console.log(`服务器正在运行，端口: ${PORT}`);
 });

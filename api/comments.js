@@ -156,6 +156,32 @@ module.exports = async function handler(req, res) {
 
   // Handle different HTTP methods
   if (req.method === 'GET') {
+    // 检查是否是获取已回复留言总数的特殊请求
+    if (req.query.action === 'replied-count') {
+      try {
+        // 确保数据库已初始化（只在第一次请求时初始化）
+        const isDbReady = await ensureDatabaseInitialized();
+        if (!isDbReady) {
+          return res.status(500).json({ error: 'Database initialization failed' });
+        }
+        
+        // 确保数据库连接已初始化
+        if (!sql) {
+          const { neon } = require('@neondatabase/serverless');
+          sql = neon(databaseUrl);
+        }
+        
+        // 获取已回复留言的总数
+        const countResult = await sql`SELECT COUNT(*) as count FROM comments WHERE reply IS NOT NULL AND reply != ''`;
+        const repliedCount = parseInt(countResult[0].count);
+        
+        return res.status(200).json({ count: repliedCount });
+      } catch (error) {
+        console.error('❌ Failed to fetch replied comments count:', error);
+        return res.status(500).json({ error: 'Failed to fetch replied comments count: ' + error.message });
+      }
+    }
+    
     try {
       // 确保数据库已初始化（只在第一次请求时初始化）
       const isDbReady = await ensureDatabaseInitialized();

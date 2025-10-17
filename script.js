@@ -756,7 +756,7 @@ function renderCommentsStats() {
     
     totalElement.textContent = totalComments;
     
-    // 计算已回复和待回复的数量
+    // 计算已回复和待回复的数量（基于当前页面数据）
     let repliedCount = 0;
     let pendingCount = 0;
     
@@ -770,11 +770,34 @@ function renderCommentsStats() {
     
     // 更新统计信息
     if (repliedElement) {
-        repliedElement.textContent = repliedCount;
+        // 显示所有留言中已回复的总数，而不是当前页面的回复数量
+        // 通过API获取真实的已回复总数
+        fetchRepliedCommentsCount().then(count => {
+            repliedElement.textContent = count;
+        }).catch(error => {
+            console.error('Error fetching replied comments count:', error);
+            repliedElement.textContent = repliedCount; // 回退到当前页面的计算
+        });
     }
     
     if (pendingElement) {
         pendingElement.textContent = pendingCount;
+    }
+}
+
+// 获取已回复留言的总数
+async function fetchRepliedCommentsCount() {
+    try {
+        const response = await fetch('/api/comments?action=replied-count');
+        if (response.ok) {
+            const data = await response.json();
+            return data.count;
+        } else {
+            throw new Error('Failed to fetch replied comments count');
+        }
+    } catch (error) {
+        console.error('Error fetching replied comments count:', error);
+        throw error;
     }
 }
 

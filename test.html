@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试页面</title>
+</head>
+<body>
+    <h1>测试已回复留言数量获取</h1>
+    <button id="testBtn">测试获取已回复留言数量</button>
+    <p>结果: <span id="result">未测试</span></p>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async function() {
+            try {
+                const response = await fetch('/api/comments?action=replied-count');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('result').textContent = '已回复留言数量: ' + data.count;
+                } else {
+                    document.getElementById('result').textContent = '请求失败: ' + response.status;
+                }
+            } catch (error) {
+                document.getElementById('result').textContent = '错误: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
