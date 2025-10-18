@@ -153,14 +153,17 @@ function renderFileList() {
             li.className = 'list-group-item folder-item';
         } else if (item.type === 'file') {
             li.className = 'list-group-item file-item';
-        } else {
+        } else if (item.type === 'divider') {
             // 处理分割线类型
-            if (item.type === 'divider') {
-                li.className = 'list-group-item py-1';
-                li.innerHTML = '<div class="divider-line">' + (item.name || '=================') + '</div>';
-                fileList.appendChild(li);
-                return li;
-            }
+            li.className = 'list-group-item py-1';
+            
+            // 构建分割线显示内容，不显示创建时间
+            let dividerContent = '<div class="divider-line">' + (item.name || '=================') + '</div>';
+            
+            li.innerHTML = dividerContent;
+            fileList.appendChild(li);
+            return li;
+        } else {
             li.className = 'list-group-item';
         }
         
@@ -337,7 +340,7 @@ function renderFileList() {
             displayContent += ` <span class="file-note">${item.note}</span>`;
         }
         
-        // 只有文件才显示创建时间
+        // 只有文件才显示创建时间（分割线不显示时间）
         if (item.type === 'file') {
             // 检查 date 或 createdAt 字段
             let displayDate = item.date || item.createdAt;
@@ -1094,7 +1097,7 @@ function maskContactInfo(contactInfo) {
         return `${start}**${end}`;
     } else {
         // 其他长度显示前3位和后3位
-        const start = contactInfo.substring(0, 3);
+        const start = contactInfo.substring(0, 4);
         const end = contactInfo.substring(contactInfo.length - 5);
         return `${start}**${end}`;
     }
@@ -1400,20 +1403,25 @@ function setupSmoothScroll() {
     });
 }
 
+
+
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM content loaded');
     
-    // 首先获取文件列表
-    fetchFiles().then(() => {
-        console.log('Files loaded');
-        // 文件列表加载完成后再获取留言列表
-        return fetchComments();
-    }).then(() => {
-        console.log('Comments loaded');
-    }).catch((error) => {
-        console.error('Error loading content:', error);
-    });
+    // 顺序加载文件列表和留言列表，避免同时发起多个请求
+    fetchFiles()
+        .then(() => {
+            console.log('Files loaded');
+            // 文件列表加载完成后再获取留言列表
+            return fetchComments();
+        })
+        .then(() => {
+            console.log('Comments loaded');
+        })
+        .catch((error) => {
+            console.error('Error loading content:', error);
+        });
     
     // 添加留言表单提交事件
     const commentForm = document.getElementById('commentForm');
@@ -1483,86 +1491,41 @@ document.addEventListener('DOMContentLoaded', function() {
             validateContactInfo();
         });
     }
-});
-
-// 更新联系方式输入框的占位符和帮助文本
-function updateContactInfoPlaceholderAndHelp(contactType) {
-    const contactInfoInput = document.getElementById('contactInfo');
-    const contactInfoHelp = document.getElementById('contactInfoHelp');
     
-    if (!contactInfoInput || !contactInfoHelp) return;
-    
-    switch(contactType) {
-        case 'QQ':
-            contactInfoInput.placeholder = '请输入您的QQ号码（5-15位数字）';
-            contactInfoHelp.textContent = '请输入有效的QQ号码，例如：1234567';
-            contactInfoHelp.className = 'form-text text-muted';
-            break;
-        case '微信':
-            contactInfoInput.placeholder = '请输入您的微信号（6-20位字母或数字）';
-            contactInfoHelp.textContent = '请输入有效的微信号，例如：weixin123';
-            contactInfoHelp.className = 'form-text text-muted';
-            break;
-        case '邮箱':
-            contactInfoInput.placeholder = '请输入您的邮箱地址';
-            contactInfoHelp.textContent = '请输入有效的邮箱地址，例如：example@qq.com';
-            contactInfoHelp.className = 'form-text text-muted';
-            break;
-        default:
-            contactInfoInput.placeholder = '请输入您的QQ号/微信号/邮箱地址';
-            contactInfoHelp.textContent = '';
-            contactInfoHelp.className = 'form-text';
-    }
-}
-
-// 验证联系方式
-function validateContactInfo() {
-    const contactType = document.getElementById('contactType').value;
-    const contactInfo = document.getElementById('contactInfo').value;
-    const contactInfoHelp = document.getElementById('contactInfoHelp');
-    
-    if (!contactType || !contactInfo || contactInfo.trim().length === 0) {
-        return; // 没有选择类型或没有输入内容时不显示错误
-    }
-    
-    let isValid = true;
-    let helpText = '';
-    
-    if (contactType === 'QQ') {
-        // QQ号码验证：5-15位数字，不能以0开头
-        if (!/^[1-9][0-9]{4,14}$/.test(contactInfo.trim())) {
-            isValid = false;
-            helpText = 'QQ号码格式不正确，请输入5-15位数字（不能以0开头）';
-        }
-    } else if (contactType === '微信') {
-        // 微信号验证：6-20位，可包含字母、数字、下划线、减号，不能纯数字
-        if (!/^[a-zA-Z0-9_-]{6,20}$/.test(contactInfo.trim()) || /^\d+$/.test(contactInfo.trim())) {
-            isValid = false;
-            helpText = '微信号格式不正确，请输入6-20位（可包含字母、数字、下划线、减号，不能纯数字）';
-        }
-    } else if (contactType === '邮箱') {
-        // 邮箱验证
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(contactInfo.trim())) {
-            isValid = false;
-            helpText = '邮箱地址格式不正确，请输入有效的邮箱地址';
-        }
-    }
-    
-    if (contactInfoHelp) {
-        contactInfoHelp.textContent = helpText;
-        if (isValid) {
-            if (helpText) {
-                contactInfoHelp.className = 'form-text text-success';
-            } else {
-                contactInfoHelp.className = 'form-text text-muted';
+    // 添加导航栏点击事件监听器
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            // 显示所有部分
+            document.querySelector('.file-list-section').style.display = 'block';
+            document.querySelector('.comments-section').style.display = 'block';
+            
+            // 处理文件列表链接
+            if (targetId === '#files') {
+                // 确保显示文件列表
+                renderFileList();
             }
-        } else {
-            contactInfoHelp.className = 'form-text text-danger';
-        }
-    }
-}
+            
+            // 平滑滚动到目标位置
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, // 考虑固定导航栏的高度
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+
+});
 
 // 添加一个窗口加载事件作为备选方案
 window.addEventListener('load', function() {
 });
+
+

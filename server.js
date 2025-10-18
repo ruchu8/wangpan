@@ -196,7 +196,7 @@ app.post('/api/comments', async (req, res) => {
 });
 
 app.put('/api/comments', async (req, res) => {
-  const { id, approved, reply, content } = req.body;
+  const { id, approved, reply, content, reply_date } = req.body;
   
   if (!id) {
     return res.status(400).json({ error: 'Comment ID is required' });
@@ -216,6 +216,8 @@ app.put('/api/comments', async (req, res) => {
   
   if (reply !== undefined) {
     comments[commentIndex].reply = reply;
+    // 如果提供了回复时间，则使用它，否则使用当前时间
+    comments[commentIndex].reply_date = reply_date || new Date().toISOString();
   }
   
   // 更新评论内容（如果提供了新的内容）
@@ -307,6 +309,54 @@ app.post('/api/auth', async (req, res) => {
       success: false, 
       message: 'Invalid credentials' 
     });
+  }
+});
+
+// 添加修改密码的API
+app.put('/api/auth/password', async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+  
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Current password and new password are required' });
+  }
+  
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+  }
+
+  try {
+    // 获取当前管理员凭证
+    const adminCredentials = await storage.get('admin_credentials');
+    
+    if (!adminCredentials) {
+      return res.status(500).json({ error: 'Admin credentials not found' });
+    }
+    
+    // 验证当前密码
+    if (currentPassword !== adminCredentials.password) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+    
+    // 更新密码
+    adminCredentials.password = newPassword;
+    await storage.set('admin_credentials', adminCredentials);
+    
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ error: 'Failed to update password' });
   }
 });
 
@@ -419,6 +469,218 @@ app.delete('/api/files', async (req, res) => {
     res.json({ message: 'File deleted successfully' });
   } else {
     res.status(500).json({ error: 'Failed to delete file data' });
+  }
+});
+
+// 文件夹内文件管理 API（需要认证）
+app.post('/api/file-manager', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+
+  const { folderIndex, file } = req.body;
+  
+  if (folderIndex === undefined || !file) {
+    return res.status(400).json({ error: 'Folder index and file data are required' });
+  }
+
+  let files = await storage.get('files') || [];
+  
+  if (folderIndex < 0 || folderIndex >= files.length || files[folderIndex].type !== 'folder') {
+    return res.status(404).json({ error: 'Folder not found' });
+  }
+  
+  // 确保children数组存在
+  if (!files[folderIndex].children) {
+    files[folderIndex].children = [];
+  }
+  
+  // 添加文件到文件夹
+  files[folderIndex].children.push(file);
+  
+  const result = await storage.set('files', files);
+  if (result) {
+    res.status(201).json(file);
+  } else {
+    res.status(500).json({ error: 'Failed to save file data' });
+  }
+});
+
+app.put('/api/file-manager', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+
+  const { folderIndex, fileIndex, file } = req.body;
+  
+  if (folderIndex === undefined || fileIndex === undefined || !file) {
+    return res.status(400).json({ error: 'Folder index, file index and file data are required' });
+  }
+
+  let files = await storage.get('files') || [];
+  
+  if (folderIndex < 0 || folderIndex >= files.length || files[folderIndex].type !== 'folder') {
+    return res.status(404).json({ error: 'Folder not found' });
+  }
+  
+  if (!files[folderIndex].children || fileIndex < 0 || fileIndex >= files[folderIndex].children.length) {
+    return res.status(404).json({ error: 'File not found' });
+  }
+  
+  // 更新文件
+  files[folderIndex].children[fileIndex] = file;
+  
+  const result = await storage.set('files', files);
+  if (result) {
+    res.json(file);
+  } else {
+    res.status(500).json({ error: 'Failed to update file data' });
+  }
+});
+
+app.delete('/api/file-manager', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+
+  const { folderIndex, fileIndex } = req.body;
+  
+  if (folderIndex === undefined || fileIndex === undefined) {
+    return res.status(400).json({ error: 'Folder index and file index are required' });
+  }
+
+  let files = await storage.get('files') || [];
+  
+  if (folderIndex < 0 || folderIndex >= files.length || files[folderIndex].type !== 'folder') {
+    return res.status(404).json({ error: 'Folder not found' });
+  }
+  
+  if (!files[folderIndex].children || fileIndex < 0 || fileIndex >= files[folderIndex].children.length) {
+    return res.status(404).json({ error: 'File not found' });
+  }
+  
+  // 删除文件
+  files[folderIndex].children.splice(fileIndex, 1);
+  
+  const result = await storage.set('files', files);
+  if (result) {
+    res.json({ message: 'File deleted successfully' });
+  } else {
+    res.status(500).json({ error: 'Failed to delete file data' });
+  }
+});
+
+// 添加数据库备份API
+app.get('/api/backup', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+  
+  try {
+    // 获取所有数据
+    const comments = await storage.get('comments') || [];
+    const files = await storage.get('files') || [];
+    const adminCredentials = await storage.get('admin_credentials');
+    const adminTokenData = await storage.get('admin_token');
+    
+    const backupData = {
+      comments: comments,
+      files: files,
+      adminCredentials: adminCredentials,
+      adminToken: adminTokenData,
+      backupDate: new Date().toISOString(),
+      version: '1.0'
+    };
+    
+    // 设置响应头以触发下载
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="backup-${new Date().toISOString().slice(0, 10)}.json"`);
+    
+    res.json(backupData);
+  } catch (error) {
+    console.error('Backup error:', error);
+    res.status(500).json({ error: 'Failed to create backup: ' + error.message });
+  }
+});
+
+// 添加数据库还原API
+app.post('/api/restore', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const backupData = req.body;
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const adminToken = await storage.get('admin_token');
+  
+  if (!adminToken || token !== adminToken) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+  
+  if (!backupData) {
+    return res.status(400).json({ error: 'Backup data is required' });
+  }
+  
+  try {
+    // 还原数据
+    if (backupData.comments) {
+      await storage.set('comments', backupData.comments);
+    }
+    
+    if (backupData.files) {
+      await storage.set('files', backupData.files);
+    }
+    
+    if (backupData.adminCredentials) {
+      await storage.set('admin_credentials', backupData.adminCredentials);
+    }
+    
+    if (backupData.adminToken) {
+      await storage.set('admin_token', backupData.adminToken);
+    }
+    
+    res.json({ message: 'Database restored successfully' });
+  } catch (error) {
+    console.error('Restore error:', error);
+    res.status(500).json({ error: 'Failed to restore database: ' + error.message });
   }
 });
 

@@ -11,12 +11,12 @@ let currentFolderIndex = -1;
 document.addEventListener('DOMContentLoaded', function() {
     // 检查是否已登录
     checkAuth();
-    
+
     // 侧边栏切换功能
     document.getElementById('sidebarToggle').addEventListener('click', function() {
         document.getElementById('sidebar').classList.toggle('show');
     });
-    
+
     // 侧边栏菜单点击事件
     document.querySelectorAll('.sidebar-menu .nav-link').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -51,10 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // 退出登录按钮事件
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    
+
     // 刷新按钮事件
     document.getElementById('refreshBtn').addEventListener('click', function() {
         const activePage = document.querySelector('.sidebar-menu .nav-link.active').getAttribute('data-target');
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loadDashboardStats();
         }
     });
-    
+
     // 添加文件夹按钮事件
     document.getElementById('addFolderBtn').addEventListener('click', function() {
         document.getElementById('folderModalTitle').textContent = '添加文件夹';
@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const folderModal = new bootstrap.Modal(document.getElementById('folderModal'));
         folderModal.show();
     });
-    
+
     // 保存文件夹按钮事件
     document.getElementById('saveFolderBtn').addEventListener('click', saveFolder);
     
     // 保存文件按钮事件
     document.getElementById('saveFileModalBtn').addEventListener('click', saveFolderFile);
-    
+
     // 添加文件按钮事件
     document.getElementById('addFileBtn').addEventListener('click', function() {
         if (currentFolderIndex === -1) {
@@ -117,18 +117,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const fileModal = new bootstrap.Modal(document.getElementById('fileModal'));
         fileModal.show();
     });
-    
+
     // 发送回复按钮事件
     document.getElementById('sendReplyBtn').addEventListener('click', sendReply);
-    
+
     // 导出数据按钮事件
     document.getElementById('exportDataBtn').addEventListener('click', exportData);
-    
+
     // 刷新留言按钮事件
     document.getElementById('refreshCommentsBtn').addEventListener('click', function() {
         loadComments(currentCommentsPage);
     });
-    
+
     // 管理员设置表单提交事件
     document.getElementById('adminSettingsForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -147,31 +147,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 检查认证状态
 function checkAuth() {
-    if (!authToken) {
+    if (authToken) {
+        loadDashboardStats();
+    } else {
         // 重定向到登录页面
         window.location.href = 'login.html';
-    } else {
-        // 验证令牌有效性
-        validateToken();
-    }
-}
-
-// 验证令牌有效性
-async function validateToken() {
-    try {
-        const response = await fetch('/api/comments?page=1&limit=1', {
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            }
-        });
-        
-        if (response.status === 401) {
-            // 令牌无效，清除并重定向到登录页面
-            localStorage.removeItem('adminToken');
-            window.location.href = 'login.html';
-        }
-    } catch (error) {
-        console.error('Token validation error:', error);
     }
 }
 

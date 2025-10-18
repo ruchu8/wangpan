@@ -365,15 +365,7 @@ body {
         flex-shrink: 0;
     }
     
-    /* 文件信息容器 */
-    .file-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex-wrap: nowrap;
-        flex: 1;
-        overflow: hidden;
-    }
+
     
     /* 子文件列表修复 */
     .ms-2 {
